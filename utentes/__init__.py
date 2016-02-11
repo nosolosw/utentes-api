@@ -22,6 +22,12 @@ class RequestWithDB(Request):
         request.db.close()
 
 
+def date_adapter(obj, request):
+    return obj.strftime('%d/%m/%Y') if obj else ''
+
+def decimal_adapter(obj, request):
+    return str(obj) if obj or obj == 0 else ''
+
 def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     session_factory = sessionmaker(bind=engine)
@@ -32,9 +38,19 @@ def main(global_config, **settings):
         request_factory = RequestWithDB
     )
 
+    from pyramid.renderers import JSON
+    json_renderer = JSON()
+    import datetime
+    json_renderer.add_adapter(datetime.date, date_adapter)
+    from decimal import Decimal
+    json_renderer.add_adapter(Decimal, decimal_adapter)
+    config.add_renderer('json', json_renderer)
+
     config.add_static_view('static', 'static', cache_max_age=3600)
 
-    config.add_route('home', '/')
+    config.add_route('exploracao.json', '/exploracao/{exp_id}.json')
 
     config.scan()
     return config.make_wsgi_app()
+
+

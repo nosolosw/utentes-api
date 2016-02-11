@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from pyramid.response import Response
 from pyramid.view import view_config
 
-from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from utentes.models.models import MyModel
+from utentes.models.models import Exploracao, Fonte, Licencia, Utente
 from utentes.models.base import badrequest_exception
 
 @view_config(
-    route_name='home',
+    route_name='exploracao.json',
     request_method='GET',
     renderer='json')
-def my_view(request):
+def exploracao(request):
+    exp_id = request.matchdict['exp_id']
     try:
-        return request.db.query(MyModel).filter(MyModel.auth_srid == 32727).one()
+        return request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).one()
     except(MultipleResultsFound, NoResultFound):
         raise badrequest_exception({
             'error': 'El código no existe',
-            'srid': 32727
+            'exp_id': exp_id
         })
