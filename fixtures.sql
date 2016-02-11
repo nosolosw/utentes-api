@@ -15,7 +15,7 @@ insert into utentes.exploracaos
        st_geomfromtext('MULTIPOLYGON( ((1 1, 1 2, 2 2, 2 1, 1 1)), (( 3 3, 3 4, 4 4, 4 3, 3 3 )) )',32737)
 );
 
-insert into utentes.exploracaos (exp_name, exp_id, utente, loc_provin, loc_distri, loc_posto, pagos) VALUES ('exploracao2', 'id_exploracao2', (SELECT gid from utentes.utentes WHERE nome = 'utente1'), 'loc_provin_2', 'loc_distri_2', 'loc_posto_2', false);
+insert into utentes.exploracaos (exp_name, exp_id, utente, loc_provin, loc_distri, loc_posto, pagos, the_geom) VALUES ('exploracao2', 'id_exploracao2', (SELECT gid from utentes.utentes WHERE nome = 'utente1'), 'loc_provin_2', 'loc_distri_2', 'loc_posto_2', false, st_geomfromtext('MULTIPOLYGON( ((5 5, 5 6, 6 6, 6 5, 5 5)) )',32737));
 
 
 insert into utentes.fontes (exploracao, tipo_agua, tipo_fonte, lat_lon, d_dado, c_requerid, c_max, c_real, contador, metodo_est) VALUES ((SELECT gid FROM utentes.exploracaos WHERE exp_id='id_exploracao1'), 'tipo_agua_1', 'tipo_fonte1', 'lat_lon_1', now(), 11.44, 12, 24.5, true, 'metodo_est');

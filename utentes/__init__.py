@@ -49,6 +49,8 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
 
     config.add_route('exploracao.json', '/exploracao/{exp_id}.json')
+    config.add_route('exploracaos.json', '/exploracaos.json')
+    config.add_route('exploracaos.geojson', '/exploracaos.geojson')
 
     config.scan()
     return config.make_wsgi_app()

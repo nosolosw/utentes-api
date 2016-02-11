@@ -20,3 +20,34 @@ def exploracao(request):
             'error': 'El código no existe',
             'exp_id': exp_id
         })
+
+@view_config(
+    route_name='exploracaos.json',
+    request_method='GET',
+    renderer='json')
+def exploracaos(request):
+    exploracaos = []
+    for e in request.db.query(Exploracao):
+        exploracaos.append({
+            'gid': e.gid,
+            'exp_name': e.exp_name,
+            'exp_id': e.exp_id,
+            'licencia': ' ?? ',
+            'consumo': ' ?? ',
+            'pagos': e.pagos,
+            'utente': e.utente_rel.nome
+        })
+    return exploracaos
+
+@view_config(
+    route_name='exploracaos.geojson',
+    request_method='GET',
+    renderer='json')
+def exploracaos_geoms(request):
+    exploracaos = []
+    for e in request.db.query(Exploracao):
+        exploracaos.append({
+            'gid': e.gid,
+            'the_geom': e.__json__(request)['the_geom']
+        })
+    return exploracaos
