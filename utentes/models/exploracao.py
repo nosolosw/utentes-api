@@ -64,21 +64,11 @@ class Exploracao(Base):
         for f in json.get('fontes'):
             e.fontes.append(Fonte.create_from_json(f))
         e.licencias = []
-        # for l in json.get('licencias'):
-        #     print json
-        #     print 'aaaaaaaaaaaaaaaa'
-        #     print l
-        #     print 'bbbbbbbbbbbbbbbbb'
-        #     for l_sub in l.get('subterranea'):
-        #         e.licencias.append(Licencia.create_from_json(l_sub))
-        #     for l_sup in l.get('superficial'):
-        #         e.licencias.append(Licencia.create_from_json(l_sup))
+        for l in json.get('licencias'):
+            e.licencias.append(Licencia.create_from_json(l))
         return e
 
     def __json__(self, request):
-        l_sub = [ l for l in self.licencias if l.lic_tipo == 'subterranea' ]
-        l_sup = [ l for l in self.licencias if l.lic_tipo == 'superficial' ]
-
         return {
             'gid': self.gid,
             'exp_name': self.exp_name,
@@ -100,5 +90,5 @@ class Exploracao(Base):
             'the_geom': mapping(to_shape(self.the_geom)) if self.the_geom else '',
             'utente': self.utente_rel,
             'fontes': self.fontes,
-            'licencias': {'subterranea': l_sub, 'superficial': l_sup}
+            'licencias': self.licencias
         }
