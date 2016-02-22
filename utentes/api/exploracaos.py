@@ -12,7 +12,7 @@ from utentes.models.base import badrequest_exception
     route_name='exploracao.json',
     request_method='GET',
     renderer='json')
-def exploracao(request):
+def exploracao_get(request):
     exp_id = request.matchdict['exp_id']
     try:
         return request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).one()
@@ -21,6 +21,33 @@ def exploracao(request):
             'error': 'El código no existe',
             'exp_id': exp_id
         })
+
+@view_config(
+    route_name='exploracao.json',
+    request_method='DELETE',
+    renderer='json')
+def exploracao_delete(request):
+    exp_id = request.matchdict['exp_id']
+    if not exp_id:
+        raise badrequest_exception({
+            'error': 'exp_id es un campo necesario'
+        })
+    try:
+        e = request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).one()
+        for f in e.fontes:
+            # setting cascade in the relatioship is not working
+            request.db.delete(f)
+        for l in e.licencias:
+            # setting cascade in the relatioship is not working
+            request.db.delete(l)
+        request.db.delete(e)
+        request.db.commit()
+    except(MultipleResultsFound, NoResultFound):
+        raise badrequest_exception({
+            'error': 'El código no existe',
+            'exp_id': exp_id
+        })
+    return {'exp_id': exp_id}
 
 @view_config(
     route_name='exploracaos.json',
