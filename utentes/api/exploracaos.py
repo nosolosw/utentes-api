@@ -54,18 +54,10 @@ def exploracao_delete(request):
     request_method='GET',
     renderer='json')
 def exploracaos_get(request):
-    exploracaos = []
-    for e in request.db.query(Exploracao):
-        exploracaos.append({
-            'gid': e.gid,
-            'exp_name': e.exp_name,
-            'exp_id': e.exp_id,
-            'licencia': ' ?? ',
-            'consumo': ' ?? ',
-            'pagos': e.pagos,
-            'utente': e.utente_rel.nome
-        })
-    return exploracaos
+    return {
+        'type': 'FeatureCollection',
+        'features': request.db.query(Exploracao).all()
+    }
 
 @view_config(
     route_name='exploracaos.geojson',
