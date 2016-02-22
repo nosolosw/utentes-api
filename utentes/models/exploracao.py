@@ -58,7 +58,7 @@ class Exploracao(Base):
         e.c_estimado = json.get('c_estimado')
         geom = json.get('the_geom')
         if geom:
-            e.the_geom = from_shape(shape(), srid=32737)
+            e.the_geom = from_shape(shape(geom), srid=32737)
         # e.utente_rel = json.get('utente')
         e.fontes = e.fontes or []
         for f in json.get('fontes'):
@@ -69,6 +69,9 @@ class Exploracao(Base):
         return e
 
     def __json__(self, request):
+        the_geom = None
+        if self.the_geom is not None:
+            the_geom = mapping(to_shape(self.the_geom))
         return {
             'gid': self.gid,
             'exp_name': self.exp_name,
@@ -87,7 +90,7 @@ class Exploracao(Base):
             'c_licencia': self.c_licencia,
             'c_real': self.c_real,
             'c_estimado': self.c_estimado,
-            'the_geom': mapping(to_shape(self.the_geom)) if self.the_geom else '',
+            'the_geom':  the_geom,
             'utente': self.utente_rel,
             'fontes': self.fontes,
             'licencias': self.licencias
