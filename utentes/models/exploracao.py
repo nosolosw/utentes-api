@@ -93,8 +93,7 @@ class Exploracao(Base):
                 'c_licencia': self.c_licencia,
                 'c_real': self.c_real,
                 'c_estimado': self.c_estimado,
-                'utente_obj': self.utente_rel,
-                'utente': self.utente_rel.nome,
+                'utente': self.utente_rel,
                 'fontes': self.fontes,
                 'licencias': self.licencias
             },
