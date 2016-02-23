@@ -71,7 +71,8 @@ class Exploracao(Base):
     def __json__(self, request):
         the_geom = None
         if self.the_geom is not None:
-            the_geom = mapping(to_shape(self.the_geom))
+            the_geom = request.db.query(self.the_geom.ST_Transform(4326)).first()[0]
+            the_geom = mapping(to_shape(the_geom))
         return {
             'type': 'Feature',
             'properties': {
