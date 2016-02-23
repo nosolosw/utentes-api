@@ -59,5 +59,8 @@ def main(global_config, **settings):
     config.add_route('exploracaos.json', '/exploracaos.json')
     config.add_route('exploracaos.geojson', '/exploracaos.geojson')
 
+    # /domains.json GET Get all domains (utentes included)
+    config.add_route('domains.json', '/domains.json')
+
     config.scan()
     return config.make_wsgi_app()
