@@ -10,6 +10,13 @@ from utentes.models.domain import Domain
     renderer='json')
 def domains_get(request):
     domains = request.db.query(Domain).all()
+    domains.append({
+        'category': 'utente',
+        'text': '',
+        'alias': '',
+        'order': 0,
+        'parent': ''
+    })
     for u in request.db.query(Utente):
         domains.append({
             'category': 'utente',
