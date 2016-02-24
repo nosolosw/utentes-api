@@ -26,7 +26,7 @@ class Utente(Base):
 
     def __json__(self, request):
         return {
-            'gid': self.gid,
+            'id': self.gid,
             'nome': self.nome,
             'nuit': self.nuit,
             'entidade': self.entidade,
