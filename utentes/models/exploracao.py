@@ -33,6 +33,7 @@ class Exploracao(Base):
     c_real = Column(Numeric(10, 2))
     c_estimado = Column(Numeric(10, 2))
     the_geom = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
+    actividade = Column(Text)
 
     utente_rel = relationship(u'Utente')
 
@@ -59,6 +60,8 @@ class Exploracao(Base):
         geom = json.get('the_geom')
         if geom:
             e.the_geom = from_shape(shape(geom), srid=32737)
+        print json
+        e.actividade = json.get('actividade')
         # e.utente_rel = json.get('utente')
         e.fontes = e.fontes or []
         for f in json.get('fontes'):
@@ -95,7 +98,8 @@ class Exploracao(Base):
                 'c_estimado': self.c_estimado,
                 'utente': self.utente_rel,
                 'fontes': self.fontes,
-                'licencias': self.licencias
+                'licencias': self.licencias,
+                'actividade': self.actividade
             },
             'geometry': the_geom
         }
