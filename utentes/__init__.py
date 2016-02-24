@@ -59,6 +59,8 @@ def main(global_config, **settings):
     config.add_route('exploracaos.json', '/exploracaos.json')
     config.add_route('exploracaos.geojson', '/exploracaos.geojson')
 
+    config.add_route('utentes.json', '/utentes.json')
+
     # /domains.json GET Get all domains (utentes included)
     config.add_route('domains.json', '/domains.json')
 
