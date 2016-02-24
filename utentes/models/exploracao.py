@@ -3,8 +3,8 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Numeric, Text, text
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
-from geoalchemy2.shape import from_shape, to_shape
-from shapely.geometry import mapping, shape
+# from geoalchemy2.shape import from_shape, to_shape
+# from shapely.geometry import mapping, shape
 
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
@@ -57,10 +57,10 @@ class Exploracao(Base):
         e.c_licencia = json.get('c_licencia')
         e.c_real = json.get('c_real')
         e.c_estimado = json.get('c_estimado')
-        geom = json.get('the_geom')
-        if geom:
-            e.the_geom = from_shape(shape(geom), srid=32737)
-        print json
+        # geom = json.get('the_geom')
+        # if geom:
+        #    e.the_geom = from_shape(shape(geom), srid=32737)
+
         e.actividade = json.get('actividade')
         # e.utente_rel = json.get('utente')
         e.fontes = e.fontes or []
@@ -74,8 +74,9 @@ class Exploracao(Base):
     def __json__(self, request):
         the_geom = None
         if self.the_geom is not None:
-            the_geom = request.db.query(self.the_geom.ST_Transform(4326)).first()[0]
-            the_geom = mapping(to_shape(the_geom))
+            import json
+            the_geom = json.loads(request.db.query(self.the_geom.ST_Transform(4326).ST_AsGeoJSON()).first()[0])
+            # the_geom = mapping(to_shape(the_geom))
         return {
             'type': 'Feature',
             'properties': {

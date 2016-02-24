@@ -10,7 +10,7 @@ requires = [
     'psycopg2==2.6.1',
     'SQLAlchemy==1.0.11',
     'geoalchemy2==0.2.6',
-    'shapely==1.5.13',
+    # 'shapely==1.5.13',
     'transaction',
     'zope.sqlalchemy',
     'waitress',
