@@ -48,21 +48,19 @@ def main(global_config, **settings):
 
     config.add_static_view('static', 'static', cache_max_age=3600)
 
-    # /exploracaos.geojson       GET    Get geometry of all exploracaos
-    # /exploracaos.json          GET    Get an abstract of all exploracaos
-    # /exploracaos.json          POST   Create a new exploracao. exp_id contained in the body
-    # /exploracaos/{exp_id}.json GET    Get exploracao
-    # /exploracaos/{exp_id}.json PUT    Update exploracao
-    # /exploracaos/{exp_id}.json DELETE Delete exploracao
+    # /exploracaos         GET    Get an abstract of all exploracaos
+    # /exploracaos         POST   Create a new exploracao. exp_id contained in the body
+    # /exploracao/{id} GET    Get exploracao
+    # /exploracao/{id} PUT    Update exploracao
+    # /exploracao/{id} DELETE Delete exploracao
+    config.add_route('exploracao', '/exploracao/{id}')
+    config.add_route('exploracaos', '/exploracaos')
 
-    config.add_route('exploracao.json', '/exploracao/{exp_id}.json')
-    config.add_route('exploracaos.json', '/exploracaos.json')
-    config.add_route('exploracaos.geojson', '/exploracaos.geojson')
+    # GET /utentes Get all the utentes
+    config.add_route('utentes', '/utentes')
 
-    config.add_route('utentes.json', '/utentes.json')
-
-    # /domains.json GET Get all domains (utentes included)
-    config.add_route('domains.json', '/domains.json')
+    # GET /domains Get all domains (utentes included)
+    config.add_route('domains', '/domains')
 
     config.scan()
     return config.make_wsgi_app()

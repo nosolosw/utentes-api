@@ -5,7 +5,7 @@ from utentes.models.utente import Utente
 from utentes.models.domain import Domain
 
 @view_config(
-    route_name='domains.json',
+    route_name='domains',
     request_method='GET',
     renderer='json')
 def domains_get(request):
