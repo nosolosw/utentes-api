@@ -48,19 +48,19 @@ def main(global_config, **settings):
 
     config.add_static_view('static', 'static', cache_max_age=3600)
 
-    # /exploracaos         GET    Get an abstract of all exploracaos
-    # /exploracaos         POST   Create a new exploracao. exp_id contained in the body
-    # /exploracao/{id} GET    Get exploracao
-    # /exploracao/{id} PUT    Update exploracao
-    # /exploracao/{id} DELETE Delete exploracao
-    config.add_route('exploracao', '/exploracao/{id}')
-    config.add_route('exploracaos', '/exploracaos')
+    # GET    /exploracaos      = Return all exploracaos
+    # GET    /exploracaos/{id} = Return individual exploracao
+    # POST   /exploracaos      = Create a new exploracao. exp_id contained in the body
+    # PUT    /exploracaos/{id} = Update exploracao
+    # DELETE /exploracaos/{id} = Delete exploracao
+    config.add_route('exploracaos',     '/api/exploracaos')
+    config.add_route('exploracaos_id',  '/api/exploracaos/{id}')
 
-    # GET /utentes Get all the utentes
-    config.add_route('utentes', '/utentes')
+    # GET /utentes  = Return all utentes
+    config.add_route('utentes', '/api/utentes')
 
-    # GET /domains Get all domains (utentes included)
-    config.add_route('domains', '/domains')
+    # GET /domains = Return all domains (utentes included)
+    config.add_route('domains', '/api/domains')
 
     config.scan()
     return config.make_wsgi_app()
