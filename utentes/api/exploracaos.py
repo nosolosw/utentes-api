@@ -32,10 +32,10 @@ def exploracaos_get(request):
         }
 
 
-@view_config(route_name='exploracaos', request_method='DELETE', renderer='json')
+@view_config(route_name='exploracaos_id', request_method='DELETE', renderer='json')
 def exploracaos_delete(request):
     gid = request.matchdict['id']
-    if not exp_id:
+    if not gid:
         raise badrequest_exception({
             'error': 'gid es un campo necesario'
         })
