@@ -80,7 +80,7 @@ class Exploracao(Base):
         return {
             'type': 'Feature',
             'properties': {
-                'gid': self.gid,
+                'id': self.gid,
                 'exp_name': self.exp_name,
                 'exp_id': self.exp_id,
                 # 'utente': self.utente,

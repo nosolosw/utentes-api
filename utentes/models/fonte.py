@@ -47,7 +47,7 @@ class Fonte(Base):
 
     def __json__(self, request):
         return {
-            'gid': self.gid,
+            'id': self.gid,
             'exploracao': self.exploracao,
             'tipo_agua': self.tipo_agua,
             'tipo_fonte': self.tipo_fonte,

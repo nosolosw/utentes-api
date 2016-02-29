@@ -45,7 +45,7 @@ class Licencia(Base):
 
     def __json__(self, request):
         return {
-            'gid':self.gid,
+            'id':self.gid,
             'lic_nro': self.lic_nro,
             'lic_tipo': self.lic_tipo,
             'exploracao': self.exploracao,

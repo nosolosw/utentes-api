@@ -4,7 +4,7 @@ from pyramid.view import view_config
 from utentes.models.utente import Utente
 
 @view_config(
-    route_name='utentes.json',
+    route_name='utentes',
     request_method='GET',
     renderer='json')
 def utentes_get(request):

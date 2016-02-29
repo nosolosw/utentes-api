@@ -9,31 +9,31 @@ from utentes.models.exploracao import Exploracao
 from utentes.models.base import badrequest_exception
 
 @view_config(
-    route_name='exploracao.json',
+    route_name='exploracao',
     request_method='GET',
     renderer='json')
 def exploracao_get(request):
-    exp_id = request.matchdict['exp_id']
+    gid = request.matchdict['id']
     try:
-        return request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).one()
+        return request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
     except(MultipleResultsFound, NoResultFound):
         raise badrequest_exception({
             'error': 'El código no existe',
-            'exp_id': exp_id
+            'gid': gid
         })
 
 @view_config(
-    route_name='exploracao.json',
+    route_name='exploracao',
     request_method='DELETE',
     renderer='json')
 def exploracao_delete(request):
-    exp_id = request.matchdict['exp_id']
+    gid = request.matchdict['id']
     if not exp_id:
         raise badrequest_exception({
-            'error': 'exp_id es un campo necesario'
+            'error': 'gid es un campo necesario'
         })
     try:
-        e = request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).one()
+        e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         for f in e.fontes:
             # setting cascade in the relatioship is not working
             request.db.delete(f)
@@ -45,12 +45,12 @@ def exploracao_delete(request):
     except(MultipleResultsFound, NoResultFound):
         raise badrequest_exception({
             'error': 'El código no existe',
-            'exp_id': exp_id
+            'gid': gid
         })
-    return {'exp_id': exp_id}
+    return {'gid': gid}
 
 @view_config(
-    route_name='exploracaos.json',
+    route_name='exploracaos',
     request_method='GET',
     renderer='json')
 def exploracaos_get(request):
@@ -60,20 +60,7 @@ def exploracaos_get(request):
     }
 
 @view_config(
-    route_name='exploracaos.geojson',
-    request_method='GET',
-    renderer='json')
-def exploracaos_geoms_get(request):
-    exploracaos = []
-    for e in request.db.query(Exploracao):
-        exploracaos.append({
-            'gid': e.gid,
-            'the_geom': e.__json__(request)['the_geom']
-        })
-    return exploracaos
-
-@view_config(
-    route_name='exploracaos.json',
+    route_name='exploracaos',
     request_method='POST',
     renderer='json')
 def exploracaos_post(request):
