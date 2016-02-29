@@ -5,8 +5,11 @@ from pyramid.view import view_config
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from utentes.models.utente import Utente
+from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.exploracao import Exploracao
+from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.base import badrequest_exception
+from utentes.lib.validator import Validator
 
 
 @view_config(route_name='exploracaos',    request_method='GET', renderer='json')
@@ -63,6 +66,13 @@ def exploracaos_create(request):
         exp_id = body.get('exp_id')
     except (ValueError):
         raise badrequest_exception({'error':'body is not a valid json'})
+
+    validatorExploracao = Validator(EXPLORACAO_SCHEMA)
+    msgs = validatorExploracao.validate(body)
+    validatorUtente = Validator(UTENTE_SCHEMA)
+    msgs = msgs + validatorUtente.validate(body['utente'])
+    if len(msgs) > 0:
+        raise badrequest_exception({'error': msgs})
 
     if not exp_id:
         raise badrequest_exception({'error':'exp_id es un campo obligatorio'})
