@@ -3,8 +3,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Numeric, Text, text
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
-# from geoalchemy2.shape import from_shape, to_shape
-# from shapely.geometry import mapping, shape
 
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
@@ -38,36 +36,39 @@ class Exploracao(Base):
     utente_rel = relationship(u'Utente')
 
     @staticmethod
-    def create_from_json(json):
+    def create_from_json(body):
         e = Exploracao()
         mandatory = [f for f in e.__table__.c if not f.nullable]
-        e.exp_name = json.get('exp_name')
-        e.exp_id = json.get('exp_id')
-        # e.utente = json.get('utente')
-        e.observacio = json.get('observacio')
-        e.loc_provin = json.get('loc_provin')
-        e.loc_distri = json.get('loc_distri')
-        e.loc_posto =  json.get('loc_posto')
-        e.loc_nucleo = json.get('loc_nucleo')
-        e.loc_endere = json.get('loc_endere')
-        e.loc_bacia = json.get('loc_bacia')
-        e.loc_rio = json.get('loc_rio')
-        e.pagos = json.get('pagos')
-        e.c_requerid = json.get('c_requerid')
-        e.c_licencia = json.get('c_licencia')
-        e.c_real = json.get('c_real')
-        e.c_estimado = json.get('c_estimado')
-        # geom = json.get('the_geom')
-        # if geom:
-        #    e.the_geom = from_shape(shape(geom), srid=32737)
+        e.exp_name = body.get('exp_name')
+        e.exp_id = body.get('exp_id')
+        # e.utente = body.get('utente')
+        e.observacio = body.get('observacio')
+        e.loc_provin = body.get('loc_provin')
+        e.loc_distri = body.get('loc_distri')
+        e.loc_posto =  body.get('loc_posto')
+        e.loc_nucleo = body.get('loc_nucleo')
+        e.loc_endere = body.get('loc_endere')
+        e.loc_bacia = body.get('loc_bacia')
+        e.loc_rio = body.get('loc_rio')
+        e.pagos = body.get('pagos')
+        e.c_requerid = body.get('c_requerid')
+        e.c_licencia = body.get('c_licencia')
+        e.c_real = body.get('c_real')
+        e.c_estimado = body.get('c_estimado')
 
-        e.actividade = json.get('actividade')
-        # e.utente_rel = json.get('utente')
+        geom = body.get('the_geom')
+        if geom:
+            from geoalchemy2.elements import WKTElement
+            from utentes.geomet import wkt
+            e.the_geom = WKTElement(wkt.dumps(geom), srid=32737)
+
+        e.actividade = body.get('actividade')
+        # e.utente_rel = body.get('utente')
         e.fontes = e.fontes or []
-        for f in json.get('fontes'):
+        for f in body.get('fontes'):
             e.fontes.append(Fonte.create_from_json(f))
         e.licencias = []
-        for l in json.get('licencias'):
+        for l in body.get('licencias'):
             e.licencias.append(Licencia.create_from_json(l))
         return e
 
@@ -76,7 +77,6 @@ class Exploracao(Base):
         if self.the_geom is not None:
             import json
             the_geom = json.loads(request.db.query(self.the_geom.ST_Transform(4326).ST_AsGeoJSON()).first()[0])
-            # the_geom = mapping(to_shape(the_geom))
         return {
             'type': 'Feature',
             'properties': {

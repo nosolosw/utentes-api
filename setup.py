@@ -14,6 +14,7 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'six'
     ]
 
 excludes= ["utentes.tests", ]
