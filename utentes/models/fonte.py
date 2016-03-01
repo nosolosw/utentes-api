@@ -15,17 +15,18 @@ class Fonte(Base):
     __tablename__ = 'fontes'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.fontes_gid_seq'::regclass)"))
-    exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
-    tipo_agua = Column(Text, nullable=False)
+    gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.fontes_gid_seq'::regclass)"))
+    tipo_agua  = Column(Text, nullable=False)
     tipo_fonte = Column(Text)
-    lat_lon = Column(Text)
-    d_dado = Column(Date)
-    c_requerid = Column(Numeric(10, 2))
-    c_max = Column(Numeric(10, 2))
-    c_real = Column(Numeric(10, 2))
-    contador = Column(Boolean)
+    lat_lon    = Column(Text)
+    d_dado     = Column(Date)
+    c_soli     = Column(Numeric(10, 2))
+    c_max      = Column(Numeric(10, 2))
+    c_real     = Column(Numeric(10, 2))
+    contador   = Column(Boolean)
     metodo_est = Column(Text)
+    comentario = Column(Text)
+    exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
     exploracao_rel = relationship(u'Exploracao',
                                backref='fontes')
@@ -33,29 +34,31 @@ class Fonte(Base):
     @staticmethod
     def create_from_json(json):
         f = Fonte()
-        f.exploracao = json.get('exploracao')
-        f.tipo_agua = json.get('tipo_agua')
+        f.tipo_agua  = json.get('tipo_agua')
         f.tipo_fonte = json.get('tipo_fonte')
-        f.lat_lon = json.get('lat_lon')
-        f.d_dado = json.get('d_dado')
-        f.c_requerid = parse_int(json.get('c_requerid'))
-        f.c_max =  None
-        f.c_real = None
-        f.contador = json.get('contador')
+        f.lat_lon    = json.get('lat_lon')
+        f.d_dado     = json.get('d_dado')
+        f.c_soli     = parse_int(json.get('c_soli'))
+        f.c_max      = parse_int(json.get('c_soli'))
+        f.c_real     = parse_int(json.get('c_soli'))
+        f.contador   = json.get('contador')
         f.metodo_est = json.get('metodo_est')
+        f.comentario = json.get('comentario')
+        f.exploracao = json.get('exploracao')
         return f
 
     def __json__(self, request):
         return {
-            'id': self.gid,
-            'exploracao': self.exploracao,
-            'tipo_agua': self.tipo_agua,
+            'id':         self.gid,
+            'tipo_agua':  self.tipo_agua,
             'tipo_fonte': self.tipo_fonte,
-            'lat_lon': self.lat_lon,
-            'd_dado': self.d_dado,
-            'c_requerid': self.c_requerid,
-            'c_max': self.c_max,
-            'c_real': self.c_real,
-            'contador': self.contador,
-            'metodo_est': self.metodo_est
+            'lat_lon':    self.lat_lon,
+            'd_dado':     self.d_dado,
+            'c_soli':     self.c_soli,
+            'c_max':      self.c_max,
+            'c_real':     self.c_real,
+            'contador':   self.contador,
+            'metodo_est': self.metodo_est,
+            'comentario': self.comentario,
+            'exploracao': self.exploracao,
         }
