@@ -5,12 +5,6 @@ from sqlalchemy.orm import relationship
 
 from .base import Base, PGSQL_SCHEMA_UTENTES
 
-def parse_int(number):
-    if(number == ''):
-        return None
-    else:
-        return int(number)
-
 class Fonte(Base):
     __tablename__ = 'fontes'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
@@ -38,9 +32,9 @@ class Fonte(Base):
         f.tipo_fonte = json.get('tipo_fonte')
         f.lat_lon    = json.get('lat_lon')
         f.d_dado     = json.get('d_dado')
-        f.c_soli     = parse_int(json.get('c_soli'))
-        f.c_max      = parse_int(json.get('c_soli'))
-        f.c_real     = parse_int(json.get('c_soli'))
+        f.c_soli     = json.get('c_soli')
+        f.c_max      = json.get('c_max')
+        f.c_real     = json.get('c_real')
         f.contador   = json.get('contador')
         f.metodo_est = json.get('metodo_est')
         f.comentario = json.get('comentario')
