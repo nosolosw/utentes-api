@@ -33,7 +33,7 @@ def exploracaos_get(request):
     else: # return collection
         return {
             'type': 'FeatureCollection',
-            'features': request.db.query(Exploracao).all()
+            'features': request.db.query(Exploracao).order_by(Exploracao.exp_id).all()
         }
 
 
@@ -106,7 +106,8 @@ def exploracaos_create(request):
     if e:
         raise badrequest_exception({'error':'La exploracao ya existe'})
 
-    u = request.db.query(Utente).filter(Utente.nome == body.get('utente').get('nome')).first()
+    u_filter = Utente.nome == body.get('utente').get('nome')
+    u = request.db.query(Utente).filter(u_filter).first()
     if not u:
         u = Utente.create_from_json(body['utente'])
         request.db.add(u)
