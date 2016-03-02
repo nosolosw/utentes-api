@@ -3,11 +3,17 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date, Numeric, Text, text
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
+from geoalchemy2.elements import WKTElement
+from geoalchemy2.functions import GenericFunction
 
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
 
 from .base import Base, PGSQL_SCHEMA_UTENTES
+
+class ST_Multi(GenericFunction):
+    name = 'ST_Multi'
+    type = Geometry
 
 class Exploracao(Base):
     __tablename__ = 'exploracaos'
@@ -61,10 +67,8 @@ class Exploracao(Base):
         if geom:
             from geoalchemy2.elements import WKTElement
             from utentes.geomet import wkt
-            e.the_geom = WKTElement(wkt.dumps(geom), srid=32737)
-
-        # e.utente     = json.get('utente')
-        # e.utente_rel = json.get('utente')
+            self.the_geom = WKTElement(wkt.dumps(geom), srid=4326)
+            self.the_geom = self.the_geom.ST_Multi().ST_Transform(32737)
 
         self.fontes = self.fontes or []
         for f in body.get('fontes'):
