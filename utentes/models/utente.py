@@ -18,6 +18,7 @@ class Utente(Base):
     loc_distri = Column(Text)
     loc_posto  = Column(Text)
     loc_nucleo = Column(Text)
+    observacio = Column(Text)
 
     @staticmethod
     def create_from_json(json):
@@ -30,6 +31,7 @@ class Utente(Base):
         u.loc_distri = json.get('loc_distri')
         u.loc_posto  = json.get('loc_posto')
         u.loc_nucleo = json.get('loc_nucleo')
+        u.observacio = json.get('observacio')
         return u
 
     def __json__(self, request):
@@ -43,5 +45,6 @@ class Utente(Base):
             'loc_provin': self.loc_provin,
             'loc_distri': self.loc_distri,
             'loc_posto':  self.loc_posto,
-            'loc_nucleo': self.loc_nucleo
+            'loc_nucleo': self.loc_nucleo,
+            'observacio': self.observacio,
             }

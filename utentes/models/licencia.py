@@ -12,7 +12,6 @@ class Licencia(Base):
     gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.licencias_gid_seq'::regclass)"))
     lic_nro    = Column(Text, nullable=False, unique=True)
     lic_tipo   = Column(Text, nullable=False)
-    finalidade = Column(Text)
     cadastro   = Column(Text)
     estado     = Column(Text)
     d_emissao  = Column(Date)
@@ -34,7 +33,6 @@ class Licencia(Base):
         l = Licencia()
         l.lic_nro    = json.get('lic_nro')
         l.lic_tipo   = json.get('lic_tipo')
-        l.finalidade = json.get('finalidade')
         l.cadastro   = json.get('cadastro')
         l.estado     = json.get('estado')
         l.d_emissao  = json.get('l.d_emissao')
@@ -54,7 +52,6 @@ class Licencia(Base):
             'id':         self.gid,
             'lic_nro':    self.lic_nro,
             'lic_tipo':   self.lic_tipo,
-            'finalidade': self.finalidade,
             'cadastro':   self.cadastro,
             'estado':     self.estado,
             'd_emissao':  self.d_emissao,
