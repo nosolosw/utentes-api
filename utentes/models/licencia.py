@@ -31,21 +31,25 @@ class Licencia(Base):
     @staticmethod
     def create_from_json(json):
         l = Licencia()
-        l.lic_nro    = json.get('lic_nro')
-        l.lic_tipo   = json.get('lic_tipo')
-        l.cadastro   = json.get('cadastro')
-        l.estado     = json.get('estado')
-        l.d_emissao  = json.get('l.d_emissao')
-        l.d_validade = json.get('d_validade')
-        l.c_soli_tot = json.get('c_soli_tot')
-        l.c_soli_int = json.get('c_soli_int')
-        l.c_soli_fon = json.get('c_soli_fon')
-        l.c_licencia = json.get('c_licencia')
-        l.c_real_tot = json.get('c_real_tot')
-        l.c_real_int = json.get('c_real_int')
-        l.c_real_fon = json.get('c_real_fon')
-        l.exploracao = json.get('exploracao')
+        l.update_from_json(json)
         return l
+
+    def update_from_json(self, json):
+        self.lic_nro    = json.get('lic_nro')
+        self.lic_tipo   = json.get('lic_tipo')
+        self.finalidade = json.get('finalidade')
+        self.cadastro   = json.get('cadastro')
+        self.estado     = json.get('estado')
+        self.d_emissao  = json.get('d_emissao')
+        self.d_validade = json.get('d_validade')
+        self.c_soli_tot = json.get('c_soli_tot')
+        self.c_soli_int = json.get('c_soli_int')
+        self.c_soli_fon = json.get('c_soli_fon')
+        self.c_licencia = json.get('c_licencia')
+        self.c_real_tot = json.get('c_real_tot')
+        self.c_real_int = json.get('c_real_int')
+        self.c_real_fon = json.get('c_real_fon')
+        self.exploracao = json.get('exploracao')
 
     def __json__(self, request):
         return {

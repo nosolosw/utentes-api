@@ -28,18 +28,22 @@ class Fonte(Base):
     @staticmethod
     def create_from_json(json):
         f = Fonte()
-        f.tipo_agua  = json.get('tipo_agua')
-        f.tipo_fonte = json.get('tipo_fonte')
-        f.lat_lon    = json.get('lat_lon')
-        f.d_dado     = json.get('d_dado')
-        f.c_soli     = json.get('c_soli')
-        f.c_max      = json.get('c_max')
-        f.c_real     = json.get('c_real')
-        f.contador   = json.get('contador')
-        f.metodo_est = json.get('metodo_est')
-        f.comentario = json.get('comentario')
-        f.exploracao = json.get('exploracao')
+        f.update_from_json(json)
         return f
+
+    def update_from_json(self, json):
+        self.tipo_agua  = json.get('tipo_agua')
+        self.tipo_fonte = json.get('tipo_fonte')
+        self.lat_lon    = json.get('lat_lon')
+        self.d_dado     = json.get('d_dado')
+        self.c_soli     = json.get('c_soli')
+        self.c_max      = json.get('c_max')
+        self.c_real     = json.get('c_real')
+        self.contador   = json.get('contador')
+        self.metodo_est = json.get('metodo_est')
+        self.comentario = json.get('comentario')
+        self.exploracao = json.get('exploracao')
+
 
     def __json__(self, request):
         return {

@@ -38,30 +38,26 @@ class Exploracao(Base):
 
     utente_rel = relationship(u'Utente')
 
-    @staticmethod
-    def create_from_json(body):
-        e = Exploracao()
-        mandatory  = [f for f in e.__table__.c if not f.nullable]
-        e.exp_id     = json.get('exp_id')
-        e.exp_name   = json.get('exp_name')
-        e.d_soli     = json.get('d_soli')
-        e.observacio = json.get('observacio')
-        e.loc_provin = json.get('loc_provin')
-        e.loc_distri = json.get('loc_distri')
-        e.loc_posto  = json.get('loc_posto')
-        e.loc_nucleo = json.get('loc_nucleo')
-        e.loc_endere = json.get('loc_endere')
-        e.loc_bacia  = json.get('loc_bacia')
-        e.loc_subaci = json.get('loc_subaci')
-        e.loc_rio    = json.get('loc_rio')
-        e.pagos      = json.get('pagos')
-        e.c_soli     = json.get('c_soli')
-        e.c_licencia = json.get('c_licencia')
-        e.c_real     = json.get('c_real')
-        e.c_estimado = json.get('c_estimado')
-        e.actividade = json.get('actividade')
-
-        geom = body.get('the_geom')
+    def update_from_json(self, body):
+        self.exp_id     = body.get('exp_id')
+        self.exp_name   = body.get('exp_name')
+        self.d_soli     = body.get('d_soli')
+        self.observacio = body.get('observacio')
+        self.loc_provin = body.get('loc_provin')
+        self.loc_distri = body.get('loc_distri')
+        self.loc_posto  = body.get('loc_posto')
+        self.loc_nucleo = body.get('loc_nucleo')
+        self.loc_endere = body.get('loc_endere')
+        self.loc_bacia  = body.get('loc_bacia')
+        self.loc_subaci = body.get('loc_subaci')
+        self.loc_rio    = body.get('loc_rio')
+        self.pagos      = body.get('pagos')
+        self.c_soli     = body.get('c_soli')
+        self.c_licencia = body.get('c_licencia')
+        self.c_real     = body.get('c_real')
+        self.c_estimado = body.get('c_estimado')
+        self.actividade = body.get('actividade')
+        geom = body.get('geometry')
         if geom:
             from geoalchemy2.elements import WKTElement
             from utentes.geomet import wkt
@@ -70,13 +66,38 @@ class Exploracao(Base):
         # e.utente     = json.get('utente')
         # e.utente_rel = json.get('utente')
 
-        e.fontes = e.fontes or []
+        self.fontes = self.fontes or []
         for f in body.get('fontes'):
-            e.fontes.append(Fonte.create_from_json(f))
-        e.licencias = []
-        for l in body.get('licencias'):
-            e.licencias.append(Licencia.create_from_json(l))
+            f_id = f.get('id')
+            if not f_id:
+                self.fontes.append(Fonte.create_from_json(f))
+            else:
+                for font in self.fontes:
+                    if (font.gid == f_id):
+                        font.update_from_json(f)
+                        break
+                else:
+                    raise 'this should not happen'
 
+        self.licencias = self.licencias or []
+        for l in body.get('licencias'):
+            l_id = f.get('id')
+            if not l_id:
+                self.licencias.append(Licencia.create_from_json(f))
+            else:
+                for lic in self.licencias:
+                    if (lic.gid == l_id):
+                        lic.update_from_json(l)
+                        break
+                else:
+                    raise 'this should not happen'
+
+    @staticmethod
+    def create_from_json(body):
+        e = Exploracao()
+        e.update_from_json(body)
+        # e.utente     = json.get('utente')
+        # e.utente_rel = json.get('utente')
         return e
 
     def __json__(self, request):

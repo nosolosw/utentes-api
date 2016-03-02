@@ -11,6 +11,8 @@ from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.base import badrequest_exception
 from utentes.lib.validator import Validator
 
+import logging
+log = logging.getLogger(__name__)
 
 @view_config(route_name='exploracaos',    request_method='GET', renderer='json')
 @view_config(route_name='exploracaos_id', request_method='GET', renderer='json')
@@ -45,10 +47,10 @@ def exploracaos_delete(request):
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         for f in e.fontes:
-            # setting cascade in the relatioship is not working
+            # setting cascade in the relationship is not working
             request.db.delete(f)
         for l in e.licencias:
-            # setting cascade in the relatioship is not working
+            # setting cascade in the relationship is not working
             request.db.delete(l)
         request.db.delete(e)
         request.db.commit()
@@ -59,21 +61,44 @@ def exploracaos_delete(request):
         })
     return {'gid': gid}
 
+
+@view_config(route_name='exploracaos_id', request_method='PUT', renderer='json')
+def exploracaos_update(request):
+    gid = request.matchdict['id']
+    if not gid:
+        raise badrequest_exception({
+            'error': 'gid es un campo necesario'
+        })
+
+    validate_entities(request.json_body)
+
+    try:
+        e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
+        e.update_from_json(request.json_body);
+        request.db.add(e)
+        request.db.commit()
+    except(MultipleResultsFound, NoResultFound):
+        raise badrequest_exception({
+            'error': 'El código no existe',
+            'gid': gid
+        })
+    except ValueError as ve:
+        log.error(ve)
+        raise badrequest_exception({'error':'body is not a valid json'})
+
+    return e
+
+
 @view_config(route_name='exploracaos', request_method='POST', renderer='json')
 def exploracaos_create(request):
     try:
         body = request.json_body
         exp_id = body.get('exp_id')
-    except (ValueError):
+    except ValueError as ve:
+        log.error(ve)
         raise badrequest_exception({'error':'body is not a valid json'})
 
-    validatorExploracao = Validator(EXPLORACAO_SCHEMA)
-    msgs = validatorExploracao.validate(body)
-    validatorUtente = Validator(UTENTE_SCHEMA)
-    msgs = msgs + validatorUtente.validate(body['utente'])
-    if len(msgs) > 0:
-        raise badrequest_exception({'error': msgs})
-
+    validate_entities(body)
     if not exp_id:
         raise badrequest_exception({'error':'exp_id es un campo obligatorio'})
 
@@ -90,3 +115,12 @@ def exploracaos_create(request):
     request.db.add(e)
     request.db.commit()
     return e
+
+
+def validate_entities(body):
+    validatorExploracao = Validator(EXPLORACAO_SCHEMA)
+    msgs = validatorExploracao.validate(body)
+    validatorUtente = Validator(UTENTE_SCHEMA)
+    msgs = msgs + validatorUtente.validate(body['utente'])
+    if len(msgs) > 0:
+        raise badrequest_exception({'error': msgs})
