@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy import Column, Integer, Text, text
-from .base import Base, PGSQL_SCHEMA_UTENTES
+from .base import Base, PGSQL_SCHEMA_DOMAINS
 
 class Domain(Base):
     __tablename__ = 'domains'
-    __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
+    __table_args__ = {u'schema': PGSQL_SCHEMA_DOMAINS}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.domains_gid_seq'::regclass)"))
-    category = Column(Text, nullable=False)
-    value = Column(Text, nullable=False)
-    alias = Column(Text)
-    ordering = Column(Integer)
-    parent = Column(Text)
+    category = Column(Text, nullable=False, primary_key=True)
+    key = Column(Text, nullable=False, primary_key=True)
+    value = Column(Text)
+    ordering = Column(Text)
+    parent = Column(Text, primary_key=True)
 
     def __json__(self, request):
         return {
             'category': self.category,
-            'text': self.value,
-            'alias': self.alias,
+            'text': self.key,
+            'alias': self.value,
             'order': self.ordering,
             'parent': self.parent
         }

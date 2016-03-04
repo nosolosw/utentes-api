@@ -3,6 +3,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 
 PGSQL_SCHEMA_UTENTES = 'utentes'
+PGSQL_SCHEMA_DOMAINS = 'domains'
 
 Base = declarative_base()
 
