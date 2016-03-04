@@ -84,14 +84,15 @@ class Exploracao(Base):
                     raise 'this should not happen'
 
         self.licencias = self.licencias or []
-        for l in body.get('licencias'):
-            l_id = f.get('id')
+        for new_lic in body.get('licencias'):
+            l_id = new_lic.get('id')
             if not l_id:
-                self.licencias.append(Licencia.create_from_json(f))
+                new_lic['lic_nro'] = self.exp_id + '-{:03d}'.format(len(self.licencias)+1)
+                self.licencias.append(Licencia.create_from_json(new_lic))
             else:
                 for lic in self.licencias:
                     if (lic.gid == l_id):
-                        lic.update_from_json(l)
+                        lic.update_from_json(new_lic)
                         break
                 else:
                     raise 'this should not happen'
