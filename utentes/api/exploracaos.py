@@ -8,6 +8,7 @@ from utentes.models.utente import Utente
 from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.exploracao import Exploracao
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
+from utentes.models.licencia_schema import LICENCIA_SCHEMA
 from utentes.models.base import badrequest_exception
 from utentes.lib.validator import Validator
 
@@ -119,9 +120,19 @@ def exploracaos_create(request):
 
 
 def validate_entities(body):
+    import re
     validatorExploracao = Validator(EXPLORACAO_SCHEMA)
+    validatorExploracao.add_rule('EXP_ID_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}$', v))})
     msgs = validatorExploracao.validate(body)
+
+    validatorLicencia = Validator(LICENCIA_SCHEMA)
+    validatorLicencia.add_rule('LIC_NRO_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}-\d{3}$', v))})
+    for l in body.get('licencias'):
+        msgs = msgs + validatorLicencia.validate(l)
+
+
     validatorUtente = Validator(UTENTE_SCHEMA)
     msgs = msgs + validatorUtente.validate(body['utente'])
+
     if len(msgs) > 0:
         raise badrequest_exception({'error': msgs})
