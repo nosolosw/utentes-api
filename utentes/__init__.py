@@ -48,16 +48,21 @@ def main(global_config, **settings):
 
     config.add_static_view('static', 'static', cache_max_age=3600)
 
-    # GET    /exploracaos      = Return all exploracaos
-    # GET    /exploracaos/{id} = Return individual exploracao
-    # POST   /exploracaos      = Create a new exploracao. exp_id contained in the body
-    # PUT    /exploracaos/{id} = Update exploracao
-    # DELETE /exploracaos/{id} = Delete exploracao
+    # GET    /api/exploracaos      = Return all exploracaos
+    # POST   /api/exploracaos      = Create a new exploracao. 'exp_id' contained in the body
+    # GET    /api/exploracaos/{id} = Return individual exploracao
+    # PUT    /api/exploracaos/{id} = Update exploracao
+    # DELETE /api/exploracaos/{id} = Delete exploracao
     config.add_route('exploracaos',     '/api/exploracaos')
     config.add_route('exploracaos_id',  '/api/exploracaos/{id}')
 
-    # GET /utentes  = Return all utentes
+    # GET    /api/utentes      = Return all utentes
+    # POST   /api/utentes      = Create a new utente. 'nome' contained in the body
+    # GET    /api/utentes/{id} = Return individual utente
+    # PUT    /api/utentes/{id} = Update utente
+    # DELETE /api/utentes/{id} = Delete utente
     config.add_route('utentes', '/api/utentes')
+    config.add_route('utentes_id', '/api/utentes/{id}')
 
     # GET /domains = Return all domains (utentes included)
     config.add_route('domains', '/api/domains')
