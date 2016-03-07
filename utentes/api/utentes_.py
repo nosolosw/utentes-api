@@ -2,7 +2,9 @@
 
 from pyramid.view import view_config
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from utentes.lib.validator import Validator
 from utentes.models.base import badrequest_exception
+from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.utente import Utente
 
 
@@ -51,6 +53,8 @@ def utentes_update(request):
             'error': 'gid es un campo necesario'
         })
 
+    validate_entities(request.json_body)
+
     try:
         e = request.db.query(Utente).filter(Utente.gid == gid).one()
         e.update_from_json(request.json_body);
@@ -76,6 +80,7 @@ def utentes_create(request):
         log.error(ve)
         raise badrequest_exception({'error':'body is not a valid json'})
 
+    validate_entities(body)
     if not nome:
         raise badrequest_exception({'error':'nome es un campo obligatorio'})
 
@@ -87,3 +92,8 @@ def utentes_create(request):
     request.db.add(u)
     request.db.commit()
     return u
+
+def validate_entities(body):
+    msgs = Validator(UTENTE_SCHEMA).validate(body)
+    if len(msgs) > 0:
+        raise badrequest_exception({'error': msgs})
