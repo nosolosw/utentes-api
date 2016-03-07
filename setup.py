@@ -11,6 +11,7 @@ requires = [
     'SQLAlchemy==1.0.11',
     'geoalchemy2==0.2.6',
     # 'shapely==1.5.13',
+    'python-dateutil==2.5.0',
     'transaction',
     'zope.sqlalchemy',
     'waitress',
