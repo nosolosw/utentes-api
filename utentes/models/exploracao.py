@@ -42,7 +42,7 @@ class Exploracao(Base):
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
     utente     = Column(ForeignKey(u'utentes.utentes.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
-    utente_rel = relationship(u'Utente')
+
 
     def update_from_json(self, body):
         self.exp_id     = body.get('exp_id')

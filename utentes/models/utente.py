@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy import Column, Integer, Text, text
-
+from sqlalchemy.orm import relationship
 from .base import Base, PGSQL_SCHEMA_UTENTES
 
 class Utente(Base):
@@ -19,6 +19,10 @@ class Utente(Base):
     loc_posto  = Column(Text)
     loc_nucleo = Column(Text)
     observacio = Column(Text)
+
+    exploracaos = relationship('Exploracao',
+                            backref='utente_rel',
+                            passive_deletes=True)
 
     @staticmethod
     def create_from_json(json):
