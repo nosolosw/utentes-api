@@ -27,18 +27,31 @@ class Utente(Base):
     @staticmethod
     def create_from_json(json):
         u = Utente()
-        u.nome       = json.get('nome')
-        u.nuit       = json.get('nuit')
-        u.entidade   = json.get('entidade')
-        u.reg_comerc = json.get('reg_comerc')
-        u.loc_provin = json.get('loc_provin')
-        u.loc_distri = json.get('loc_distri')
-        u.loc_posto  = json.get('loc_posto')
-        u.loc_nucleo = json.get('loc_nucleo')
-        u.observacio = json.get('observacio')
+        u.update_from_json(json)
         return u
 
+    def update_from_json(self, json):
+        self.nome       = json.get('nome')
+        self.nuit       = json.get('nuit')
+        self.entidade   = json.get('entidade')
+        self.reg_comerc = json.get('reg_comerc')
+        self.reg_zona = json.get('reg_zona')
+        self.loc_provin = json.get('loc_provin')
+        self.loc_distri = json.get('loc_distri')
+        self.loc_posto  = json.get('loc_posto')
+        self.loc_nucleo = json.get('loc_nucleo')
+        self.observacio = json.get('observacio')
+
     def __json__(self, request):
+        exploracaos = []
+        for e in self.exploracaos:
+            exploracaos.append({
+                'gid': e.gid,
+                'exp_name': e.exp_name,
+                'exp_id': e.exp_id,
+                'actividade': e.actividade
+            })
+
         return {
             'id':         self.gid,
             'nome':       self.nome,
@@ -51,4 +64,5 @@ class Utente(Base):
             'loc_posto':  self.loc_posto,
             'loc_nucleo': self.loc_nucleo,
             'observacio': self.observacio,
+            'exploracaos': exploracaos
             }
