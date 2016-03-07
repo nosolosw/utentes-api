@@ -19,7 +19,7 @@ class Fonte(Base):
     c_real     = Column(Numeric(10, 2))
     contador   = Column(Boolean)
     metodo_est = Column(Text)
-    comentario = Column(Text)
+    observacio = Column(Text)
     exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
     exploracao_rel = relationship(u'Exploracao',
@@ -41,7 +41,7 @@ class Fonte(Base):
         self.c_real     = json.get('c_real')
         self.contador   = json.get('contador')
         self.metodo_est = json.get('metodo_est')
-        self.comentario = json.get('comentario')
+        self.observacio = json.get('observacio')
         self.exploracao = json.get('exploracao')
 
 
@@ -57,6 +57,6 @@ class Fonte(Base):
             'c_real':     self.c_real,
             'contador':   self.contador,
             'metodo_est': self.metodo_est,
-            'comentario': self.comentario,
+            'observacio': self.observacio,
             'exploracao': self.exploracao,
         }
