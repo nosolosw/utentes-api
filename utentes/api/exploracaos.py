@@ -75,7 +75,10 @@ def exploracaos_update(request):
 
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
-        e.update_from_json(request.json_body);
+        u = e.utente_rel
+        u.update_from_json(request.json_body['utente'])
+        request.db.add(u)
+        e.update_from_json(request.json_body)
         request.db.add(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
