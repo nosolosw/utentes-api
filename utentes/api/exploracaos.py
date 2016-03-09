@@ -26,6 +26,7 @@ def exploracaos_get(request):
         try:
             return request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         except(MultipleResultsFound, NoResultFound):
+            # TODO translate msg
             raise badrequest_exception({
                 'error': 'El código no existe',
                 'gid': gid
@@ -42,20 +43,22 @@ def exploracaos_get(request):
 def exploracaos_delete(request):
     gid = request.matchdict['id']
     if not gid:
+        # TODO translate msg
         raise badrequest_exception({
             'error': 'gid es un campo necesario'
         })
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         for f in e.fontes:
-            # setting cascade in the relationship is not working
+            # TODO review - setting cascade in the relationship is not working
             request.db.delete(f)
         for l in e.licencias:
-            # setting cascade in the relationship is not working
+            # TODO review - setting cascade in the relationship is not working
             request.db.delete(l)
         request.db.delete(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
+        # TODO translate msg
         raise badrequest_exception({
             'error': 'El código no existe',
             'gid': gid
@@ -67,11 +70,14 @@ def exploracaos_delete(request):
 def exploracaos_update(request):
     gid = request.matchdict['id']
     if not gid:
+        # TODO translate msg
         raise badrequest_exception({
             'error': 'gid es un campo necesario'
         })
 
-    validate_entities(request.json_body)
+    msgs = validate_entities(request.json_body)
+    if len(msgs) > 0:
+        raise badrequest_exception({'error': msgs})
 
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
@@ -82,12 +88,14 @@ def exploracaos_update(request):
         request.db.add(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
+        # TODO translate msg
         raise badrequest_exception({
             'error': 'El código no existe',
             'gid': gid
         })
     except ValueError as ve:
         log.error(ve)
+        # TODO translate msg
         raise badrequest_exception({'error':'body is not a valid json'})
 
     return e
@@ -100,12 +108,18 @@ def exploracaos_create(request):
         exp_id = body.get('exp_id')
     except ValueError as ve:
         log.error(ve)
+        # TODO translate msg
         raise badrequest_exception({'error':'body is not a valid json'})
 
-    validate_entities(body)
+    msgs = validate_entities(body)
+    if len(msgs) > 0:
+        raise badrequest_exception({'error': msgs})
+
+    # TODO is this not covered by the schema rules?
     if not exp_id:
         raise badrequest_exception({'error':'exp_id es un campo obligatorio'})
 
+    # TODO translate msg
     e = request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
     if e:
         raise badrequest_exception({'error':'La exploracao ya existe'})
@@ -137,5 +151,4 @@ def validate_entities(body):
     validatorUtente = Validator(UTENTE_SCHEMA)
     msgs = msgs + validatorUtente.validate(body['utente'])
 
-    if len(msgs) > 0:
-        raise badrequest_exception({'error': msgs})
+    return msgs
