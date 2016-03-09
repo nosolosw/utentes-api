@@ -22,9 +22,6 @@ class Fonte(Base):
     observacio = Column(Text)
     exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
-    exploracao_rel = relationship(u'Exploracao',
-                               backref='fontes')
-
     @staticmethod
     def create_from_json(json):
         f = Fonte()
@@ -42,7 +39,7 @@ class Fonte(Base):
         self.contador   = json.get('contador')
         self.metodo_est = json.get('metodo_est')
         self.observacio = json.get('observacio')
-        self.exploracao = json.get('exploracao')
+        # self.exploracao = json.get('exploracao')
 
 
     def __json__(self, request):

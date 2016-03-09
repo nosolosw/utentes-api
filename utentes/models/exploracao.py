@@ -42,7 +42,14 @@ class Exploracao(Base):
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
     utente     = Column(ForeignKey(u'utentes.utentes.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
-
+    licencias = relationship(u'Licencia',
+                                cascade="all, delete-orphan",
+                                # backref='exploracao_rel',
+                                passive_deletes=True)
+    fontes = relationship(u'Fonte',
+                            cascade="all, delete-orphan",
+                            # backref='exploracao_rel',
+                            passive_deletes=True)
 
     def update_from_json(self, body):
         self.exp_id     = body.get('exp_id')
@@ -63,6 +70,7 @@ class Exploracao(Base):
         self.c_real     = body.get('c_real')
         self.c_estimado = body.get('c_estimado')
         self.actividade = body.get('actividade')
+        # self.utente   = json.get('utente')
         geom = body.get('geometry')
         if geom:
             from geoalchemy2.elements import WKTElement
@@ -101,8 +109,6 @@ class Exploracao(Base):
     def create_from_json(body):
         e = Exploracao()
         e.update_from_json(body)
-        # e.utente     = json.get('utente')
-        # e.utente_rel = json.get('utente')
         return e
 
     def __json__(self, request):

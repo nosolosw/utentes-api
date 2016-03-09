@@ -25,9 +25,6 @@ class Licencia(Base):
     c_real_fon = Column(Numeric(10, 2))
     exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
-    exploracao_rel = relationship(u'Exploracao',
-                               backref='licencias')
-
     @staticmethod
     def create_from_json(json):
         l = Licencia()
@@ -49,7 +46,7 @@ class Licencia(Base):
         self.c_real_tot = json.get('c_real_tot')
         self.c_real_int = json.get('c_real_int')
         self.c_real_fon = json.get('c_real_fon')
-        self.exploracao = json.get('exploracao')
+        # self.exploracao = json.get('exploracao')
 
     def __json__(self, request):
         return {
