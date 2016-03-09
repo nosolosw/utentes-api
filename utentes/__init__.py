@@ -22,9 +22,11 @@ class RequestWithDB(Request):
         request.db.close()
 
 
+# TODO send dates in iso ISO8601 format
 def date_adapter(obj, request):
     return obj.strftime('%d/%m/%Y') if obj else ''
 
+# TODO send numbers as numbers, not strings
 def decimal_adapter(obj, request):
     return str(obj) if obj or obj == 0 else ''
 
