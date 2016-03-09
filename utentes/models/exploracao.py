@@ -81,37 +81,22 @@ class Exploracao(Base):
         self.fontes = self.fontes or []
         self._remove_childs_not_in_json(self.fontes, body.get('fontes'))
 
-        for f in body.get('fontes'):
-            f_id = f.get('id')
-            if not f_id:
-                self.fontes.append(Fonte.create_from_json(f))
+        for new_font in body.get('fontes'):
+            if not new_font.get('id'):
+                self.fontes.append(Fonte.create_from_json(new_font))
             else:
-                for font in self.fontes:
-                    if (font.gid == f_id):
-                        font.update_from_json(f)
-                        break
-                else:
-                    raise 'this should not happen'
+                self._update_child_from_json(self.fontes, new_font)
 
         self.licencias = self.licencias or []
         self._remove_childs_not_in_json(self.licencias, body.get('licencias'))
 
 
         for new_lic in body.get('licencias'):
-            l_id = new_lic.get('id')
-            if not l_id:
-                # Create new licenses
+            if not new_lic.get('id'):
                 new_lic['lic_nro'] = self.exp_id + '-{:03d}'.format(len(self.licencias)+1)
                 self.licencias.append(Licencia.create_from_json(new_lic))
             else:
-                for lic in self.licencias:
-                    if (lic.gid == l_id):
-                        # Update licenses
-                        lic.update_from_json(new_lic)
-                        break
-                else:
-                    raise 'this should not happen'
-
+                self._update_child_from_json(self.licencias, new_lic)
 
 
     def _remove_childs_not_in_json(self, actual_childs, json):
@@ -121,6 +106,18 @@ class Exploracao(Base):
                     break;
             else:
                 actual_childs.remove(child)
+
+    def _update_child_from_json(self, actual_childs, json_updated_child):
+        for child in actual_childs:
+            print child.lic_nro
+            print child.gid
+            print json_updated_child.get('id')
+            if (child.gid == json_updated_child.get('id')):
+                print 'GOING TO UPDATE'
+                child.update_from_json(json_updated_child)
+                break
+        else:
+            raise 'this should not happen'
 
     @staticmethod
     def create_from_json(body):
