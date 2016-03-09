@@ -43,15 +43,24 @@ class IsNumeric():
         return False
 
 
+class IsBoolean():
+    '''
+    Value is a proper boolean.
+    '''
+    def fails(self, value):
+        return value not in [True, False, None]
+
+
 class Validator():
 
     def __init__(self, schemaValidateFrom):
         self.messages = []
         self.schema = schemaValidateFrom
         self.rules = {
-            'NOT_NULL': IsNotNull(),
-            'IS_DATE':  IsDate(),
-            'IS_NUMERIC': IsNumeric()
+            'NOT_NULL':   IsNotNull(),
+            'IS_DATE':    IsDate(),
+            'IS_NUMERIC': IsNumeric(),
+            'IS_BOOLEAN': IsBoolean(),
         }
 
     def validate(self, model):

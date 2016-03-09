@@ -52,4 +52,8 @@ EXPLORACAO_SCHEMA = [{
   'fieldname': 'utente',
   'message':   'A exploracão ten que ter asignado un utente',
   'rules':     ['NOT_NULL']
+}, {
+  'fieldname': 'pagos',
+  'message':   'Pagos não tem o formato correcto',
+  'rules':     ['IS_BOOLEAN']
 }];
