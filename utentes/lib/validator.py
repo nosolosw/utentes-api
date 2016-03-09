@@ -20,7 +20,7 @@ class IsDate():
         if not value:
             return False
         # datetime.datetime is child of datetime.date
-        if instanceof(value, datetime.date):
+        if isinstance(value, datetime.date):
             return False
         try:
             dateutil.parser.parse(isohoy)
