@@ -109,9 +109,6 @@ class Exploracao(Base):
 
     def _update_child_from_json(self, actual_childs, json_updated_child):
         for child in actual_childs:
-            print child.lic_nro
-            print child.gid
-            print json_updated_child.get('id')
             if (child.gid == json_updated_child.get('id')):
                 print 'GOING TO UPDATE'
                 child.update_from_json(json_updated_child)
