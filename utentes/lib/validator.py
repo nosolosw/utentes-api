@@ -19,11 +19,8 @@ class IsDate():
     def fails(self, value):
         if not value:
             return False
-        # datetime.datetime is child of datetime.date
-        if isinstance(value, datetime.date):
-            return False
         try:
-            dateutil.parser.parse(isohoy)
+            dateutil.parser.parse(value)
         except:
             return True
 
