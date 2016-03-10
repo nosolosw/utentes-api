@@ -81,10 +81,14 @@ def exploracaos_update(request):
 
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
-        u = e.utente_rel
-        u.update_from_json(request.json_body['utente'])
-        request.db.add(u)
         e.update_from_json(request.json_body)
+
+        # TODO exploracao should take responsibility to update utente
+        u_filter = Utente.nome == request.json_body.get('utente').get('nome')
+        u = request.db.query(Utente).filter(u_filter).one()
+        e.utente_rel = u
+        # TODO end
+
         request.db.add(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
