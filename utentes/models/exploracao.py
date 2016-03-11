@@ -74,7 +74,7 @@ class Exploracao(Base):
         geom = body.get('geometry')
         if geom:
             from geoalchemy2.elements import WKTElement
-            from utentes.geomet import wkt
+            from utentes.lib.geomet import wkt
             self.the_geom = WKTElement(wkt.dumps(geom), srid=4326)
             self.the_geom = self.the_geom.ST_Multi().ST_Transform(32737)
 

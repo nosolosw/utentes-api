@@ -10,7 +10,7 @@ from utentes.models.exploracao import Exploracao
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.licencia_schema import LICENCIA_SCHEMA
 from utentes.models.base import badrequest_exception
-from utentes.lib.validator import Validator
+from utentes.lib.schema_validator.validator import Validator
 
 import logging
 log = logging.getLogger(__name__)

@@ -2,7 +2,7 @@
 
 from pyramid.view import view_config
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
-from utentes.lib.validator import Validator
+from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import badrequest_exception
 from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.utente import Utente
