@@ -3,7 +3,9 @@
 from sqlalchemy import Column, Date, ForeignKey, Integer, Numeric, Text, text
 from sqlalchemy.orm import relationship
 
-from .base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.lib.formatter.formatter import to_decimal, to_date
+from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
+
 
 class Licencia(Base):
     __tablename__ = 'licencias'
@@ -32,21 +34,30 @@ class Licencia(Base):
         return l
 
     def update_from_json(self, json):
+        self.gid        = json.get('id') or None
         self.lic_nro    = json.get('lic_nro')
         self.lic_tipo   = json.get('lic_tipo')
         self.finalidade = json.get('finalidade')
         self.cadastro   = json.get('cadastro')
         self.estado     = json.get('estado')
-        self.d_emissao  = json.get('d_emissao')
-        self.d_validade = json.get('d_validade')
-        self.c_soli_tot = json.get('c_soli_tot')
-        self.c_soli_int = json.get('c_soli_int')
-        self.c_soli_fon = json.get('c_soli_fon')
-        self.c_licencia = json.get('c_licencia')
-        self.c_real_tot = json.get('c_real_tot')
-        self.c_real_int = json.get('c_real_int')
-        self.c_real_fon = json.get('c_real_fon')
+        self.d_emissao  = to_date(json.get('d_emissao'))
+        self.d_validade = to_date(json.get('d_validade'))
+        self.c_soli_tot = to_decimal(json.get('c_soli_tot'))
+        self.c_soli_int = to_decimal(json.get('c_soli_int'))
+        self.c_soli_fon = to_decimal(json.get('c_soli_fon'))
+        self.c_licencia = to_decimal(json.get('c_licencia'))
+        self.c_real_tot = to_decimal(json.get('c_real_tot'))
+        self.c_real_int = to_decimal(json.get('c_real_int'))
+        self.c_real_fon = to_decimal(json.get('c_real_fon'))
         # self.exploracao = json.get('exploracao')
+
+    # python uses this method to compare objects
+    # for example, in exploracao.update_array
+    def __eq__(self, other):
+        if (self.gid is None) or (other.gid is None):
+            # shall we in this case compare all attributes?
+            return False
+        return self.gid == other.gid
 
     def __json__(self, request):
         return {

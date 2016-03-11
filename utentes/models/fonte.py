@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Boolean, Column, Date, ForeignKey, Integer, Numeric, Text, text
+from sqlalchemy import Boolean, Column, Date, Integer, Numeric, Text
+from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship
 
-from .base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.lib.formatter.formatter import to_decimal, to_date
+from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
+
 
 class Fonte(Base):
     __tablename__ = 'fontes'
@@ -29,18 +32,26 @@ class Fonte(Base):
         return f
 
     def update_from_json(self, json):
+        self.gid        = json.get('id') or None
         self.tipo_agua  = json.get('tipo_agua')
         self.tipo_fonte = json.get('tipo_fonte')
         self.lat_lon    = json.get('lat_lon')
-        self.d_dado     = json.get('d_dado')
-        self.c_soli     = json.get('c_soli')
-        self.c_max      = json.get('c_max')
-        self.c_real     = json.get('c_real')
+        self.d_dado     = to_date(json.get('d_dado'))
+        self.c_soli     = to_decimal(json.get('c_soli'))
+        self.c_max      = to_decimal(json.get('c_max'))
+        self.c_real     = to_decimal(json.get('c_real'))
         self.contador   = json.get('contador')
         self.metodo_est = json.get('metodo_est')
         self.observacio = json.get('observacio')
         # self.exploracao = json.get('exploracao')
 
+    # python uses this method to compare objects
+    # for example, in exploracao.update_array
+    def __eq__(self, other):
+        if (self.gid is None) or (other.gid is None):
+            # shall we in this case compare all attributes?
+            return False
+        return self.gid == other.gid
 
     def __json__(self, request):
         return {

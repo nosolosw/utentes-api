@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from pyramid.view import view_config
+
 from utentes.models.utente import Utente
 from utentes.models.domain import Domain
+
 
 @view_config(
     route_name='domains',

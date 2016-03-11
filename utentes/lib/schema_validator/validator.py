@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import dateutil.parser
+
 
 class IsNotNull():
 
@@ -26,9 +26,11 @@ class IsDate():
 
         return False
 
+
 class IsNumeric():
     '''
-    The received value is the representation of a number. So '5' is considered valid
+    The received value is the representation of a number.
+    So '5' is considered valid
     '''
     def fails(self, value):
         if not value:

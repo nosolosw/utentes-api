@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date, Numeric, Text, text
+from sqlalchemy import Boolean, Column, Integer, Date, Numeric, Text
+from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
 from geoalchemy2.functions import GenericFunction
 
+from utentes.lib.formatter.formatter import to_decimal, to_date
+from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
 
-from .base import Base, PGSQL_SCHEMA_UTENTES
 
 class ST_Multi(GenericFunction):
     name = 'ST_Multi'
     type = Geometry
+
 
 class Exploracao(Base):
     __tablename__ = 'exploracaos'
@@ -22,8 +25,9 @@ class Exploracao(Base):
     gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.exploracaos_gid_seq'::regclass)"))
     exp_id     = Column(Text, nullable=False, unique=True)
     exp_name   = Column(Text, nullable=False)
-    observacio = Column(Text)
+    pagos      = Column(Boolean)
     d_soli     = Column(Date)
+    observacio = Column(Text)
     loc_provin = Column(Text, nullable=False)
     loc_distri = Column(Text, nullable=False)
     loc_posto  = Column(Text, nullable=False)
@@ -32,7 +36,6 @@ class Exploracao(Base):
     loc_bacia  = Column(Text)
     loc_subaci = Column(Text)
     loc_rio    = Column(Text)
-    pagos      = Column(Boolean)
     c_soli     = Column(Numeric(10, 2))
     c_licencia = Column(Numeric(10, 2))
     c_real     = Column(Numeric(10, 2))
@@ -41,86 +44,101 @@ class Exploracao(Base):
     area       = Column(Numeric(10, 2))
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
     utente     = Column(ForeignKey(u'utentes.utentes.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
+    licencias  = relationship(u'Licencia',
+                              cascade="all, delete-orphan",
+                              # backref='exploracao_rel',
+                              passive_deletes=True)
+    fontes     = relationship(u'Fonte',
+                              cascade="all, delete-orphan",
+                              # backref='exploracao_rel',
+                              passive_deletes=True)
 
-    licencias = relationship(u'Licencia',
-                                cascade="all, delete-orphan",
-                                # backref='exploracao_rel',
-                                passive_deletes=True)
-    fontes = relationship(u'Fonte',
-                            cascade="all, delete-orphan",
-                            # backref='exploracao_rel',
-                            passive_deletes=True)
+    def update_geom(self, new):
+        the_geom = None
+        from geoalchemy2.elements import WKTElement
+        from utentes.lib.geomet import wkt
+        the_geom = WKTElement(wkt.dumps(new), srid=4326)
+        the_geom = the_geom.ST_Multi().ST_Transform(32737)
+        return the_geom
 
-    def update_from_json(self, body):
-        self.exp_id     = body.get('exp_id')
-        self.exp_name   = body.get('exp_name')
-        self.d_soli     = body.get('d_soli')
-        self.observacio = body.get('observacio')
-        self.loc_provin = body.get('loc_provin')
-        self.loc_distri = body.get('loc_distri')
-        self.loc_posto  = body.get('loc_posto')
-        self.loc_nucleo = body.get('loc_nucleo')
-        self.loc_endere = body.get('loc_endere')
-        self.loc_bacia  = body.get('loc_bacia')
-        self.loc_subaci = body.get('loc_subaci')
-        self.loc_rio    = body.get('loc_rio')
-        self.pagos      = body.get('pagos')
-        self.c_soli     = body.get('c_soli')
-        self.c_licencia = body.get('c_licencia')
-        self.c_real     = body.get('c_real')
-        self.c_estimado = body.get('c_estimado')
-        self.actividade = body.get('actividade')
-        # self.utente   = json.get('utente')
-        geom = body.get('geometry')
-        if geom:
-            from geoalchemy2.elements import WKTElement
-            from utentes.lib.geomet import wkt
-            self.the_geom = WKTElement(wkt.dumps(geom), srid=4326)
-            self.the_geom = self.the_geom.ST_Multi().ST_Transform(32737)
+    def update_array(self, olds, news_json, factory):
+        news = []
+        update_dict = {}
+        for n in news_json:
+            new = factory(n)
+            new.exploracao = self.gid
+            news.append(new)
+            if n.get('id'):
+               update_dict[n.get('id')] = n
 
-        self.fontes = self.fontes or []
-        self._remove_childs_not_in_json(self.fontes, body.get('fontes'))
+        # this needs objects to declare when they are equals
+        # by declaring the method __eq__
+        to_remove = [el for el in olds if el not in news]
+        to_update = [el for el in olds if el in news]
+        to_append = [el for el in news if el not in olds]
 
-        for new_font in body.get('fontes'):
-            if not new_font.get('id'):
-                self.fontes.append(Fonte.create_from_json(new_font))
-            else:
-                self._update_child_from_json(self.fontes, new_font)
+        for old in to_remove:
+            olds.remove(old)
 
-        self.licencias = self.licencias or []
-        self._remove_childs_not_in_json(self.licencias, body.get('licencias'))
+        for old in to_update:
+            new = update_dict[old.gid]
+            if new:
+                old.update_from_json(new)
 
+        for new in to_append:
+            olds.append(new)
 
-        for new_lic in body.get('licencias'):
-            if not new_lic.get('id'):
-                new_lic['lic_nro'] = self.exp_id + '-{:03d}'.format(len(self.licencias)+1)
-                self.licencias.append(Licencia.create_from_json(new_lic))
-            else:
-                self._update_child_from_json(self.licencias, new_lic)
+    def update_from_json(self, json, lic_nro_sequence):
+        self.gid        = json.get('id') or None
+        self.exp_id     = json.get('exp_id')
+        self.exp_name   = json.get('exp_name')
+        self.pagos      = json.get('pagos')
+        self.d_soli     = to_date(json.get('d_soli'))
+        self.observacio = json.get('observacio')
+        self.loc_provin = json.get('loc_provin')
+        self.loc_distri = json.get('loc_distri')
+        self.loc_posto  = json.get('loc_posto')
+        self.loc_nucleo = json.get('loc_nucleo')
+        self.loc_endere = json.get('loc_endere')
+        self.loc_bacia  = json.get('loc_bacia')
+        self.loc_subaci = json.get('loc_subaci')
+        self.loc_rio    = json.get('loc_rio')
+        self.c_soli     = to_decimal(json.get('c_soli'))
+        self.c_licencia = to_decimal(json.get('c_licencia'))
+        self.c_real     = to_decimal(json.get('c_real'))
+        self.c_estimado = to_decimal(json.get('c_estimado'))
+        self.actividade = json.get('actividade')
+        g = json.get('geometry')
+        if g:
+            self.the_geom = self.update_geom(g)
 
+        # update relationships
+        self.update_array(self.fontes,
+                          json.get('fontes'),
+                          Fonte.create_from_json)
 
-    def _remove_childs_not_in_json(self, actual_childs, json):
-        for child in list(actual_childs):
-            for new_child in json:
-                if  child.gid == new_child.get('id'):
-                    break;
-            else:
-                actual_childs.remove(child)
-
-    def _update_child_from_json(self, actual_childs, json_updated_child):
-        for child in actual_childs:
-            if (child.gid == json_updated_child.get('id')):
-                print 'GOING TO UPDATE'
-                child.update_from_json(json_updated_child)
-                break
-        else:
-            raise 'this should not happen'
+        self.update_array(self.licencias,
+                          json.get('licencias'),
+                          Licencia.create_from_json)
+        for licencia in self.licencias:
+            if not licencia.lic_nro:
+                licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)
+                lic_nro_sequence += 1
 
     @staticmethod
     def create_from_json(body):
         e = Exploracao()
-        e.update_from_json(body)
+        # let lic_nro start by 001
+        e.update_from_json(body, 1)
         return e
+
+    # python uses this method to compare objects
+    # for example, in exploracao.update_array
+    def __eq__(self, other):
+        if (self.gid is None) or (other.gid is None):
+            # shall we in this case compare all attributes?
+            return False
+        return self.gid == other.gid
 
     def __json__(self, request):
         the_geom = None
@@ -133,6 +151,7 @@ class Exploracao(Base):
                 'id':         self.gid,
                 'exp_id':     self.exp_id,
                 'exp_name':   self.exp_name,
+                'pagos':      self.pagos,
                 'd_soli':     self.d_soli,
                 'observacio': self.observacio,
                 'loc_provin': self.loc_provin,
@@ -143,17 +162,27 @@ class Exploracao(Base):
                 'loc_bacia':  self.loc_bacia,
                 'loc_subaci': self.loc_subaci,
                 'loc_rio':    self.loc_rio,
-                'pagos':      self.pagos,
                 'c_soli':     self.c_soli,
                 'c_licencia': self.c_licencia,
                 'c_real':     self.c_real,
                 'c_estimado': self.c_estimado,
                 'actividade': self.actividade,
-                #'utente':     self.utente,
                 'area':       self.area,
-                'utente':     self.utente_rel,
                 'fontes':     self.fontes,
                 'licencias':  self.licencias,
+                'utente':{
+                    'id':          self.utente_rel.gid,
+                    'nome':        self.utente_rel.nome,
+                    'nuit':        self.utente_rel.nuit,
+                    'entidade':    self.utente_rel.entidade,
+                    'reg_comerc':  self.utente_rel.reg_comerc,
+                    'reg_zona':    self.utente_rel.reg_zona,
+                    'loc_provin':  self.utente_rel.loc_provin,
+                    'loc_distri':  self.utente_rel.loc_distri,
+                    'loc_posto':   self.utente_rel.loc_posto,
+                    'loc_nucleo':  self.utente_rel.loc_nucleo,
+                    'observacio':  self.utente_rel.observacio,
+                },
             },
             'geometry': the_geom
         }

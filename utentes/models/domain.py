@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy import Column, Integer, Text, text
+
 from .base import Base, PGSQL_SCHEMA_DOMAINS
+
 
 class Domain(Base):
     __tablename__ = 'domains'
@@ -16,8 +18,8 @@ class Domain(Base):
     def __json__(self, request):
         return {
             'category': self.category,
-            'text': self.key,
-            'alias': self.value,
-            'order': self.ordering,
-            'parent': self.parent
+            'text':     self.key,
+            'alias':    self.value,
+            'order':    self.ordering,
+            'parent':   self.parent
         }
