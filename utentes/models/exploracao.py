@@ -44,11 +44,16 @@ class Exploracao(Base):
     area       = Column(Numeric(10, 2))
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
     utente     = Column(ForeignKey(u'utentes.utentes.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
+
     licencias  = relationship(u'Licencia',
                               cascade="all, delete-orphan",
                               # backref='exploracao_rel',
                               passive_deletes=True)
     fontes     = relationship(u'Fonte',
+                              cascade="all, delete-orphan",
+                              # backref='exploracao_rel',
+                              passive_deletes=True)
+    actividades = relationship(u'Actividade',
                               cascade="all, delete-orphan",
                               # backref='exploracao_rel',
                               passive_deletes=True)
@@ -125,6 +130,7 @@ class Exploracao(Base):
                 licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)
                 lic_nro_sequence += 1
 
+
     @staticmethod
     def create_from_json(body):
         e = Exploracao()
@@ -166,7 +172,8 @@ class Exploracao(Base):
                 'c_licencia': self.c_licencia,
                 'c_real':     self.c_real,
                 'c_estimado': self.c_estimado,
-                'actividade': self.actividade,
+                'actividades': self.actividades,
+                #'utente':     self.utente,
                 'area':       self.area,
                 'fontes':     self.fontes,
                 'licencias':  self.licencias,
