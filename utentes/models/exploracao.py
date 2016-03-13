@@ -40,7 +40,6 @@ class Exploracao(Base):
     c_licencia = Column(Numeric(10, 2))
     c_real     = Column(Numeric(10, 2))
     c_estimado = Column(Numeric(10, 2))
-    actividade = Column(Text)
     area       = Column(Numeric(10, 2))
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
     utente     = Column(ForeignKey(u'utentes.utentes.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)

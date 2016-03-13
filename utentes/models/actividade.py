@@ -19,7 +19,9 @@ class Actividade(Base):
     }
 
     def __json__(self, request):
-        return {c: getattr(self, c) for c in self.__table__.columns.keys()}
+        json = {c: getattr(self, c) for c in self.__table__.columns.keys()}
+        json['tipo'] = self.tipo
+        return json
 
 
 class ActividadesProduccaoEnergia(Actividade):
