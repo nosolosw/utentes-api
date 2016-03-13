@@ -50,12 +50,6 @@ def exploracaos_delete(request):
         })
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
-        for f in e.fontes:
-            # TODO review - setting cascade in the relationship is not working
-            request.db.delete(f)
-        for l in e.licencias:
-            # TODO review - setting cascade in the relationship is not working
-            request.db.delete(l)
         request.db.delete(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
