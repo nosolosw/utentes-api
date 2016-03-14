@@ -4,6 +4,8 @@ from sqlalchemy import Column, Integer, Text, text
 from sqlalchemy.orm import relationship
 
 from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.models.utente_schema import UTENTE_SCHEMA
+from utentes.lib.validator import Validator
 
 
 class Utente(Base):
@@ -52,6 +54,11 @@ class Utente(Base):
             # shall we in this case compare all attributes?
             return False
         return self.gid == other.gid
+
+    # TODO. We can copy how backbone works for valation
+    def validate(self, json):
+        validatorUtente = Validator(UTENTE_SCHEMA)
+        return validatorUtente.validate(json)
 
     def __json__(self, request):
         exploracaos = []

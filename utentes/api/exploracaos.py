@@ -6,7 +6,6 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from utentes.lib.schema_validator.validator import Validator
 from utentes.models.utente import Utente
-from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.exploracao import Exploracao
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.licencia_schema import LICENCIA_SCHEMA
@@ -83,10 +82,19 @@ def exploracaos_update(request):
             u = Utente.create_from_json(body['utente'])
             request.db.add(u)
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
+
         # TODO instead of using licencias.length use a sequence in DB
         # related to not delete licencias but make it inactive with a flag
         e.update_from_json(request.json_body, len(e.licencias))
         e.utente_rel = u
+        msgs = u.validate(request.json_body['utente'])
+        if len(msgs) > 0:
+            raise badrequest_exception({'error': msgs})
+
+        u.update_from_json(request.json_body['utente'])
+        request.db.add(u)
+        e.update_from_json(request.json_body)
+
         request.db.add(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
@@ -124,6 +132,9 @@ def exploracaos_create(request):
     u_filter = Utente.nome == body.get('utente').get('nome')
     u = request.db.query(Utente).filter(u_filter).first()
     if not u:
+        msgs = u.validate(body['utente'])
+        if len(msgs) > 0:
+            raise badrequest_exception({'error': msgs})
         u = Utente.create_from_json(body['utente'])
         request.db.add(u)
     e = Exploracao.create_from_json(body)
@@ -147,8 +158,5 @@ def validate_entities(body):
     validatorLicencia.add_rule('LIC_NRO_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}-\d{3}$', v))})
     for l in body.get('licencias'):
         msgs = msgs + validatorLicencia.validate(l)
-
-    validatorUtente = Validator(UTENTE_SCHEMA)
-    msgs = msgs + validatorUtente.validate(body['utente'])
 
     return msgs
