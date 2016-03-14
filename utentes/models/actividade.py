@@ -11,7 +11,10 @@ class Actividade(Base):
 
     gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.actividades_gid_seq'::regclass)"))
     exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
-    tipo = Column(ForeignKey(u'domains.actividade.key', onupdate=u'CASCADE'), nullable=False)
+    # when updating tipo value, or other ForeignKey with tables not defined in the mapper
+    # an exception is raised. Probably removing onupdate will work
+    # tipo = Column(ForeignKey(u'domains.actividade.key', onupdate=u'CASCADE'), nullable=False)
+    tipo = Column(Text, nullable=False)
 
     __mapper_args__ = {
         'polymorphic_identity':'actividades',
@@ -30,7 +33,8 @@ class ActividadesProduccaoEnergia(Actividade):
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
-    energia_tipo = Column(ForeignKey(u'domains.energia_tipo.key', onupdate=u'CASCADE'))
+    # energia_tipo = Column(ForeignKey(u'domains.energia_tipo.key', onupdate=u'CASCADE'))
+    energia_tipo = Column(Text)
     alt_agua = Column(Numeric(10, 2))
     potencia = Column(Numeric(10, 2))
     equipo = Column(Text)
@@ -88,7 +92,8 @@ class ActividadesIndustria(Actividade):
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
-    industria_tipo = Column(ForeignKey(u'domains.industria_tipo.key', onupdate=u'CASCADE'))
+    # industria_tipo = Column(ForeignKey(u'domains.industria_tipo.key', onupdate=u'CASCADE'))
+    industria_tipo = Column(Text)
     instalacio = Column(Text)
     efluente = Column(Text)
     tratamento = Column(Text)
