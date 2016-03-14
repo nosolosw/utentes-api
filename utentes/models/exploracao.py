@@ -11,6 +11,7 @@ from utentes.lib.formatter.formatter import to_decimal, to_date
 from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
+from utentes.models.actividade import Actividade
 
 
 class ST_Multi(GenericFunction):
