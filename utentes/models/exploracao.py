@@ -102,14 +102,14 @@ class Exploracao(Base):
             actv = Actividade.create_from_json(json.get('actividade'))
             msgs = actv.validate(json.get('actividade'))
             if len(msgs) > 0:
-                from utentes.models.base import badrequest_exception
-                raise badrequest_exception({'error': msgs})
+                from utentes.lib.schema_validator.validation_exception import ValidationException
+                raise ValidationException({'error': msgs})
             self.actividade = actv
         elif self.actividade and json.get('actividade'):
             msgs = self.actividade.validate(json.get('actividade'))
             if len(msgs) > 0:
-                from utentes.models.base import badrequest_exception
-                raise badrequest_exception({'error': msgs})
+                from utentes.lib.schema_validator.validation_exception import ValidationException
+                raise ValidationException({'error': msgs})
             self.actividade.update_from_json(json.get('actividade'))
 
         self.gid        = json.get('id') or None

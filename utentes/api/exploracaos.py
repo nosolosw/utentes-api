@@ -5,6 +5,7 @@ from pyramid.view import view_config
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from utentes.lib.schema_validator.validator import Validator
+from utentes.lib.schema_validator.validation_exception import ValidationException
 from utentes.models.utente import Utente
 from utentes.models.exploracao import Exploracao
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
@@ -70,12 +71,12 @@ def exploracaos_update(request):
             'error': 'gid es un campo necesario'
         })
 
-    body = request.json_body
-    msgs = validate_entities(body)
-    if len(msgs) > 0:
-        raise badrequest_exception({'error': msgs})
-
     try:
+        body = request.json_body
+        msgs = validate_entities(body)
+        if len(msgs) > 0:
+            raise badrequest_exception({'error': msgs})
+
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
 
         u_id = body.get('utente').get('id')
@@ -110,6 +111,12 @@ def exploracaos_update(request):
         log.error(ve)
         # TODO translate msg
         raise badrequest_exception({'error': 'body is not a valid json'})
+    except ValidationException as val_exp:
+        if u:
+            request.db.refresh(u)
+        if e:
+            request.db.refresh(e)
+        raise badrequest_exception(val_exp.msgs)
 
     return e
 
