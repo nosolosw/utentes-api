@@ -76,24 +76,27 @@ def exploracaos_update(request):
         raise badrequest_exception({'error': msgs})
 
     try:
-        u_filter = Utente.nome == body.get('utente').get('nome')
-        u = request.db.query(Utente).filter(u_filter).first()
-        if not u:
-            u = Utente.create_from_json(body['utente'])
-            request.db.add(u)
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
 
-        # TODO instead of using licencias.length use a sequence in DB
-        # related to not delete licencias but make it inactive with a flag
-        e.update_from_json(request.json_body, len(e.licencias))
-        e.utente_rel = u
+        u_id = body.get('utente').get('id')
+        if not u_id:
+            u = Utente.create_from_json(body['utente'])
+            request.db.add(u)
+        elif e.utente_rel.gid != u_id:
+            u_filter = Utente.id == u_id
+            u = request.db.query(Utente).filter(u_filter).one()
+        else:
+            u = e.utente_rel
+
         msgs = u.validate(request.json_body['utente'])
         if len(msgs) > 0:
             raise badrequest_exception({'error': msgs})
-
+        e.utente_rel = u
         u.update_from_json(request.json_body['utente'])
         request.db.add(u)
-        e.update_from_json(request.json_body)
+        # TODO instead of using licencias.length use a sequence in DB
+        # related to not delete licencias but make it inactive with a flag
+        e.update_from_json(request.json_body, len(e.licencias))
 
         request.db.add(e)
         request.db.commit()

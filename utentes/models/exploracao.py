@@ -130,12 +130,12 @@ class Exploracao(Base):
                 licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)
                 lic_nro_sequence += 1
 
-        if self.actividade and not body.get('actividade'):
+        if self.actividade and not json.get('actividade'):
             self.actividade = None
-        elif not self.actividade and body.get('actividade'):
-            self.actividade = Actividade.create_from_json(body.get('actividade'))
-        elif self.actividade and body.get('actividade'):
-            self.actividade.update_from_json(body.get('actividade'))
+        elif not self.actividade and json.get('actividade'):
+            self.actividade = Actividade.create_from_json(json.get('actividade'))
+        elif self.actividade and json.get('actividade'):
+            self.actividade.update_from_json(json.get('actividade'))
 
     @staticmethod
     def create_from_json(body):

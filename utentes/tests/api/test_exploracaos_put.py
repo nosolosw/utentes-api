@@ -148,7 +148,6 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
         expected_json['fontes'] = [f.__json__(self.request) for f in expected_json['fontes']]
         expected_json['licencias'] = [f.__json__(self.request) for f in expected_json['licencias']]
         expected_json['actividade'] = expected_json['actividade'].__json__(self.request)
-        expected_json['utente'] = expected_json['utente'].__json__(self.request)
         return expected_json
 
 
