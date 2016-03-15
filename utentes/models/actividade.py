@@ -31,10 +31,8 @@ class Actividade(Base):
             u'Indústria': ActividadesIndustria,
             u'Agricultura-Regadia': ActividadesAgriculturaRega
         }
-        tipo = json.get(tipo)
-        print tipo
+        tipo = json.get('tipo')
         a = classes[tipo]()
-        print a
         a.update_from_json(json)
         return a
 
@@ -68,7 +66,7 @@ class ActividadesProduccaoEnergia(Actividade):
         self.alt_agua = json.get('alt_agua')
         self.potencia = json.get('potencia')
         self.equipo = json.get('equipo')
-        self.eval_impac = json.eval_impac('eval_impac')
+        self.eval_impac = json.get('eval_impac')
 
 
 
