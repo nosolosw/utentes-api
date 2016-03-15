@@ -32,7 +32,7 @@ ActividadesSaneamento_SCHEMA = [{
   'rules':     ['IS_NUMERIC']
 }];
 
-ActividadesAbastecemento = [{
+ActividadesAbastecemento_SCHEMA = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -50,7 +50,7 @@ ActividadesAbastecemento = [{
   'rules':     ['IS_NUMERIC', 'NOT_NULL']
 }];
 
-ActividadesIndustria = [{
+ActividadesIndustria_SCHEMA = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -60,7 +60,7 @@ ActividadesIndustria = [{
   'rules':     ['IS_NUMERIC']
 }];
 
-ActividadesIndustria = [{
+ActividadesIndustria_SCHEMA = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']

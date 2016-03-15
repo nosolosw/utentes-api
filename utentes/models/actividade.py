@@ -2,7 +2,8 @@
 
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date, Numeric, Text, text
 from sqlalchemy.orm import relationship
-
+import actividades_schema
+from utentes.lib.schema_validator.validator import Validator
 from .base import Base, PGSQL_SCHEMA_UTENTES
 
 class Actividade(Base):
@@ -20,6 +21,11 @@ class Actividade(Base):
         'polymorphic_identity':'actividades',
         'polymorphic_on':tipo
     }
+
+    # def validate(self, json):
+    #     validator_name = self.__class__.__name__ + '_SCHEMA'
+    #     validator = Validator(actividades_schema.validator_name)
+    #     return validator.validate(json)
 
     @staticmethod
     def create_from_json(json):
@@ -68,7 +74,9 @@ class ActividadesProduccaoEnergia(Actividade):
         self.equipo = json.get('equipo')
         self.eval_impac = json.get('eval_impac')
 
-
+    def validate(self, json):
+        validator = Validator(actividades_schema.ActividadesProduccaoEnergia_SCHEMA)
+        return validator.validate(json)
 
 
 class ActividadesSaneamento(Actividade):
@@ -88,6 +96,9 @@ class ActividadesSaneamento(Actividade):
         self.c_estimado = json.get('c_estimado')
         self.habitanes = json.get('habitantes')
 
+    def validate(self, json):
+        validator = Validator(actividades_schema.ActividadesSaneamento_SCHEMA)
+        return validator.validate(json)
 
 class ActividadesAbastecemento(Actividade):
     __tablename__ = 'actividades_abastecemento'
@@ -108,6 +119,9 @@ class ActividadesAbastecemento(Actividade):
         self.habitantes = json.get('habitantes')
         self.dotacao = json.get('dotacao')
 
+    def validate(self, json):
+        validator = Validator(actividades_schema.ActividadesAbastecemento_SCHEMA)
+        return validator.validate(json)
 
 class ActividadesPiscicultura(Actividade):
     __tablename__ = 'actividades_piscicultura'
@@ -128,6 +142,9 @@ class ActividadesPiscicultura(Actividade):
         self.area = json.get('area')
         self.v_reservas = json.get('v_reservas')
 
+    def validate(self, json):
+        validator = Validator(actividades_schema.ActividadesPiscicultura_SCHEMA)
+        return validator.validate(json)
 
 class ActividadesIndustria(Actividade):
     __tablename__ = 'actividades_industria'
@@ -155,6 +172,9 @@ class ActividadesIndustria(Actividade):
         self.tratamento = json.get('tratamento')
         self.eval_impac = json.get('eval_impac')
 
+    def validate(self, json):
+        validator = Validator(actividades_schema.ActividadesIndustria_SCHEMA)
+        return validator.validate(json)
 
 class ActividadesAgriculturaRega(Actividade):
     __tablename__ = 'actividades_agricultura_rega'
@@ -170,3 +190,7 @@ class ActividadesAgriculturaRega(Actividade):
     def update_from_json(self, json):
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
+
+    def validate(self, json):
+        validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        return validator.validate(json)

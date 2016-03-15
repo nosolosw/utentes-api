@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 
 from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.models.utente_schema import UTENTE_SCHEMA
-from utentes.lib.validator import Validator
+from utentes.lib.schema_validator.validator import Validator
 
 
 class Utente(Base):

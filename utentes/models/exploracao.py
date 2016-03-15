@@ -95,6 +95,23 @@ class Exploracao(Base):
             olds.append(new)
 
     def update_from_json(self, json, lic_nro_sequence):
+
+        if self.actividade and not json.get('actividade'):
+            self.actividade = None
+        elif not self.actividade and json.get('actividade'):
+            actv = Actividade.create_from_json(json.get('actividade'))
+            msgs = actv.validate(json.get('actividade'))
+            if len(msgs) > 0:
+                from utentes.models.base import badrequest_exception
+                raise badrequest_exception({'error': msgs})
+            self.actividade = actv
+        elif self.actividade and json.get('actividade'):
+            msgs = self.actividade.validate(json.get('actividade'))
+            if len(msgs) > 0:
+                from utentes.models.base import badrequest_exception
+                raise badrequest_exception({'error': msgs})
+            self.actividade.update_from_json(json.get('actividade'))
+
         self.gid        = json.get('id') or None
         self.exp_id     = json.get('exp_id')
         self.exp_name   = json.get('exp_name')
@@ -129,13 +146,6 @@ class Exploracao(Base):
             if not licencia.lic_nro:
                 licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)
                 lic_nro_sequence += 1
-
-        if self.actividade and not json.get('actividade'):
-            self.actividade = None
-        elif not self.actividade and json.get('actividade'):
-            self.actividade = Actividade.create_from_json(json.get('actividade'))
-        elif self.actividade and json.get('actividade'):
-            self.actividade.update_from_json(json.get('actividade'))
 
     @staticmethod
     def create_from_json(body):
