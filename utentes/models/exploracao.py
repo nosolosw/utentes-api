@@ -53,9 +53,10 @@ class Exploracao(Base):
                               cascade="all, delete-orphan",
                               # backref='exploracao_rel',
                               passive_deletes=True)
-    actividades = relationship(u'Actividade',
+    actividade = relationship(u'Actividade',
                               cascade="all, delete-orphan",
                               # backref='exploracao_rel',
+                              uselist=False,
                               passive_deletes=True)
 
     def update_geom(self, new):
@@ -112,7 +113,6 @@ class Exploracao(Base):
         self.c_licencia = to_decimal(json.get('c_licencia'))
         self.c_real     = to_decimal(json.get('c_real'))
         self.c_estimado = to_decimal(json.get('c_estimado'))
-        self.actividade = json.get('actividade')
         g = json.get('geometry')
         if g:
             self.the_geom = self.update_geom(g)
@@ -130,6 +130,12 @@ class Exploracao(Base):
                 licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)
                 lic_nro_sequence += 1
 
+        if self.actividade and not body.get('actividade'):
+            self.actividade = None
+        elif not self.actividade and body.get('actividade'):
+            self.actividade = Actividade.create_from_json(body.get('actividade'))
+        elif self.actividade and body.get('actividade'):
+            self.actividade.update_from_json(body.get('actividade'))
 
     @staticmethod
     def create_from_json(body):
@@ -172,7 +178,7 @@ class Exploracao(Base):
                 'c_licencia': self.c_licencia,
                 'c_real':     self.c_real,
                 'c_estimado': self.c_estimado,
-                'actividades': self.actividades,
+                'actividade': self.actividade,
                 #'utente':     self.utente,
                 'area':       self.area,
                 'fontes':     self.fontes,

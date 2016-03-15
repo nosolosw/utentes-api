@@ -21,6 +21,23 @@ class Actividade(Base):
         'polymorphic_on':tipo
     }
 
+    @staticmethod
+    def create_from_json(json):
+        classes = {
+            u'Producção de energia': ActividadesProduccaoEnergia,
+            u'Saneamento': ActividadesSaneamento,
+            u'Abastecimento': ActividadesAbastecemento,
+            u'Piscicultura': ActividadesPiscicultura,
+            u'Indústria': ActividadesIndustria,
+            u'Agricultura-Regadia': ActividadesAgriculturaRega
+        }
+        tipo = json.get(tipo)
+        print tipo
+        a = classes[tipo]()
+        print a
+        a.update_from_json(json)
+        return a
+
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__table__.columns.keys()}
         json['tipo'] = self.tipo
@@ -44,6 +61,17 @@ class ActividadesProduccaoEnergia(Actividade):
         'polymorphic_identity':u'Producção de energia',
     }
 
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        self.energia_tipo = json.get('energia_tipo')
+        self.alt_agua = json.get('alt_agua')
+        self.potencia = json.get('potencia')
+        self.equipo = json.get('equipo')
+        self.eval_impac = json.eval_impac('eval_impac')
+
+
+
 
 class ActividadesSaneamento(Actividade):
     __tablename__ = 'actividades_saneamento'
@@ -56,6 +84,11 @@ class ActividadesSaneamento(Actividade):
     __mapper_args__ = {
         'polymorphic_identity':u'Saneamento',
     }
+
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        self.habitanes = json.get('habitantes')
 
 
 class ActividadesAbastecemento(Actividade):
@@ -71,6 +104,12 @@ class ActividadesAbastecemento(Actividade):
         'polymorphic_identity':u'Abastecimento',
     }
 
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        self.habitantes = json.get('habitantes')
+        self.dotacao = json.get('dotacao')
+
 
 class ActividadesPiscicultura(Actividade):
     __tablename__ = 'actividades_piscicultura'
@@ -84,6 +123,12 @@ class ActividadesPiscicultura(Actividade):
     __mapper_args__ = {
         'polymorphic_identity':u'Piscicultura',
     }
+
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        self.area = json.get('area')
+        self.v_reservas = json.get('v_reservas')
 
 
 class ActividadesIndustria(Actividade):
@@ -103,6 +148,15 @@ class ActividadesIndustria(Actividade):
         'polymorphic_identity':u'Indústria',
     }
 
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        self.industria_tipo = json.get('industria_tipo')
+        self.intalacio = json.get('instalacio')
+        self.efluente = json.get('efluente')
+        self.tratamento = json.get('tratamento')
+        self.eval_impac = json.get('eval_impac')
+
 
 class ActividadesAgriculturaRega(Actividade):
     __tablename__ = 'actividades_agricultura_rega'
@@ -114,3 +168,7 @@ class ActividadesAgriculturaRega(Actividade):
     __mapper_args__ = {
         'polymorphic_identity':u'Agricultura-Regadia',
     }
+
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')

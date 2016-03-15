@@ -5,6 +5,7 @@ import unittest
 from utentes.tests.api import DBIntegrationTest
 from utentes.models.exploracao import Exploracao
 from utentes.models.utente import Utente
+from utentes.api.exploracaos import exploracaos_update
 
 # Asume que se está usando una base de datos con fixtures
 # limpia
@@ -53,8 +54,17 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
 
 
 
+
+
     def test_update_exploracao_update_actividade(self):
-        pass
+        self.request.matchdict.update( dict(id= 117) )
+        expected = self.request.db.query(Exploracao).filter(Exploracao.gid == 117).first()
+        expected_json = self._build_json(expected)
+        expected_json['actividade']['c_estimado'] = 101.11
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == 117).first()
+        self.assertEquals(101.11, float(actual.actividade.c_estimado))
 
     def test_update_exploracao_update_actividade_validation_fails(self):
         pass
@@ -71,14 +81,9 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
 
 
     def test_update_exploracao_update_utente(self):
-        from utentes.api.exploracaos import exploracaos_update
         self.request.matchdict.update( dict(id= 117) )
         expected = self.request.db.query(Exploracao).filter(Exploracao.gid == 117).first()
-        expected_json = expected.__json__(self.request)
-        expected_json.update ( expected_json.pop('properties') )
-        expected_json['fontes'] = [f.__json__(self.request) for f in expected_json['fontes']]
-        expected_json['licencias'] = [f.__json__(self.request) for f in expected_json['licencias']]
-        expected_json['utente'] = expected_json['utente'].__json__(self.request)
+        expected_json = self._build_json(expected)
         expected_json['utente']['observacio'] = 'foo - bar'
         self.request.json_body = expected_json
         exploracaos_update(self.request)
@@ -86,14 +91,9 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
         self.assertEquals('foo - bar', actual.utente_rel.observacio)
 
     def test_update_exploracao_update_utente_validation_fails(self):
-        from utentes.api.exploracaos import exploracaos_update
         self.request.matchdict.update( dict(id= 117) )
         expected = self.request.db.query(Exploracao).filter(Exploracao.gid == 117).first()
-        expected_json = expected.__json__(self.request)
-        expected_json.update ( expected_json.pop('properties') )
-        expected_json['fontes'] = [f.__json__(self.request) for f in expected_json['fontes']]
-        expected_json['licencias'] = [f.__json__(self.request) for f in expected_json['licencias']]
-        expected_json['utente'] = expected_json['utente'].__json__(self.request)
+        expected_json = self._build_json(expected)
         expected_json['utente']['nome'] = None
         self.request.json_body = expected_json
         from pyramid.httpexceptions import HTTPBadRequest
@@ -118,15 +118,10 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
         Tests that the related utente can be renamed from the exploracao,
         and a new utente is not created
         '''
-        from utentes.api.exploracaos import exploracaos_update
         self.request.matchdict.update( dict(id= 117) )
         expected = self.request.db.query(Exploracao).filter(Exploracao.gid == 117).first()
         expected_utente_gid = expected.utente
-        expected_json = expected.__json__(self.request)
-        expected_json.update ( expected_json.pop('properties') )
-        expected_json['fontes'] = [f.__json__(self.request) for f in expected_json['fontes']]
-        expected_json['licencias'] = [f.__json__(self.request) for f in expected_json['licencias']]
-        expected_json['utente'] = expected_json['utente'].__json__(self.request)
+        expected_json = self._build_json(expected)
         expected_json['utente']['nome'] = 'foo - bar'
         self.request.json_body = expected_json
         exploracaos_update(self.request)
@@ -137,22 +132,24 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
         self.assertEquals('foo - bar', u.nome)
 
     def test_update_exploracao_rename_utente_validation_fails(self):
-        from utentes.api.exploracaos import exploracaos_update
         self.request.matchdict.update( dict(id= 117) )
         expected = self.request.db.query(Exploracao).filter(Exploracao.gid == 117).first()
         expected_utente_gid = expected.utente
-        expected_json = expected.__json__(self.request)
-        expected_json.update ( expected_json.pop('properties') )
-        expected_json['fontes'] = [f.__json__(self.request) for f in expected_json['fontes']]
-        expected_json['licencias'] = [f.__json__(self.request) for f in expected_json['licencias']]
-        expected_json['utente'] = expected_json['utente'].__json__(self.request)
+        expected_json = self._build_json(expected)
         expected_json['utente']['nome'] = 'foo - bar'
         expected_json['c_soli'] = 'text'
         self.request.json_body = expected_json
         from pyramid.httpexceptions import HTTPBadRequest
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
 
-
+    def _build_json(self, e):
+        expected_json = e.__json__(self.request)
+        expected_json.update ( expected_json.pop('properties') )
+        expected_json['fontes'] = [f.__json__(self.request) for f in expected_json['fontes']]
+        expected_json['licencias'] = [f.__json__(self.request) for f in expected_json['licencias']]
+        expected_json['actividade'] = expected_json['actividade'].__json__(self.request)
+        expected_json['utente'] = expected_json['utente'].__json__(self.request)
+        return expected_json
 
 
 if __name__ == '__main__':
