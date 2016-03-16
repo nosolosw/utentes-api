@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 from .base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.lib.schema_validator.validator import Validator
 import actividades_schema
+from utentes.models.cultivo import ActividadesCultivos
 
 
 class Actividade(Base):
@@ -196,6 +197,18 @@ class ActividadesAgriculturaRega(Actividade):
     __mapper_args__ = {
         'polymorphic_identity': u'Agricultura-Regadia',
     }
+
+    cultivos  = relationship('ActividadesCultivos',
+                              cascade="all, delete-orphan",
+                              passive_deletes=True)
+
+    def __json__(self, request):
+        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        json['cultivos'] = {
+            'type': 'FeatureCollection',
+            'features': self.cultivos
+        }
+        return json
 
     def update_from_json(self, json):
         self.tipo = json.get('tipo')
