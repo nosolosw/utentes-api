@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, Date, Numeric, Text, text
+from sqlalchemy import Boolean, Column, Integer, Date, Numeric, Text
+from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship
-import actividades_schema
-from utentes.lib.schema_validator.validator import Validator
+
 from .base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.lib.schema_validator.validator import Validator
+import actividades_schema
+
 
 class Actividade(Base):
     __tablename__ = 'actividades'
@@ -18,8 +21,8 @@ class Actividade(Base):
     tipo = Column(Text, nullable=False)
 
     __mapper_args__ = {
-        'polymorphic_identity':'actividades',
-        'polymorphic_on':tipo
+        'polymorphic_identity': 'actividades',
+        'polymorphic_on': tipo
     }
 
     # def validate(self, json):
@@ -62,7 +65,7 @@ class ActividadesProduccaoEnergia(Actividade):
     eval_impac = Column(Boolean)
 
     __mapper_args__ = {
-        'polymorphic_identity':u'Producção de energia',
+        'polymorphic_identity': u'Producção de energia',
     }
 
     def update_from_json(self, json):
@@ -75,8 +78,9 @@ class ActividadesProduccaoEnergia(Actividade):
         self.eval_impac = json.get('eval_impac')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesProduccaoEnergia_SCHEMA)
-        return validator.validate(json)
+        return []
+        # validator = Validator(actividades_schema.ActividadesProduccaoEnergia_SCHEMA)
+        # return validator.validate(json)
 
 
 class ActividadesSaneamento(Actividade):
@@ -88,7 +92,7 @@ class ActividadesSaneamento(Actividade):
     habitantes = Column(Integer)
 
     __mapper_args__ = {
-        'polymorphic_identity':u'Saneamento',
+        'polymorphic_identity': u'Saneamento',
     }
 
     def update_from_json(self, json):
@@ -97,8 +101,10 @@ class ActividadesSaneamento(Actividade):
         self.habitanes = json.get('habitantes')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesSaneamento_SCHEMA)
-        return validator.validate(json)
+        return []
+        # validator = Validator(actividades_schema.ActividadesSaneamento_SCHEMA)
+        # return validator.validate(json)
+
 
 class ActividadesAbastecemento(Actividade):
     __tablename__ = 'actividades_abastecemento'
@@ -110,7 +116,7 @@ class ActividadesAbastecemento(Actividade):
     dotacao = Column(Integer, nullable=False)
 
     __mapper_args__ = {
-        'polymorphic_identity':u'Abastecimento',
+        'polymorphic_identity': u'Abastecimento',
     }
 
     def update_from_json(self, json):
@@ -120,8 +126,10 @@ class ActividadesAbastecemento(Actividade):
         self.dotacao = json.get('dotacao')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesAbastecemento_SCHEMA)
-        return validator.validate(json)
+        return []
+        # validator = Validator(actividades_schema.ActividadesAbastecemento_SCHEMA)
+        # return validator.validate(json)
+
 
 class ActividadesPiscicultura(Actividade):
     __tablename__ = 'actividades_piscicultura'
@@ -133,7 +141,7 @@ class ActividadesPiscicultura(Actividade):
     v_reservas = Column(Numeric(10, 2))
 
     __mapper_args__ = {
-        'polymorphic_identity':u'Piscicultura',
+        'polymorphic_identity': u'Piscicultura',
     }
 
     def update_from_json(self, json):
@@ -143,8 +151,10 @@ class ActividadesPiscicultura(Actividade):
         self.v_reservas = json.get('v_reservas')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesPiscicultura_SCHEMA)
-        return validator.validate(json)
+        return []
+        # validator = Validator(actividades_schema.ActividadesPiscicultura_SCHEMA)
+        # return validator.validate(json)
+
 
 class ActividadesIndustria(Actividade):
     __tablename__ = 'actividades_industria'
@@ -160,7 +170,7 @@ class ActividadesIndustria(Actividade):
     eval_impac = Column(Boolean)
 
     __mapper_args__ = {
-        'polymorphic_identity':u'Indústria',
+        'polymorphic_identity': u'Indústria',
     }
 
     def update_from_json(self, json):
@@ -173,8 +183,10 @@ class ActividadesIndustria(Actividade):
         self.eval_impac = json.get('eval_impac')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesIndustria_SCHEMA)
-        return validator.validate(json)
+        return []
+        # validator = Validator(actividades_schema.ActividadesIndustria_SCHEMA)
+        # return validator.validate(json)
+
 
 class ActividadesAgriculturaRega(Actividade):
     __tablename__ = 'actividades_agricultura_rega'
@@ -184,7 +196,7 @@ class ActividadesAgriculturaRega(Actividade):
     c_estimado = Column(Numeric(10, 2), nullable=False)
 
     __mapper_args__ = {
-        'polymorphic_identity':u'Agricultura-Regadia',
+        'polymorphic_identity': u'Agricultura-Regadia',
     }
 
     def update_from_json(self, json):
@@ -192,5 +204,6 @@ class ActividadesAgriculturaRega(Actividade):
         self.c_estimado = json.get('c_estimado')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
-        return validator.validate(json)
+        return []
+        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        # return validator.validate(json)
