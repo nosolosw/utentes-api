@@ -33,12 +33,12 @@ class Actividade(Base):
     @staticmethod
     def create_from_json(json):
         classes = {
+            u'Abastecimento': ActividadesAbastecemento,
+            u'Agricultura-Regadia': ActividadesAgriculturaRega,
+            u'Indústria': ActividadesIndustria,
+            u'Piscicultura': ActividadesPiscicultura,
             u'Producção de energia': ActividadesProduccaoEnergia,
             u'Saneamento': ActividadesSaneamento,
-            u'Abastecimento': ActividadesAbastecemento,
-            u'Piscicultura': ActividadesPiscicultura,
-            u'Indústria': ActividadesIndustria,
-            u'Agricultura-Regadia': ActividadesAgriculturaRega
         }
         tipo = json.get('tipo')
         a = classes[tipo]()
