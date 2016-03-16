@@ -162,10 +162,10 @@ class ActividadesIndustria(Actividade):
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
-    # industria_tipo = Column(ForeignKey(u'domains.industria_tipo.key', onupdate=u'CASCADE'))
-    industria_tipo = Column(Text)
+    # tipo_indus = Column(ForeignKey(u'domains.industria_tipo.key', onupdate=u'CASCADE'))
+    tipo_indus = Column(Text)
     instalacio = Column(Text)
-    efluente = Column(Text)
+    efluente   = Column(Text)
     tratamento = Column(Text)
     eval_impac = Column(Boolean)
 
@@ -174,11 +174,11 @@ class ActividadesIndustria(Actividade):
     }
 
     def update_from_json(self, json):
-        self.tipo = json.get('tipo')
+        self.tipo       = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
-        self.industria_tipo = json.get('industria_tipo')
-        self.intalacio = json.get('instalacio')
-        self.efluente = json.get('efluente')
+        self.tipo_indus = json.get('tipo_indus')
+        self.intalacio  = json.get('instalacio')
+        self.efluente   = json.get('efluente')
         self.tratamento = json.get('tratamento')
         self.eval_impac = json.get('eval_impac')
 
