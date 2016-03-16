@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+
+from sqlalchemy import Column, Integer, Numeric, Text
+from sqlalchemy import ForeignKey, text
+
+from .base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.lib.schema_validator.validator import Validator
+
+
+class ActividadesReses(Base):
+    __tablename__ = 'actividades_reses'
+    __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
+
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.actividades_reses_gid_seq'::regclass)"))
+    actividade = Column(ForeignKey(u'utentes.actividades_pecuaria.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
+    c_estimado = Column(Numeric(10, 2), nullable=False)
+    reses_tipo = Column(Text, nullable=False)
+    reses_nro = Column(Integer, nullable=False)
+    c_res = Column(Integer, nullable=False)
+    observacio = Column(Text)
+
+    def __json__(self, request):
+        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        return json
+
+    def update_from_json(self, json):
+        pass
+
+    def validate(self, json):
+        return []
+        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        # return validator.validate(json)

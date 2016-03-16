@@ -218,3 +218,33 @@ class ActividadesAgriculturaRega(Actividade):
         return []
         # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
         # return validator.validate(json)
+
+class ActividadesPecuaria(Actividade):
+    __tablename__ = 'actividades_pecuaria'
+    __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
+
+    gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
+    c_estimado = Column(Numeric(10, 2), nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': u'Pecuária',
+    }
+
+    reses  = relationship('ActividadesReses',
+                              cascade="all, delete-orphan",
+                              passive_deletes=True)
+
+    def __json__(self, request):
+        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        json['reses'] = self.reses
+        return json
+
+    def update_from_json(self, json):
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        # TODO. update reses
+
+    def validate(self, json):
+        return []
+        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        # return validator.validate(json)

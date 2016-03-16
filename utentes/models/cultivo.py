@@ -2,7 +2,6 @@
 
 from sqlalchemy import Column, Integer, Numeric, Text
 from sqlalchemy import ForeignKey, text
-from sqlalchemy.orm import relationship
 
 from .base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.lib.schema_validator.validator import Validator
@@ -21,7 +20,7 @@ class ActividadesCultivos(Base):
     rega = Column(Text, nullable=False)
     eficiencia = Column(Numeric(10, 2), nullable=False)
     area = Column(Numeric(10, 2), nullable=False)
-    observacio = Column(Text, nullable=False)
+    observacio = Column(Text)
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True, nullable=False)
 
     def __json__(self, request):
