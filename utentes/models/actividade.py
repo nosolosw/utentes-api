@@ -46,8 +46,7 @@ class Actividade(Base):
         return a
 
     def __json__(self, request):
-        json = {c: getattr(self, c) for c in self.__table__.columns.keys()}
-        json['tipo'] = self.tipo
+        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
         return json
 
 
@@ -186,7 +185,6 @@ class ActividadesIndustria(Actividade):
         return []
         # validator = Validator(actividades_schema.ActividadesIndustria_SCHEMA)
         # return validator.validate(json)
-
 
 class ActividadesAgriculturaRega(Actividade):
     __tablename__ = 'actividades_agricultura_rega'

@@ -95,7 +95,8 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
     def test_update_exploracao_delete_actividade(self):
         pass
 
-
+    def test_update_exploracao_update_actividade_tipo(self):
+        pass
 
     def test_update_exploracao_update_utente(self):
         self.request.matchdict.update( dict(id= MAGIC_GID) )
