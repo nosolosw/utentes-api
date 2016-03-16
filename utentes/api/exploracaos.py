@@ -97,7 +97,7 @@ def exploracaos_update(request):
         request.db.add(u)
         # TODO instead of using licencias.length use a sequence in DB
         # related to not delete licencias but make it inactive with a flag
-        e.update_from_json(request.json_body, len(e.licencias))
+        e.update_from_json(request.json_body, len(e.licencias), request)
 
         request.db.add(e)
         request.db.commit()

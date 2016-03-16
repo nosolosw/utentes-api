@@ -94,9 +94,14 @@ class Exploracao(Base):
         for new in to_append:
             olds.append(new)
 
-    def update_from_json(self, json, lic_nro_sequence):
+    def update_from_json(self, json, lic_nro_sequence, request = None):
+
+        if self.actividade and self.actividade.tipo != json.get('actividade').get('tipo'):
+            request.db.delete(self.actividade)
+            self.actividade = None
 
         if self.actividade and not json.get('actividade'):
+            request.db.delete(self.actividade)
             self.actividade = None
         elif not self.actividade and json.get('actividade'):
             actv = Actividade.create_from_json(json.get('actividade'))
