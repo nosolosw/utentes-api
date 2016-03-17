@@ -94,23 +94,16 @@ class Exploracao(Base):
         for new in to_append:
             olds.append(new)
 
-    def update_from_json(self, json, lic_nro_sequence, request = None):
+    def update_from_json(self, json, lic_nro_sequence):
 
-        if self.actividade and self.actividade.tipo != json.get('actividade').get('tipo'):
-            request.db.delete(self.actividade)
-            self.actividade = None
-
-        if self.actividade and not json.get('actividade'):
-            request.db.delete(self.actividade)
-            self.actividade = None
-        elif not self.actividade and json.get('actividade'):
+        if not self.actividade:
             actv = Actividade.create_from_json(json.get('actividade'))
             msgs = actv.validate(json.get('actividade'))
             if len(msgs) > 0:
                 from utentes.lib.schema_validator.validation_exception import ValidationException
                 raise ValidationException({'error': msgs})
             self.actividade = actv
-        elif self.actividade and json.get('actividade'):
+        elif self.actividade:
             msgs = self.actividade.validate(json.get('actividade'))
             if len(msgs) > 0:
                 from utentes.lib.schema_validator.validation_exception import ValidationException

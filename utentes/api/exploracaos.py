@@ -95,9 +95,14 @@ def exploracaos_update(request):
         e.utente_rel = u
         u.update_from_json(request.json_body['utente'])
         request.db.add(u)
+
+        if _tipo_actividade_changes(e, request.json_body):
+            request.db.delete(e.actividade)
+            e.actividade = None
+
         # TODO instead of using licencias.length use a sequence in DB
         # related to not delete licencias but make it inactive with a flag
-        e.update_from_json(request.json_body, len(e.licencias), request)
+        e.update_from_json(request.json_body, len(e.licencias))
 
         request.db.add(e)
         request.db.commit()
@@ -120,6 +125,8 @@ def exploracaos_update(request):
 
     return e
 
+def _tipo_actividade_changes(e, json):
+    return e.actividade and json.get('actividade') and (e.actividade.tipo != json.get('actividade').get('tipo'))
 
 @view_config(route_name='exploracaos', request_method='POST', renderer='json')
 def exploracaos_create(request):
