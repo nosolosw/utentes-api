@@ -175,7 +175,7 @@ class ExploracaosPUT_IntegrationTests(DBIntegrationTest):
         self.assertEquals(reses[0].gid, 1)
         self.assertEquals(reses[1].gid, 2)
         self.assertEquals(reses[2].c_estimado, 50)
-        self.assertEquals(reses[4].c_res, 5000)
+        self.assertEquals(reses[2].c_res, 5000)
 
 
 

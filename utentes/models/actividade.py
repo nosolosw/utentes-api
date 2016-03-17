@@ -43,10 +43,10 @@ class Actividade(Base):
             u'Abastecimento': ActividadesAbastecemento,
             u'Agricultura-Regadia': ActividadesAgriculturaRega,
             u'Indústria': ActividadesIndustria,
+            u'Pecuária': ActividadesPecuaria,
             u'Piscicultura': ActividadesPiscicultura,
             u'Producção de energia': ActividadesProduccaoEnergia,
             u'Saneamento': ActividadesSaneamento,
-            u'Pecuária': ActividadesPecuaria
         }
         tipo = json.get('tipo')
         a = classes[tipo]()
@@ -156,6 +156,43 @@ class ActividadesIndustria(Actividade):
         # validator = Validator(actividades_schema.ActividadesIndustria_SCHEMA)
         # return validator.validate(json)
 
+class ActividadesPecuaria(Actividade):
+    __tablename__ = 'actividades_pecuaria'
+    __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
+
+    gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
+    c_estimado = Column(Numeric(10, 2), nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': u'Pecuária',
+    }
+
+    reses  = relationship('ActividadesReses',
+                        cascade="all, delete-orphan",
+                        order_by='ActividadesReses.gid',
+                        passive_deletes=True)
+
+    def __json__(self, request):
+        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        del json['gid']
+        json['id'] = self.gid
+        json['reses'] = self.reses
+        return json
+
+    def update_from_json(self, json):
+        self.gid = json.get('id')
+        self.tipo = json.get('tipo')
+        self.c_estimado = json.get('c_estimado')
+        update_array(self.reses,
+                    json.get('reses'),
+                    ActividadesReses.create_from_json)
+
+
+    def validate(self, json):
+        return []
+        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        # return validator.validate(json)
+
 class ActividadesPiscicultura(Actividade):
     __tablename__ = 'actividades_piscicultura'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
@@ -235,42 +272,4 @@ class ActividadesSaneamento(Actividade):
     def validate(self, json):
         return []
         # validator = Validator(actividades_schema.ActividadesSaneamento_SCHEMA)
-        # return validator.validate(json)
-
-
-class ActividadesPecuaria(Actividade):
-    __tablename__ = 'actividades_pecuaria'
-    __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
-
-    gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2), nullable=False)
-
-    __mapper_args__ = {
-        'polymorphic_identity': u'Pecuária',
-    }
-
-    reses  = relationship('ActividadesReses',
-                        cascade="all, delete-orphan",
-                        order_by='ActividadesReses.gid',
-                        passive_deletes=True)
-
-    def __json__(self, request):
-        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
-        del json['gid']
-        json['id'] = self.gid
-        json['reses'] = self.reses
-        return json
-
-    def update_from_json(self, json):
-        self.gid = json.get('id')
-        self.tipo = json.get('tipo')
-        self.c_estimado = json.get('c_estimado')
-        update_array(self.reses,
-                    json.get('reses'),
-                    ActividadesReses.create_from_json)
-
-
-    def validate(self, json):
-        return []
-        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
         # return validator.validate(json)
