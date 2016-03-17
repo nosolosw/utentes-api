@@ -80,7 +80,7 @@ class Exploracao(Base):
                 raise ValidationException({'error': msgs})
             self.actividade.update_from_json(json.get('actividade'))
 
-        self.gid        = json.get('id') or None
+        self.gid        = json.get('id')
         self.exp_id     = json.get('exp_id')
         self.exp_name   = json.get('exp_name')
         self.pagos      = json.get('pagos')

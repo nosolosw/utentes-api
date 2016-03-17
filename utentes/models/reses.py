@@ -26,8 +26,8 @@ class ActividadesReses(Base):
         return res
 
     def update_from_json(self, json):
-        # gid - created in db, not updatable
         # actividade - handled by sqlalchemy relationship
+        self.gid        = json.get('id')
         self.c_estimado = json.get('c_estimado')
         self.reses_tipo = json.get('reses_tipo')
         self.reses_nro = json.get('reses_nro')
@@ -36,6 +36,8 @@ class ActividadesReses(Base):
 
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        del json['gid']
+        json['id'] = self.gid
         return json
 
 

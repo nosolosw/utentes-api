@@ -32,7 +32,7 @@ class Fonte(Base):
         return f
 
     def update_from_json(self, json):
-        self.gid        = json.get('id') or None
+        self.gid        = json.get('id')
         self.tipo_agua  = json.get('tipo_agua')
         self.tipo_fonte = json.get('tipo_fonte')
         self.lat_lon    = json.get('lat_lon')

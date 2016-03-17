@@ -35,7 +35,7 @@ class Utente(Base):
         return u
 
     def update_from_json(self, json):
-        self.gid        = json.get('id') or None
+        self.gid        = json.get('id')
         self.nome       = json.get('nome')
         self.nuit       = json.get('nuit')
         self.entidade   = json.get('entidade')

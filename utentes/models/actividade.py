@@ -55,6 +55,8 @@ class Actividade(Base):
 
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        del json['gid']
+        json['id'] = self.gid
         return json
 
 class ActividadesAbastecemento(Actividade):
@@ -71,6 +73,7 @@ class ActividadesAbastecemento(Actividade):
     }
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         self.habitantes = json.get('habitantes')
@@ -99,6 +102,8 @@ class ActividadesAgriculturaRega(Actividade):
 
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        del json['gid']
+        json['id'] = self.gid
         json['cultivos'] = {
             'type': 'FeatureCollection',
             'features': self.cultivos
@@ -106,6 +111,7 @@ class ActividadesAgriculturaRega(Actividade):
         return json
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         update_array(self.cultivos,
@@ -136,6 +142,7 @@ class ActividadesIndustria(Actividade):
     }
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo       = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         self.tipo_indus = json.get('tipo_indus')
@@ -163,6 +170,7 @@ class ActividadesPiscicultura(Actividade):
     }
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         self.area = json.get('area')
@@ -191,6 +199,7 @@ class ActividadesProduccaoEnergia(Actividade):
     }
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         self.energia_tipo = json.get('energia_tipo')
@@ -218,6 +227,7 @@ class ActividadesSaneamento(Actividade):
     }
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         self.habitanes = json.get('habitantes')
@@ -246,10 +256,13 @@ class ActividadesPecuaria(Actividade):
 
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        del json['gid']
+        json['id'] = self.gid
         json['reses'] = self.reses
         return json
 
     def update_from_json(self, json):
+        self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         update_array(self.reses,

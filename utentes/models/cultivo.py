@@ -34,8 +34,8 @@ class ActividadesCultivos(Base):
         return cultivo
 
     def update_from_json(self, json):
-        # gid - created in db, not updatable
         # actividade - handled by sqlalchemy relationship
+        self.gid = json.get('id')
         self.c_estimado = json.get('c_estimado')
         self.cultivo = json.get('cultivo')
         self.rega = json.get('rega')
@@ -53,7 +53,7 @@ class ActividadesCultivos(Base):
         return {
             'type': 'Feature',
             'properties': {
-                'gid': self.gid,
+                'id': self.gid,
                 'actividade': self.actividade,
                 'c_estimado': self.c_estimado,
                 'cultivo': self.cultivo,

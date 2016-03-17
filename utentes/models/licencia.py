@@ -34,7 +34,7 @@ class Licencia(Base):
         return l
 
     def update_from_json(self, json):
-        self.gid        = json.get('id') or None
+        self.gid        = json.get('id')
         self.lic_nro    = json.get('lic_nro')
         self.lic_tipo   = json.get('lic_tipo')
         self.finalidade = json.get('finalidade')
