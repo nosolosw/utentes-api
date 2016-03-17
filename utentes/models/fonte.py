@@ -45,14 +45,6 @@ class Fonte(Base):
         self.observacio = json.get('observacio')
         # self.exploracao = json.get('exploracao')
 
-    # python uses this method to compare objects
-    # for example, in exploracao.update_array
-    def __eq__(self, other):
-        if (self.gid is None) or (other.gid is None):
-            # shall we in this case compare all attributes?
-            return False
-        return self.gid == other.gid
-
     def __json__(self, request):
         return {
             'id':         self.gid,

@@ -7,7 +7,18 @@ from sqlalchemy.ext.declarative import declarative_base
 PGSQL_SCHEMA_UTENTES = 'utentes'
 PGSQL_SCHEMA_DOMAINS = 'domains'
 
-Base = declarative_base()
+class BaseClass(object):
+    # python uses this method to compare objects
+    # for example, in exploracao.update_array
+    def __eq__(self, other):
+        if (self.gid is None) or (other.gid is None):
+            # shall we in this case compare all attributes?
+            return False
+        return self.gid == other.gid
+
+DeclarativeBase = declarative_base()
+Base = declarative_base(cls=BaseClass)
+
 
 
 def unauthorized_exception(body=None):

@@ -2,10 +2,10 @@
 
 from sqlalchemy import Column, Integer, Text, text
 
-from .base import Base, PGSQL_SCHEMA_DOMAINS
+from .base import DeclarativeBase, PGSQL_SCHEMA_DOMAINS
 
 
-class Domain(Base):
+class Domain(DeclarativeBase):
     __tablename__ = 'domains'
     __table_args__ = {u'schema': PGSQL_SCHEMA_DOMAINS}
 

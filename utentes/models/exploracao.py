@@ -129,14 +129,6 @@ class Exploracao(Base):
         e.update_from_json(body, 1)
         return e
 
-    # python uses this method to compare objects
-    # for example, in exploracao.update_array
-    def __eq__(self, other):
-        if (self.gid is None) or (other.gid is None):
-            # shall we in this case compare all attributes?
-            return False
-        return self.gid == other.gid
-
     def __json__(self, request):
         the_geom = None
         if self.the_geom is not None:

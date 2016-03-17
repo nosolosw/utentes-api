@@ -47,13 +47,6 @@ class Utente(Base):
         self.loc_nucleo = json.get('loc_nucleo')
         self.observacio = json.get('observacio')
 
-    # python uses this method to compare objects
-    # for example, in exploracao.update_array
-    def __eq__(self, other):
-        if (self.gid is None) or (other.gid is None):
-            # shall we in this case compare all attributes?
-            return False
-        return self.gid == other.gid
 
     # TODO. We can copy how backbone works for valation
     def validate(self, json):
