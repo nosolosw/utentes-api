@@ -108,6 +108,9 @@ class ActividadesAgriculturaRega(Actividade):
     def update_from_json(self, json):
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
+        update_array(self.cultivos,
+                    json.get('cultivos'),
+                    ActividadesCultivos.create_from_json)
 
     def validate(self, json):
         return []
@@ -249,7 +252,10 @@ class ActividadesPecuaria(Actividade):
     def update_from_json(self, json):
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
-        # TODO. update reses
+        update_array(self.reses,
+                    json.get('reses'),
+                    ActividadesReses.create_from_json)
+
 
     def validate(self, json):
         return []

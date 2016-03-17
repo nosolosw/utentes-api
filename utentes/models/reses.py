@@ -19,12 +19,26 @@ class ActividadesReses(Base):
     c_res = Column(Integer, nullable=False)
     observacio = Column(Text)
 
+    @staticmethod
+    def create_from_json(json):
+        res = ActividadesReses()
+        res.update_from_json(json)
+        return res
+
+    def update_from_json(self, json):
+        # gid - created in db, not updatable
+        # actividade - handled by sqlalchemy relationship
+        self.c_estimado = json.get('c_estimado')
+        self.reses_tipo = json.get('reses_tipo')
+        self.reses_nro = json.get('reses_nro')
+        self.c_res = json.get('c_res')
+        self.observacio = json.get('observacio')
+
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
         return json
 
-    def update_from_json(self, json):
-        pass
+
 
     def validate(self, json):
         return []

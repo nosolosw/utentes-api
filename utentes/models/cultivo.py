@@ -27,6 +27,23 @@ class ActividadesCultivos(Base):
     observacio = Column(Text)
     the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True, nullable=False)
 
+    @staticmethod
+    def create_from_json(json):
+        cultivo = ActividadesCultivos()
+        cultivo.update_from_json(json)
+        return cultivo
+
+    def update_from_json(self, json):
+        # gid - created in db, not updatable
+        # actividade - handled by sqlalchemy relationship
+        self.c_estimado = json.get('c_estimado')
+        self.cultivo = json.get('cultivo')
+        self.rega = json.get('rega')
+        self.eficiencia = json.get('eficiencia')
+        self.area = json.get('area')
+        self.obervacio = json.get('observacio')
+        update_geom(self.the_geom, json)
+
     def __json__(self, request):
         the_geom = None
         if self.the_geom is not None:
@@ -49,8 +66,7 @@ class ActividadesCultivos(Base):
 
         }
 
-    def update_from_json(self, json):
-        pass
+
 
     def validate(self, json):
         return []
