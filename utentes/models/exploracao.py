@@ -8,7 +8,11 @@ from geoalchemy2.elements import WKTElement
 from geoalchemy2.functions import GenericFunction
 
 from utentes.lib.formatter.formatter import to_decimal, to_date
-from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.models.base import (
+    Base,
+    PGSQL_SCHEMA_UTENTES,
+    update_array
+)
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
 from utentes.models.actividade import Actividade
@@ -67,33 +71,6 @@ class Exploracao(Base):
         the_geom = the_geom.ST_Multi().ST_Transform(32737)
         return the_geom
 
-    def update_array(self, olds, news_json, factory):
-        news = []
-        update_dict = {}
-        for n in news_json:
-            new = factory(n)
-            new.exploracao = self.gid
-            news.append(new)
-            if n.get('id'):
-               update_dict[n.get('id')] = n
-
-        # this needs objects to declare when they are equals
-        # by declaring the method __eq__
-        to_remove = [el for el in olds if el not in news]
-        to_update = [el for el in olds if el in news]
-        to_append = [el for el in news if el not in olds]
-
-        for old in to_remove:
-            olds.remove(old)
-
-        for old in to_update:
-            new = update_dict[old.gid]
-            if new:
-                old.update_from_json(new)
-
-        for new in to_append:
-            olds.append(new)
-
     def update_from_json(self, json, lic_nro_sequence):
 
         if not self.actividade:
@@ -133,11 +110,11 @@ class Exploracao(Base):
             self.the_geom = self.update_geom(g)
 
         # update relationships
-        self.update_array(self.fontes,
+        update_array(self.fontes,
                           json.get('fontes'),
                           Fonte.create_from_json)
 
-        self.update_array(self.licencias,
+        update_array(self.licencias,
                           json.get('licencias'),
                           Licencia.create_from_json)
         for licencia in self.licencias:

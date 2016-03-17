@@ -4,7 +4,11 @@ from sqlalchemy import Boolean, Column, Integer, Date, Numeric, Text
 from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship
 
-from .base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.models.base import (
+    Base,
+    PGSQL_SCHEMA_UTENTES,
+    update_array,
+)
 from utentes.lib.schema_validator.validator import Validator
 import actividades_schema
 from utentes.models.cultivo import ActividadesCultivos
@@ -90,6 +94,7 @@ class ActividadesAgriculturaRega(Actividade):
 
     cultivos  = relationship('ActividadesCultivos',
                               cascade="all, delete-orphan",
+                              order_by='ActividadesCultivos.gid',
                               passive_deletes=True)
 
     def __json__(self, request):
@@ -232,8 +237,9 @@ class ActividadesPecuaria(Actividade):
     }
 
     reses  = relationship('ActividadesReses',
-                              cascade="all, delete-orphan",
-                              passive_deletes=True)
+                        cascade="all, delete-orphan",
+                        order_by='ActividadesReses.gid',
+                        passive_deletes=True)
 
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}

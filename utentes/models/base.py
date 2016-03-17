@@ -62,3 +62,30 @@ class APIAction(object):
             'id':        self.exp_id,
             'name':      self.user_name
         }
+
+def update_array(olds, news_json, factory):
+    news = []
+    update_dict = {}
+    for n in news_json:
+        new = factory(n)
+        # new.exploracao = self.gid
+        news.append(new)
+        if n.get('id'):
+           update_dict[n.get('id')] = n
+
+    # this needs objects to declare when they are equals
+    # by declaring the method __eq__
+    to_remove = [el for el in olds if el not in news]
+    to_update = [el for el in olds if el in news]
+    to_append = [el for el in news if el not in olds]
+
+    for old in to_remove:
+        olds.remove(old)
+
+    for old in to_update:
+        new = update_dict[old.gid]
+        if new:
+            old.update_from_json(new)
+
+    for new in to_append:
+        olds.append(new)
