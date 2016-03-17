@@ -8,6 +8,8 @@ from .base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.lib.schema_validator.validator import Validator
 import actividades_schema
 from utentes.models.cultivo import ActividadesCultivos
+from utentes.models.reses import ActividadesReses
+
 
 
 class Actividade(Base):
