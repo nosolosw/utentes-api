@@ -40,6 +40,7 @@ class Actividade(Base):
             u'Piscicultura': ActividadesPiscicultura,
             u'Producção de energia': ActividadesProduccaoEnergia,
             u'Saneamento': ActividadesSaneamento,
+            u'Pecuária': ActividadesPecuaria
         }
         tipo = json.get('tipo')
         a = classes[tipo]()
