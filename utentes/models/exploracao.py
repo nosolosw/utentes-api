@@ -11,7 +11,8 @@ from utentes.lib.formatter.formatter import to_decimal, to_date
 from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
-    update_array
+    update_array,
+    update_geom
 )
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
@@ -63,16 +64,8 @@ class Exploracao(Base):
                               uselist=False,
                               passive_deletes=True)
 
-    def update_geom(self, new):
-        the_geom = None
-        from geoalchemy2.elements import WKTElement
-        from utentes.lib.geomet import wkt
-        the_geom = WKTElement(wkt.dumps(new), srid=4326)
-        the_geom = the_geom.ST_Multi().ST_Transform(32737)
-        return the_geom
 
     def update_from_json(self, json, lic_nro_sequence):
-
         if not self.actividade:
             actv = Actividade.create_from_json(json.get('actividade'))
             msgs = actv.validate(json.get('actividade'))
@@ -105,9 +98,7 @@ class Exploracao(Base):
         self.c_licencia = to_decimal(json.get('c_licencia'))
         self.c_real     = to_decimal(json.get('c_real'))
         self.c_estimado = to_decimal(json.get('c_estimado'))
-        g = json.get('geometry')
-        if g:
-            self.the_geom = self.update_geom(g)
+        update_geom(self.the_geom, json)
 
         # update relationships
         update_array(self.fontes,

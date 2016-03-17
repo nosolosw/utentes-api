@@ -3,7 +3,11 @@
 from sqlalchemy import Column, Integer, Numeric, Text
 from sqlalchemy import ForeignKey, text
 
-from .base import Base, PGSQL_SCHEMA_UTENTES
+from utentes.models.base import (
+    Base,
+    PGSQL_SCHEMA_UTENTES,
+    update_geom
+)
 from utentes.lib.schema_validator.validator import Validator
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
