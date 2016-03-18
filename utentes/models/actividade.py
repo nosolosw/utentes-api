@@ -146,7 +146,7 @@ class ActividadesIndustria(Actividade):
         self.tipo       = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         self.tipo_indus = json.get('tipo_indus')
-        self.intalacio  = json.get('instalacio')
+        self.instalacio  = json.get('instalacio')
         self.efluente   = json.get('efluente')
         self.tratamento = json.get('tratamento')
         self.eval_impac = json.get('eval_impac')
