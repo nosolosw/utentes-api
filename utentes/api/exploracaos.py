@@ -83,9 +83,10 @@ def exploracaos_update(request):
         u_id = body.get('utente').get('id')
         if not u_id:
             u = Utente.create_from_json(body['utente'])
+            # TODO validate utente
             request.db.add(u)
         elif e.utente_rel.gid != u_id:
-            u_filter = Utente.id == u_id
+            u_filter = Utente.gid == u_id
             u = request.db.query(Utente).filter(u_filter).one()
         else:
             u = e.utente_rel
