@@ -6,11 +6,12 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from utentes.lib.schema_validator.validator import Validator
 from utentes.lib.schema_validator.validation_exception import ValidationException
+from utentes.models.base import badrequest_exception
 from utentes.models.utente import Utente
+from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.exploracao import Exploracao
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.licencia_schema import LICENCIA_SCHEMA
-from utentes.models.base import badrequest_exception
 from utentes.models.fonte_schema import FONTE_SCHEMA
 
 import logging
@@ -89,7 +90,8 @@ def exploracaos_update(request):
         else:
             u = e.utente_rel
 
-        msgs = u.validate(request.json_body['utente'])
+        validatorUtente = Validator(UTENTE_SCHEMA)
+        msgs = validatorUtente.validate(request.json_body['utente'])
         if len(msgs) > 0:
             raise badrequest_exception({'error': msgs})
         e.utente_rel = u
@@ -125,8 +127,10 @@ def exploracaos_update(request):
 
     return e
 
+
 def _tipo_actividade_changes(e, json):
     return e.actividade and json.get('actividade') and (e.actividade.tipo != json.get('actividade').get('tipo'))
+
 
 @view_config(route_name='exploracaos', request_method='POST', renderer='json')
 def exploracaos_create(request):
@@ -149,7 +153,8 @@ def exploracaos_create(request):
     u_filter = Utente.nome == body.get('utente').get('nome')
     u = request.db.query(Utente).filter(u_filter).first()
     if not u:
-        msgs = u.validate(body['utente'])
+        validatorUtente = Validator(UTENTE_SCHEMA)
+        msgs = validatorUtente.validate(body['utente'])
         if len(msgs) > 0:
             raise badrequest_exception({'error': msgs})
         u = Utente.create_from_json(body['utente'])

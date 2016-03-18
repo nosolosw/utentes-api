@@ -4,8 +4,6 @@ from sqlalchemy import Column, Integer, Text, text
 from sqlalchemy.orm import relationship
 
 from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES
-from utentes.models.utente_schema import UTENTE_SCHEMA
-from utentes.lib.schema_validator.validator import Validator
 
 
 class Utente(Base):
@@ -46,12 +44,6 @@ class Utente(Base):
         self.loc_posto  = json.get('loc_posto')
         self.loc_nucleo = json.get('loc_nucleo')
         self.observacio = json.get('observacio')
-
-
-    # TODO. We can copy how backbone works for valation
-    def validate(self, json):
-        validatorUtente = Validator(UTENTE_SCHEMA)
-        return validatorUtente.validate(json)
 
     def __json__(self, request):
         exploracaos = []
