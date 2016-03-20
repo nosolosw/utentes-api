@@ -69,11 +69,10 @@ class Validator():
             for rulename in definition['rules']:
                 rule = self.get_rule(rulename)
                 if isinstance(rule, dict):
-                    model[definition['fieldname']]
-                    if rule['fails'](model[definition['fieldname']]):
+                    if rule['fails'](model.get(definition['fieldname'])):
                         self.messages.append(definition['message'])
                 else:
-                    if rule.fails(model[definition['fieldname']]):
+                    if rule.fails(model.get(definition['fieldname'])):
                         self.messages.append(definition['message'])
 
         return self.messages
