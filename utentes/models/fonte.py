@@ -60,3 +60,6 @@ class Fonte(Base):
             'observacio': self.observacio,
             'exploracao': self.exploracao,
         }
+
+    def validate(self, json):
+        return []

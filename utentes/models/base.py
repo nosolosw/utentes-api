@@ -79,7 +79,10 @@ def update_array(olds, news_json, factory):
     update_dict = {}
     for n in news_json:
         new = factory(n)
-        # new.exploracao = self.gid
+        msgs = new.validate(n)
+        if len(msgs) > 0:
+            from utentes.lib.schema_validator.validation_exception import ValidationException
+            raise ValidationException({'error': msgs})
         news.append(new)
         if n.get('id'):
            update_dict[n.get('id')] = n

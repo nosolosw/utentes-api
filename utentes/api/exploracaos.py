@@ -160,7 +160,14 @@ def exploracaos_create(request):
             raise badrequest_exception({'error': msgs})
         u = Utente.create_from_json(body['utente'])
         request.db.add(u)
-    e = Exploracao.create_from_json(body)
+    try:
+        e = Exploracao.create_from_json(body)
+    except ValidationException as val_exp:
+        if u:
+            request.db.refresh(u)
+        if e:
+            request.db.refresh(e)
+        raise badrequest_exception(val_exp.msgs)
     e.utente_rel = u
     request.db.add(e)
     request.db.commit()

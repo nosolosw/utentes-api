@@ -3,15 +3,17 @@
 from sqlalchemy import Column, Integer, Numeric, Text
 from sqlalchemy import ForeignKey, text
 
+from geoalchemy2 import Geometry
+from geoalchemy2.elements import WKTElement
+from geoalchemy2.functions import GenericFunction
+
+from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
     update_geom
 )
-from utentes.lib.schema_validator.validator import Validator
-from geoalchemy2 import Geometry
-from geoalchemy2.elements import WKTElement
-from geoalchemy2.functions import GenericFunction
+from actividades_schema import ActividadesCultivos_SCHEMA
 
 class ActividadesCultivos(Base):
     __tablename__ = 'actividades_cultivos'
@@ -69,6 +71,5 @@ class ActividadesCultivos(Base):
 
 
     def validate(self, json):
-        return []
-        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
-        # return validator.validate(json)
+        validator = Validator(ActividadesCultivos_SCHEMA)
+        return validator.validate(json)

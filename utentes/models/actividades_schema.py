@@ -45,17 +45,13 @@ ActividadesCultivos_SCHEMA = [{
   'message':   'rega non pode estar vacío',
   'rules':     ['NOT_NULL']
 }, {
-  'fieldname': 'efiencia',
+  'fieldname': 'eficiencia',
   'message':   'eficiencia non pode estar vacío',
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
 }, {
   'fieldname': 'area',
   'message':   'area non pode estar vacío',
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
-}, {
-  'fieldname': 'the_geom',
-  'message':   'the_geom non pode estar vacío',
-  'rules':     ['NOT_NULL']
 }];
 
 ActividadesIndustria_SCHEMA = [{

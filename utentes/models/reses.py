@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, text
 
 from .base import Base, PGSQL_SCHEMA_UTENTES
 from utentes.lib.schema_validator.validator import Validator
-
+from actividades_schema import ActividadesReses_SCHEMA
 
 class ActividadesReses(Base):
     __tablename__ = 'actividades_reses'
@@ -43,6 +43,5 @@ class ActividadesReses(Base):
 
 
     def validate(self, json):
-        return []
-        # validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
-        # return validator.validate(json)
+        validator = Validator(ActividadesReses_SCHEMA)
+        return validator.validate(json)

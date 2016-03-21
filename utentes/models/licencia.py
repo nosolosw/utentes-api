@@ -70,3 +70,6 @@ class Licencia(Base):
             'c_real_fon': self.c_real_fon,
             'exploracao': self.exploracao,
         }
+
+    def validate(self, json):
+        return []
