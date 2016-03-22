@@ -181,12 +181,11 @@ class ActividadesPecuaria(Actividade):
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         update_array(self.reses,
-                    json.get('reses'),
-                    ActividadesReses.create_from_json)
-
+                     json.get('reses'),
+                     ActividadesReses.create_from_json)
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        validator = Validator(actividades_schema.ActividadesPecuaria_SCHEMA)
         return validator.validate(json)
 
 class ActividadesPiscicultura(Actividade):
@@ -261,7 +260,7 @@ class ActividadesSaneamento(Actividade):
         self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
-        self.habitanes = json.get('habitantes')
+        self.habitantes = json.get('habitantes')
 
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadesSaneamento_SCHEMA)

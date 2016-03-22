@@ -5,6 +5,7 @@ import unittest
 from utentes.tests.api import DBIntegrationTest
 from utentes.models.exploracao import Exploracao
 from utentes.models.utente import Utente
+from utentes.models.actividade import Actividade
 from utentes.api.exploracaos import exploracaos_update
 
 
@@ -33,6 +34,15 @@ def create_new_session():
     session = sessionmaker()
     session.configure(bind=engine)
     return session()
+
+
+class ExploracaoUpdateTests(DBIntegrationTest):
+
+    def test_update_exploracao(self):
+        pass
+
+    def test_update_exploracao_validation_fails(self):
+        pass
 
 
 class ExploracaoUpdateFonteTests(DBIntegrationTest):
@@ -68,27 +78,6 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         pass
 
     def test_update_exploracao_delete_licencia(self):
-        pass
-
-
-class ExploracaoUpdateTests(DBIntegrationTest):
-
-    def test_update_exploracao(self):
-        pass
-
-    def test_update_exploracao_validation_fails(self):
-        pass
-
-    def test_update_exploracao_create_actividade(self):
-        pass
-
-    def test_update_exploracao_create_actividade_validation_fails(self):
-        pass
-
-    def test_update_exploracao_delete_actividade(self):
-        pass
-
-    def test_update_exploracao_update_actividade_tipo(self):
         pass
 
 
@@ -223,14 +212,15 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         self.assertEquals('test nome', actual.utente_rel.nome)
 
 
-class ExploracaosUpdateActividadeTests(DBIntegrationTest):
+class ExploracaoUpdateActividadeTests(DBIntegrationTest):
 
-    def test_update_exploracao_update_actividade(self):
-        exp = self.get_test_exploracao()
-        gid = exp.gid
+    def test_update_exploracao_update_actividade_values(self):
+        # SELECT a.tipo, e.exp_id FROM actividades AS a INNER JOIN exploracaos AS e ON (a.exploracao = e.gid) ORDER BY exp_id;
+        # 2010-002 industria
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
-        expected = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
-        expected_json = self._build_json(expected)
+        expected_json = build_json(self.request, expected)
         expected_json['actividade']['c_estimado'] = 101.11
         self.request.json_body = expected_json
         exploracaos_update(self.request)
@@ -238,30 +228,50 @@ class ExploracaosUpdateActividadeTests(DBIntegrationTest):
         self.assertEquals(101.11, float(actual.actividade.c_estimado))
 
     def test_update_exploracao_update_actividade_validation_fails(self):
-        exp = self.get_test_exploracao()
-        gid = exp.gid
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
-        expected = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
-        expected_json = self._build_json(expected)
+        expected_json = build_json(self.request, expected)
         expected_json['utente']['observacio'] = ' foo - bar '
         expected_json['observacio'] = ' foo - bar '
         expected_json['actividade']['c_estimado'] = 'TEXT'
         self.request.json_body = expected_json
         from pyramid.httpexceptions import HTTPBadRequest
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-
-        s = self._create_new_session()
+        s = create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(expected.utente_rel.observacio, actual.utente_rel.observacio)
         self.assertNotEquals(' foo - bar ', actual.utente_rel.observacio)
         self.assertEquals(expected.observacio, actual.observacio)
         self.assertNotEquals(' foo - bar ', actual.observacio)
 
+    def test_update_exploracao_change_actividade(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        gid_actividade = expected.actividade.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        # change from industria to saneamento
+        expected_json['actividade'] = {
+            'id': None,
+            'tipo': u'Saneamento',
+            'c_estimado': 23,
+            'habitantes': 42
+        }
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        count_actividade = self.request.db.query(Actividade).filter(Actividade.gid == gid_actividade).count()
+        self.assertEquals(0, count_actividade)  # was deleted
+        self.assertEquals('Saneamento', actual.actividade.tipo)
+        self.assertEquals(23, actual.actividade.c_estimado)
+        self.assertEquals(42, actual.actividade.habitantes)
+
     def test_update_exploracao_update_actividade_pecuaria_delete_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
-        self.request.matchdict.update( dict(id= expected.gid) )
-        expected_json = self._build_json(expected)
-        expected_json['actividade']['reses'] = [ res for res in expected_json['actividade']['reses'] if res['id'] != 2]
+        self.request.matchdict.update(dict(id=expected.gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['actividade']['reses'] = [res for res in expected_json['actividade']['reses'] if res['id'] != 2]
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
@@ -273,7 +283,7 @@ class ExploracaosUpdateActividadeTests(DBIntegrationTest):
     def test_update_exploracao_update_actividade_pecuaria_update_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         self.request.matchdict.update( dict(id= expected.gid) )
-        expected_json = self._build_json(expected)
+        expected_json = build_json(self.request, expected)
         for res in expected_json['actividade']['reses']:
             if res['id'] == 1:
                 res['c_estimado'] = 9999.88
@@ -290,14 +300,13 @@ class ExploracaosUpdateActividadeTests(DBIntegrationTest):
     def test_update_exploracao_update_actividade_pecuaria_create_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         self.request.matchdict.update( dict(id= expected.gid) )
-        expected_json = self._build_json(expected)
+        expected_json = build_json(self.request, expected)
         expected_json['actividade']['reses'].append({
             'c_estimado': 40,
             'reses_tipo': 'Vacuno (Vacas)',
             'reses_nro': 400,
             'c_res': 4000,
         })
-
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
@@ -311,9 +320,9 @@ class ExploracaosUpdateActividadeTests(DBIntegrationTest):
 
     def test_update_exploracao_update_actividade_pecuaria_create_update_delete_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
-        self.request.matchdict.update( dict(id= expected.gid) )
-        expected_json = self._build_json(expected)
-        expected_json['actividade']['reses'] = [ res for res in expected_json['actividade']['reses'] if res['id'] != 3]
+        self.request.matchdict.update(dict(id=expected.gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['actividade']['reses'] = [res for res in expected_json['actividade']['reses'] if res['id'] != 3]
         expected_json['actividade']['reses'].append({
             'c_estimado': 50,
             'reses_tipo': 'Vacuno (Vacas)',

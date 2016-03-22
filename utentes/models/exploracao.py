@@ -64,7 +64,6 @@ class Exploracao(Base):
                               uselist=False,
                               passive_deletes=True)
 
-
     def update_from_json(self, json, lic_nro_sequence):
         if not self.actividade:
             actv = Actividade.create_from_json(json.get('actividade'))
@@ -102,12 +101,12 @@ class Exploracao(Base):
 
         # update relationships
         update_array(self.fontes,
-                          json.get('fontes'),
-                          Fonte.create_from_json)
+                     json.get('fontes'),
+                     Fonte.create_from_json)
 
         update_array(self.licencias,
-                          json.get('licencias'),
-                          Licencia.create_from_json)
+                     json.get('licencias'),
+                     Licencia.create_from_json)
         for licencia in self.licencias:
             if not licencia.lic_nro:
                 licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)

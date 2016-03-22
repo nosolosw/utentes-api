@@ -101,7 +101,7 @@ def exploracaos_update(request):
 
         if _tipo_actividade_changes(e, request.json_body):
             request.db.delete(e.actividade)
-            e.actividade = None
+            del e.actividade
 
         # TODO instead of using licencias.length use a sequence in DB
         # related to not delete licencias but make it inactive with a flag

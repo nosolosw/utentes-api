@@ -7,6 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 PGSQL_SCHEMA_UTENTES = 'utentes'
 PGSQL_SCHEMA_DOMAINS = 'domains'
 
+
 class BaseClass(object):
     # python uses this method to compare objects
     # for example, in exploracao.update_array
@@ -18,7 +19,6 @@ class BaseClass(object):
 
 DeclarativeBase = declarative_base()
 Base = declarative_base(cls=BaseClass)
-
 
 
 def unauthorized_exception(body=None):
@@ -73,6 +73,7 @@ class APIAction(object):
             'id':        self.exp_id,
             'name':      self.user_name
         }
+
 
 def update_array(olds, news_json, factory):
     news = []
