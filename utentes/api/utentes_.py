@@ -20,9 +20,8 @@ def utentes_get(request):
         try:
             return request.db.query(Utente).filter(Utente.gid == gid).one()
         except(MultipleResultsFound, NoResultFound):
-            # TODO translate msg
             raise badrequest_exception({
-                'error': 'El código no existe',
+                'error': error_msgs['no_gid'],
                 'gid': gid
                 })
     else:
@@ -33,18 +32,16 @@ def utentes_get(request):
 def utentes_delete(request):
     gid = request.matchdict['id']
     if not gid:
-        # TODO translate msg
         raise badrequest_exception({
-            'error': 'gid es un campo necesario'
+            'error': error_msgs['gid_obligatory']
         })
     try:
         e = request.db.query(Utente).filter(Utente.gid == gid).one()
         request.db.delete(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
-        # TODO translate msg
         raise badrequest_exception({
-            'error': 'El código no existe',
+            'error': error_msgs['no_gid'],
             'gid': gid
         })
     return {'gid': gid}
@@ -54,10 +51,7 @@ def utentes_delete(request):
 def utentes_update(request):
     gid = request.matchdict['id']
     if not gid:
-        # TODO translate msg
-        raise badrequest_exception({
-            'error': 'gid es un campo necesario'
-        })
+        raise badrequest_exception({'error': error_msgs['gid_obligatory']})
 
     msgs = validate_entities(request.json_body)
     if len(msgs) > 0:
@@ -69,15 +63,13 @@ def utentes_update(request):
         request.db.add(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
-        # TODO translate msg
         raise badrequest_exception({
-            'error': 'El código no existe',
+            'error': error_msgs['no_gid'],
             'gid': gid
         })
     except ValueError as ve:
         log.error(ve)
-        # TODO translate msg
-        raise badrequest_exception({'error': 'body is not a valid json'})
+        raise badrequest_exception({'error': error_msgs['body_not_valid']})
 
     return e
 
@@ -89,22 +81,19 @@ def utentes_create(request):
         nome = body.get('nome')
     except ValueError as ve:
         log.error(ve)
-        # TODO translate msg
-        raise badrequest_exception({'error': 'body is not a valid json'})
+        raise badrequest_exception({'error': error_msgs['body_not_valid']})
 
     msgs = validate_entities(body)
     if len(msgs) > 0:
         raise badrequest_exception({'error': msgs})
 
-    # TODO is this not covered by schema validations?
+    # TODO:320 is this not covered by schema validations?
     if not nome:
-        # TODO translate msg
         raise badrequest_exception({'error': 'nome es un campo obligatorio'})
 
     e = request.db.query(Utente).filter(Utente.nome == nome).first()
     if e:
-        # TODO translate msg
-        raise badrequest_exception({'error': 'La utente ya existe'})
+        raise badrequest_exception({'error': error_msgs['utente_already_exists']})
 
     u = Utente.create_from_json(body)
     request.db.add(u)

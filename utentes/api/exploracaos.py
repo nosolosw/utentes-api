@@ -13,6 +13,7 @@ from utentes.models.exploracao import Exploracao
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.licencia_schema import LICENCIA_SCHEMA
 from utentes.models.fonte_schema import FONTE_SCHEMA
+from utentes.api.error_msgs import error_msgs
 
 import logging
 log = logging.getLogger(__name__)
@@ -29,9 +30,8 @@ def exploracaos_get(request):
         try:
             return request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         except(MultipleResultsFound, NoResultFound):
-            # TODO translate msg
             raise badrequest_exception({
-                'error': 'El código no existe',
+                'error': error_msgs['no_gid'],
                 'gid': gid
                 })
 
@@ -46,18 +46,16 @@ def exploracaos_get(request):
 def exploracaos_delete(request):
     gid = request.matchdict['id']
     if not gid:
-        # TODO translate msg
         raise badrequest_exception({
-            'error': 'gid es un campo necesario'
+            'error': error_msgs['gid_obligatory']
         })
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         request.db.delete(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
-        # TODO translate msg
         raise badrequest_exception({
-            'error': 'El código no existe',
+            'error': error_msgs['no_gid'],
             'gid': gid
         })
     return {'gid': gid}
@@ -67,9 +65,8 @@ def exploracaos_delete(request):
 def exploracaos_update(request):
     gid = request.matchdict['id']
     if not gid:
-        # TODO translate msg
         raise badrequest_exception({
-            'error': 'gid es un campo necesario'
+            'error': error_msgs['gid_obligatory']
         })
 
     try:
@@ -83,7 +80,7 @@ def exploracaos_update(request):
         u_id = body.get('utente').get('id')
         if not u_id:
             u = Utente.create_from_json(body['utente'])
-            # TODO validate utente
+            # TODO:660 validate utente
             request.db.add(u)
         elif e.utente_rel.gid != u_id:
             u_filter = Utente.gid == u_id
@@ -111,15 +108,10 @@ def exploracaos_update(request):
         request.db.add(e)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
-        # TODO translate msg
-        raise badrequest_exception({
-            'error': 'El código no existe',
-            'gid': gid
-        })
+        raise badrequest_exception({'error': error_msgs['no_gid'], 'gid': gid})
     except ValueError as ve:
         log.error(ve)
-        # TODO translate msg
-        raise badrequest_exception({'error': 'body is not a valid json'})
+        raise badrequest_exception({'error': error_msgs['body_not_valid']})
     except ValidationException as val_exp:
         if u:
             request.db.refresh(u)
@@ -153,8 +145,7 @@ def exploracaos_create(request):
         exp_id = body.get('exp_id')
     except ValueError as ve:
         log.error(ve)
-        # TODO translate msg
-        raise badrequest_exception({'error': 'body is not a valid json'})
+        raise badrequest_exception({'error': error_msgs['body_not_valid']})
 
     msgs = validate_entities(body)
     if len(msgs) > 0:
@@ -162,8 +153,7 @@ def exploracaos_create(request):
 
     e = request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
     if e:
-        # TODO translate msg
-        raise badrequest_exception({'error': 'La exploracao ya existe'})
+        raise badrequest_exception({'error': error_msgs['exploracao_already_exists']})
 
     u_filter = Utente.nome == body.get('utente').get('nome')
     u = request.db.query(Utente).filter(u_filter).first()
