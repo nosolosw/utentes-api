@@ -3,20 +3,21 @@
 
 import unittest
 from utentes.tests.api import DBIntegrationTest
+from utentes.models.exploracao import Exploracao
 
-# Asume que se está usando una base de datos con fixtures
-# limpia
+
 class ExploracaosGET_IntegrationTests(DBIntegrationTest):
 
-    def test_lengh_of_get_exploracaos(self):
+    def test_exploracao_get_length(self):
         from utentes.api.exploracaos import exploracaos_get
         actual = exploracaos_get(self.request)
-        expected_len = 46
-        self.assertEquals(len(actual['features']), expected_len)
+        exp_count = self.request.db.query(Exploracao).count()
+        self.assertEquals(len(actual['features']), exp_count)
 
-    def test_properties_exists_in_get_exploracaos_id(self):
+    def test_exploracao_get_returns_a_geojson(self):
         from utentes.api.exploracaos import exploracaos_get
-        self.request.matchdict.update( dict(id= 117) )
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        self.request.matchdict.update(dict(id=expected.gid))
         actual = exploracaos_get(self.request).__json__(self.request)
         self.assertTrue('geometry' in actual)
         self.assertTrue('type' in actual)
