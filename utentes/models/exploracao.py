@@ -121,7 +121,7 @@ class Exploracao(Base):
     @staticmethod
     def create_from_json(body):
         e = Exploracao()
-        e.update_from_json(body, LIC_NRO_FIRST)
+        e.update_from_json(body, Exploracao.LIC_NRO_SEQUENCE_FIRST)
         return e
 
     def __json__(self, request):

@@ -157,12 +157,13 @@ def exploracaos_create(request):
         raise badrequest_exception({'error': 'body is not a valid json'})
 
     msgs = validate_entities(body)
+    if len(msgs) > 0:
+        raise badrequest_exception({'error': msgs})
+
     e = request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
     if e:
         # TODO translate msg
-        msgs.append('La exploracao ya existe')
-    if len(msgs) > 0:
-        raise badrequest_exception({'error': msgs})
+        raise badrequest_exception({'error': 'La exploracao ya existe'})
 
     u_filter = Utente.nome == body.get('utente').get('nome')
     u = request.db.query(Utente).filter(u_filter).first()
