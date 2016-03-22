@@ -181,8 +181,8 @@ def validate_entities(body):
     msgs = validatorExploracao.validate(body)
 
     validatorFonte = Validator(FONTE_SCHEMA)
-    for l in body.get('fontes'):
-        msgs = msgs + validatorFonte.validate(l)
+    for fonte in body.get('fontes'):
+        msgs = msgs + validatorFonte.validate(fonte)
 
     validatorLicencia = Validator(LICENCIA_SCHEMA)
     validatorLicencia.add_rule('LIC_NRO_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}-\d{3}$', v))})

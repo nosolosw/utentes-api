@@ -2,10 +2,13 @@
 
 
 import unittest
+from pyramid.httpexceptions import HTTPBadRequest
+
 from utentes.tests.api import DBIntegrationTest
 from utentes.models.exploracao import Exploracao
 from utentes.models.utente import Utente
 from utentes.models.actividade import Actividade
+from utentes.models.fonte import Fonte
 from utentes.api.exploracaos import exploracaos_update
 
 
@@ -47,34 +50,109 @@ class ExploracaoUpdateTests(DBIntegrationTest):
 
 class ExploracaoUpdateFonteTests(DBIntegrationTest):
 
-    def test_update_exploracao_update_fonte(self):
-        pass
-
-    def test_update_exploracao_update_fonte_validation_fails(self):
-        pass
-
     def test_update_exploracao_create_fonte(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['fontes'].append({
+            'tipo_agua': 'Subterrânea',
+            'tipo_fonte': 'Outros',
+            'lat_lon': '23,23 42,21',
+            'd_dado': '2001-01-01',
+            'c_soli': 23.42,
+            'c_max': 42.23,
+            'c_real': 4.3,
+            'contador': False,
+            'metodo_est': 'manual',
+            'observacio': 'nao'
+        })
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(2, len(actual.fontes))
 
     def test_update_exploracao_create_fonte_validation_fails(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['fontes'].append({
+            'tipo_fonte': 'Outros',
+        })
+        self.request.json_body = expected_json
+        self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
+        s = create_new_session()
+        actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(1, len(actual.fontes))
+
+    def test_update_exploracao_update_fonte_values(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        gid_fonte = expected.fontes[0].gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['fontes'][0]['tipo_fonte'] = 'Outros'
+        expected_json['fontes'][0]['lat_lon'] = '23,23 42,21'
+        expected_json['fontes'][0]['d_dado'] = '2001-01-01'
+        expected_json['fontes'][0]['c_soli'] = 23.42
+        expected_json['fontes'][0]['c_max'] = 42.23
+        expected_json['fontes'][0]['c_real'] = 4.3
+        expected_json['fontes'][0]['contador'] = False
+        expected_json['fontes'][0]['metodo_est'] = 'manual'
+        expected_json['fontes'][0]['observacio'] = 'nao'
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Fonte).filter(Fonte.gid == gid_fonte).first()
+        self.assertEquals('Outros', actual.tipo_fonte)
+        self.assertEquals('23,23 42,21', actual.lat_lon)
+        self.assertEquals('2001-01-01', actual.d_dado.isoformat())
+        self.assertEquals(23.42, float(actual.c_soli))
+        self.assertEquals(42.23, float(actual.c_max))
+        self.assertEquals(4.3, float(actual.c_real))
+        self.assertEquals(False, actual.contador)
+        self.assertEquals('manual', actual.metodo_est)
+        self.assertEquals('nao', actual.observacio)
+        self.assertEquals(gid, actual.exploracao)
+
+    def test_update_exploracao_update_fonte_validation_fails(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        gid_fonte = expected.fontes[0].gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        tipo_agua = expected_json['fontes'][0]['tipo_agua']
+        expected_json['fontes'][0]['tipo_agua'] = None
+        self.request.json_body = expected_json
+        self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
+        s = create_new_session()
+        actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(tipo_agua, actual.fontes[0].tipo_agua)
 
     def test_update_exploracao_delete_fonte(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['fontes'] = []
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(0, len(actual.fontes))
 
 
 class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
-
-    def test_update_exploracao_update_licencia(self):
-        pass
-
-    def test_update_exploracao_update_licencia_validation_fails(self):
-        pass
 
     def test_update_exploracao_create_licencia(self):
         pass
 
     def test_update_exploracao_create_licencia_validation_fails(self):
+        pass
+
+    def test_update_exploracao_update_licencia(self):
+        pass
+
+    def test_update_exploracao_update_licencia_validation_fails(self):
         pass
 
     def test_update_exploracao_delete_licencia(self):
@@ -133,9 +211,7 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         expected_json = build_json(self.request, expected)
         expected_json['utente']['nome'] = None
         self.request.json_body = expected_json
-        from pyramid.httpexceptions import HTTPBadRequest
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-
         s = create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(expected.utente_rel.nome, actual.utente_rel.nome)
@@ -170,7 +246,6 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         expected_json['utente']['nome'] = 'foo - bar'
         expected_json['c_soli'] = 'text'
         self.request.json_body = expected_json
-        from pyramid.httpexceptions import HTTPBadRequest
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
 
     def test_update_exploracao_change_utente(self):
