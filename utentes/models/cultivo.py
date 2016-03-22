@@ -13,7 +13,8 @@ from utentes.models.base import (
     PGSQL_SCHEMA_UTENTES,
     update_geom
 )
-from actividades_schema import ActividadesCultivos_SCHEMA
+import actividades_schema
+
 
 class ActividadesCultivos(Base):
     __tablename__ = 'actividades_cultivos'
@@ -71,5 +72,5 @@ class ActividadesCultivos(Base):
 
 
     def validate(self, json):
-        validator = Validator(ActividadesCultivos_SCHEMA)
+        validator = Validator(ActividadeSchema['cultivos'])
         return validator.validate(json)

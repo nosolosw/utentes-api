@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-ActividadesAbastecemento_SCHEMA = [{
+ActividadeSchema = {}
+
+ActividadeSchema['Abastecimento'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -16,9 +18,9 @@ ActividadesAbastecemento_SCHEMA = [{
   'fieldname': 'dotacao',
   'message':   'dotacao não tem o formato correcto',
   'rules':     ['IS_NUMERIC', 'NOT_NULL']
-}];
+}]
 
-ActividadesAgriculturaRega_SCHEMA = [{
+ActividadeSchema['Agricultura-Regadia'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -30,9 +32,9 @@ ActividadesAgriculturaRega_SCHEMA = [{
   'fieldname': 'cultivos',
   'message':   'cultivos non pode estar vacío',
   'rules':     ['NOT_NULL']
-}];
+}]
 
-ActividadesCultivos_SCHEMA = [{
+ActividadeSchema['Cultivos'] = [{
   'fieldname': 'c_estimado',
   'message':   'c_estimado não tem o formato correcto',
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
@@ -52,9 +54,9 @@ ActividadesCultivos_SCHEMA = [{
   'fieldname': 'area',
   'message':   'area non pode estar vacío',
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
-}];
+}]
 
-ActividadesIndustria_SCHEMA = [{
+ActividadeSchema['Indústria'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -62,9 +64,9 @@ ActividadesIndustria_SCHEMA = [{
   'fieldname': 'c_estimado',
   'message':   'c_estimado não tem o formato correcto',
   'rules':     ['IS_NUMERIC']
-}];
+}]
 
-ActividadesPecuaria_SCHEMA = [{
+ActividadeSchema ['Pecuária']= [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -76,9 +78,9 @@ ActividadesPecuaria_SCHEMA = [{
   'fieldname': 'reses',
   'message':   'reses non pode estar vacío',
   'rules':     ['NOT_NULL']
-}];
+}]
 
-ActividadesReses_SCHEMA = [{
+ActividadeSchema['Reses'] = [{
   'fieldname': 'c_estimado',
   'message':   'c_estimado não tem o formato correcto',
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
@@ -94,9 +96,9 @@ ActividadesReses_SCHEMA = [{
   'fieldname': 'c_res',
   'message':   'c_res non pode estar vacío',
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
-}];
+}]
 
-ActividadesPiscicultura_SCHEMA = [{
+ActividadeSchema['Piscicultura'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -112,9 +114,9 @@ ActividadesPiscicultura_SCHEMA = [{
   'fieldname': 'v_reservas',
   'message':   'v_reservas não tem o formato correcto',
   'rules':     ['IS_NUMERIC']
-}];
+}]
 
-ActividadesProduccaoEnergia_SCHEMA = [{
+ActividadeSchema['Producção de energia'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -130,9 +132,9 @@ ActividadesProduccaoEnergia_SCHEMA = [{
   'fieldname': 'potencia',
   'message':   'potencia não tem o formato correcto',
   'rules':     ['IS_NUMERIC']
-}];
+}]
 
-ActividadesSaneamento_SCHEMA = [{
+ActividadeSchema['Saneamento'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -144,4 +146,4 @@ ActividadesSaneamento_SCHEMA = [{
   'fieldname': 'habitantes',
   'message':   'habitantes não tem o formato correcto',
   'rules':     ['IS_NUMERIC']
-}];
+}]

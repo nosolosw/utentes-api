@@ -80,7 +80,7 @@ class ActividadesAbastecemento(Actividade):
         self.dotacao = json.get('dotacao')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesAbastecemento_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Abastecimento'])
         return validator.validate(json)
 
 class ActividadesAgriculturaRega(Actividade):
@@ -118,7 +118,7 @@ class ActividadesAgriculturaRega(Actividade):
                     ActividadesCultivos.create_from_json)
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesAgriculturaRega_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Agricultura-Regadia'])
         return validator.validate(json)
 
 
@@ -150,7 +150,7 @@ class ActividadesIndustria(Actividade):
         self.eval_impac = json.get('eval_impac')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesIndustria_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Indústria'])
         return validator.validate(json)
 
 class ActividadesPecuaria(Actividade):
@@ -185,7 +185,7 @@ class ActividadesPecuaria(Actividade):
                      ActividadesReses.create_from_json)
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesPecuaria_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Pecuária'])
         return validator.validate(json)
 
 class ActividadesPiscicultura(Actividade):
@@ -209,7 +209,7 @@ class ActividadesPiscicultura(Actividade):
         self.v_reservas = json.get('v_reservas')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesPiscicultura_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Piscicultura'])
         return validator.validate(json)
 
 class ActividadesProduccaoEnergia(Actividade):
@@ -240,7 +240,7 @@ class ActividadesProduccaoEnergia(Actividade):
         self.eval_impac = json.get('eval_impac')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesProduccaoEnergia_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Producção de energia'])
         return validator.validate(json)
 
 
@@ -263,5 +263,5 @@ class ActividadesSaneamento(Actividade):
         self.habitantes = json.get('habitantes')
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadesSaneamento_SCHEMA)
+        validator = Validator(actividades_schema.ActividadeSchema[u'Saneamento'])
         return validator.validate(json)
