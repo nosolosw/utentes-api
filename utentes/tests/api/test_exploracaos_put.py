@@ -9,6 +9,7 @@ from utentes.models.exploracao import Exploracao
 from utentes.models.utente import Utente
 from utentes.models.actividade import Actividade
 from utentes.models.fonte import Fonte
+from utentes.models.licencia import Licencia
 from utentes.api.exploracaos import exploracaos_update
 
 
@@ -144,19 +145,118 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
 class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
 
     def test_update_exploracao_create_licencia(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        lic_nro_first = expected.licencias[0].lic_nro
+        lic_nro_second = expected.exp_id + '-{:03d}'.format(len(expected.licencias) + 1)
+        expected_json['licencias'].append({
+            'lic_nro':    None,
+            'lic_tipo':   'Subterrânea',
+            'cadastro':   'cadastro',
+            'estado':     'Irregular',
+            'd_emissao':  '2020-02-02',
+            'd_validade': '2020-02-02',
+            'c_soli_tot': 4.3,
+            'c_soli_int': 2.1,
+            'c_soli_fon': 2.2,
+            'c_licencia': 10,
+            'c_real_tot': 4.3,
+            'c_real_int': 0,
+            'c_real_fon': 4.3,
+        })
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(2, len(actual.licencias))
+        self.assertEquals(lic_nro_first, actual.licencias[0].lic_nro)
+        self.assertEquals(lic_nro_second, actual.licencias[1].lic_nro)
 
     def test_update_exploracao_create_licencia_validation_fails(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['licencias'].append({
+            'lic_tipo':   None,
+        })
+        self.request.json_body = expected_json
+        self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
+        s = create_new_session()
+        actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(1, len(actual.licencias))
+
+    def test_update_exploracao_create_licencia_lic_nro_adds_up(self):
+        # TODO check that lic_nro is calculated from database values
+        # not from license array length
         pass
 
     def test_update_exploracao_update_licencia(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        lic_gid = expected.licencias[0].gid
+        lic_nro = expected.licencias[0].lic_nro
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['licencias'][0]['cadastro']   = 'cadastro'
+        expected_json['licencias'][0]['estado']     = 'Denegada'
+        expected_json['licencias'][0]['d_emissao']  = '1999-9-9'
+        expected_json['licencias'][0]['d_validade'] = '1999-8-7'
+        expected_json['licencias'][0]['c_soli_tot'] = 23.45
+        expected_json['licencias'][0]['c_soli_int'] = 0.45
+        expected_json['licencias'][0]['c_soli_fon'] = 23
+        expected_json['licencias'][0]['c_licencia'] = 999
+        expected_json['licencias'][0]['c_real_tot'] = 23.45
+        expected_json['licencias'][0]['c_real_int'] = 0.45
+        expected_json['licencias'][0]['c_real_fon'] = 23
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(1, len(actual.licencias))
+        self.assertEquals(lic_gid, actual.licencias[0].gid)
+        self.assertEquals(lic_nro, actual.licencias[0].lic_nro)
+        self.assertEquals('cadastro', actual.licencias[0].cadastro)
+        self.assertEquals('Denegada', actual.licencias[0].estado)
+        self.assertEquals('1999-09-09', actual.licencias[0].d_emissao.isoformat())
+        self.assertEquals('1999-08-07', actual.licencias[0].d_validade.isoformat())
+        self.assertEquals(23.45, float(actual.licencias[0].c_soli_tot))
+        self.assertEquals(0.45, float(actual.licencias[0].c_soli_int))
+        self.assertEquals(23, float(actual.licencias[0].c_soli_fon))
+        self.assertEquals(999, float(actual.licencias[0].c_licencia))
+        self.assertEquals(23.45, float(actual.licencias[0].c_real_tot))
+        self.assertEquals(0.45, float(actual.licencias[0].c_real_int))
+        self.assertEquals(23, float(actual.licencias[0].c_real_fon))
 
     def test_update_exploracao_update_licencia_validation_fails(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        lic_gid = expected.licencias[0].gid
+        lic_tipo = expected.licencias[0].lic_tipo
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['licencias'][0]['lic_tipo'] = None
+        self.request.json_body = expected_json
+        self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
+        s = create_new_session()
+        actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(1, len(actual.licencias))
+        self.assertEquals(lic_gid, actual.licencias[0].gid)
+        self.assertEquals(lic_tipo, actual.licencias[0].lic_tipo)
 
     def test_update_exploracao_delete_licencia(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        lic_gid = expected.licencias[0].gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['licencias'] = []
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        lic_count = self.request.db.query(Licencia).filter(Licencia.gid == lic_gid).count()
+        self.assertEquals(0, len(actual.licencias))
+        self.assertEquals(0, lic_count)
 
 
 class ExploracaoUpdateUtenteTests(DBIntegrationTest):

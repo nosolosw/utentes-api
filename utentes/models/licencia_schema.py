@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 LICENCIA_SCHEMA = [{
+  'fieldname': 'lic_tipo',
+  'message':   'Tipo de licencia não pode estar vacío',
+  'rules':     ['NOT_NULL']
+}, {
   'fieldname': 'lic_nro',
   'message':   'Nro de licencia não tem o formato correcto',
   'rules':     ['LIC_NRO_FORMAT']
