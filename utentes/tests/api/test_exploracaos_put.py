@@ -156,8 +156,8 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
             'lic_tipo':   'Subterrânea',
             'cadastro':   'cadastro',
             'estado':     'Irregular',
-            'd_emissao':  '2020-02-02',
-            'd_validade': '2020-02-02',
+            'd_emissao':  '2020-2-2',
+            'd_validade': '2010-10-10',
             'c_soli_tot': 4.3,
             'c_soli_int': 2.1,
             'c_soli_fon': 2.2,
@@ -170,8 +170,8 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(2, len(actual.licencias))
-        self.assertEquals(lic_nro_first, actual.licencias[0].lic_nro)
-        self.assertEquals(lic_nro_second, actual.licencias[1].lic_nro)
+        for lic in actual.licencias:
+            self.assertIn(lic.lic_nro, [lic_nro_first, lic_nro_second])
 
     def test_update_exploracao_create_licencia_validation_fails(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
@@ -187,10 +187,55 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(1, len(actual.licencias))
 
-    def test_update_exploracao_create_licencia_lic_nro_adds_up(self):
-        # TODO check that lic_nro is calculated from database values
-        # not from license array length
-        pass
+    def test_update_exploracao_create_licencia_update_lic_nro(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        # in test data, lic_nro_first is 'expid-001'
+        lic_nro_first = expected.licencias[0].lic_nro
+        lic_nro_second = expected.exp_id + '-002'
+        lic_nro_third = expected.exp_id + '-003'
+        expected_json['licencias'].append({
+            'lic_nro':    None,
+            'lic_tipo':   'Subterrânea',
+            'cadastro':   'cadastro',
+            'estado':     'Irregular',
+            'c_soli_tot': 4.3,
+            'c_soli_int': 2.1,
+            'c_soli_fon': 2.2,
+            'c_licencia': 10,
+            'c_real_tot': 4.3,
+            'c_real_int': 0,
+            'c_real_fon': 4.3,
+        })
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(2, len(actual.licencias))
+        for lic in actual.licencias:
+            self.assertIn(lic.lic_nro, [lic_nro_first, lic_nro_second])
+
+        # delete first license, with lic_nro expid-001
+        expected_json = build_json(self.request, actual)
+        for lic in expected_json['licencias']:
+            if lic['lic_nro'] == lic_nro_first:
+                expected_json['licencias'].remove(lic)
+                break
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        # add new one
+        expected_json['licencias'].append({
+            'lic_nro':    None,
+            'lic_tipo':   'Superficial',
+            'estado':     'Irregular',
+        })
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        exploracao = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(2, len(exploracao.licencias))
+        for lic in exploracao.licencias:
+            self.assertIn(lic.lic_nro, [lic_nro_second, lic_nro_third])
 
     def test_update_exploracao_update_licencia(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()

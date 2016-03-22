@@ -103,9 +103,10 @@ def exploracaos_update(request):
             request.db.delete(e.actividade)
             del e.actividade
 
-        # TODO instead of using licencias.length use a sequence in DB
-        # related to not delete licencias but make it inactive with a flag
-        e.update_from_json(request.json_body, len(e.licencias) + 1)
+        lic_nro_sequence = Exploracao.LIC_NRO_SEQUENCE_FIRST
+        for lic in e.licencias:
+            lic_nro_sequence = calculate_lic_nro(lic.lic_nro, lic_nro_sequence)
+        e.update_from_json(request.json_body, lic_nro_sequence)
 
         request.db.add(e)
         request.db.commit()
@@ -127,6 +128,18 @@ def exploracaos_update(request):
         raise badrequest_exception(val_exp.msgs)
 
     return e
+
+
+def calculate_lic_nro(lic_nro, next_sequence):
+    # format is XXXX-YYY-ZZZ, being the ZZZ the value we are interested in
+    nro = int(lic_nro.split('-')[2])
+    if next_sequence > nro:
+        pass
+    elif next_sequence == nro:
+        next_sequence = next_sequence + 1
+    else:
+        next_sequence = nro + 1
+    return next_sequence
 
 
 def _tipo_actividade_changes(e, json):
@@ -186,7 +199,7 @@ def validate_entities(body):
 
     validatorLicencia = Validator(LICENCIA_SCHEMA)
     validatorLicencia.add_rule('LIC_NRO_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}-\d{3}$', v))})
-    for l in body.get('licencias'):
-        msgs = msgs + validatorLicencia.validate(l)
+    for lic in body.get('licencias'):
+        msgs = msgs + validatorLicencia.validate(lic)
 
     return msgs

@@ -28,6 +28,8 @@ class Exploracao(Base):
     __tablename__ = 'exploracaos'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
+    LIC_NRO_SEQUENCE_FIRST = 1
+
     gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.exploracaos_gid_seq'::regclass)"))
     exp_id     = Column(Text, nullable=False, unique=True)
     exp_name   = Column(Text, nullable=False)
@@ -115,8 +117,7 @@ class Exploracao(Base):
     @staticmethod
     def create_from_json(body):
         e = Exploracao()
-        # let lic_nro start by 001
-        e.update_from_json(body, 1)
+        e.update_from_json(body, LIC_NRO_FIRST)
         return e
 
     def __json__(self, request):
