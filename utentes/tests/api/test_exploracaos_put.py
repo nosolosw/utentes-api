@@ -43,11 +43,78 @@ def create_new_session():
 class ExploracaoUpdateTests(DBIntegrationTest):
 
     def test_update_exploracao(self):
-        pass
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['exp_name']   = 'new name'
+        expected_json['pagos']      = None
+        expected_json['d_soli']     = '2001-01-01'
+        expected_json['observacio'] = 'new observ'
+        expected_json['loc_provin'] = 'Niassa'
+        expected_json['loc_distri'] = 'Lago'
+        expected_json['loc_posto']  = 'Cobue'
+        expected_json['loc_nucleo'] = 'new loc_nucleo'
+        expected_json['loc_endere'] = 'new enderezo'
+        expected_json['loc_bacia']  = 'Megaruma'
+        expected_json['loc_subaci'] = 'Megaruma'
+        expected_json['loc_rio']    = 'Megaruma'
+        expected_json['c_soli']     = 19.02
+        expected_json['c_licencia'] = 29
+        expected_json['c_real']     = 92
+        expected_json['c_estimado'] = 42.23
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals('new name', actual.exp_name)
+        self.assertEquals(None, actual.pagos)
+        self.assertEquals('2001-01-01', actual.d_soli.isoformat())
+        self.assertEquals('new observ', actual.observacio)
+        self.assertEquals('Niassa', actual.loc_provin)
+        self.assertEquals('Lago', actual.loc_distri)
+        self.assertEquals('Cobue', actual.loc_posto)
+        self.assertEquals('new loc_nucleo', actual.loc_nucleo)
+        self.assertEquals('new enderezo', actual.loc_endere)
+        self.assertEquals('Megaruma', actual.loc_bacia)
+        self.assertEquals('Megaruma', actual.loc_subaci)
+        self.assertEquals('Megaruma', actual.loc_rio)
+        self.assertEquals(19.02, float(actual.c_soli))
+        self.assertEquals(29, float(actual.c_licencia))
+        self.assertEquals(92, float(actual.c_real))
+        self.assertEquals(42.23, float(actual.c_estimado))
+
+    def test_update_exploracao_the_geom(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['the_geom'] = {
+            "type": "MultiPolygon",
+            "coordinates": [[[
+                [40.3566078671374, -12.8577371684984],
+                [40.3773594643965, -12.8576290475983],
+                [40.3774400124151, -12.8723906015176],
+                [40.3566872025163, -12.8724988506617],
+                [40.3566078671374, -12.8577371684984]
+                ]]]
+        }
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(479925.32, float(actual.area))
 
     def test_update_exploracao_validation_fails(self):
-        pass
-
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        exp_name = expected_json['exp_name']
+        expected_json['exp_name'] = None
+        self.request.json_body = expected_json
+        self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
+        s = create_new_session()
+        actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(exp_name, actual.exp_name)
 
 class ExploracaoUpdateFonteTests(DBIntegrationTest):
 

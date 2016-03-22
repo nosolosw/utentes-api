@@ -105,6 +105,7 @@ def update_array(olds, news_json, factory):
     for new in to_append:
         olds.append(new)
 
+
 def update_geom(updatable, json, geom_key='geometry'):
     g = json.get(geom_key)
     if not g:

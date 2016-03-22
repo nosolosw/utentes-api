@@ -100,6 +100,10 @@ class Exploracao(Base):
         self.c_real     = to_decimal(json.get('c_real'))
         self.c_estimado = to_decimal(json.get('c_estimado'))
         update_geom(self.the_geom, json)
+        if self.the_geom is None:
+            self.area = None
+        else:
+            self.area = self.the_geom.ST_Area()
 
         # update relationships
         update_array(self.fontes,
