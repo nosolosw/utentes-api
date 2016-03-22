@@ -44,5 +44,5 @@ class ActividadesReses(Base):
 
 
     def validate(self, json):
-        validator = Validator(ActividadeSchema['Reses'])
+        validator = Validator(actividades_schema.ActividadeSchema['Reses'])
         return validator.validate(json)
