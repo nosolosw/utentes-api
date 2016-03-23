@@ -70,7 +70,7 @@ ActividadeSchema['Indústria'] = [{
   'rules':     ['IS_BOOLEAN']
 }]
 
-ActividadeSchema ['Pecuária']= [{
+ActividadeSchema['Pecuária'] = [{
   'fieldname': 'tipo',
   'message':   'tipo non pode estar vacío',
   'rules':     ['NOT_NULL']
@@ -108,8 +108,8 @@ ActividadeSchema['Piscicultura'] = [{
   'rules':     ['NOT_NULL']
 },{
   'fieldname': 'c_estimado',
-  'message': 'c_estimado não tem o formato correcto',
-  'rules': ['IS_NUMERIC']
+  'message':   'c_estimado não tem o formato correcto',
+  'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'area',
   'message':   'area non pode estar vacío',
@@ -126,8 +126,8 @@ ActividadeSchema['Producção de energia'] = [{
   'rules':     ['NOT_NULL']
 },{
   'fieldname': 'c_estimado',
-  'message': 'c_estimado não tem o formato correcto',
-  'rules': ['IS_NUMERIC']
+  'message':   'c_estimado não tem o formato correcto',
+  'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'alt_agua',
   'message':   'alt_agua non pode estar vacío',
