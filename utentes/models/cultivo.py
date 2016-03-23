@@ -44,7 +44,7 @@ class ActividadesCultivos(Base):
         self.rega = json.get('rega')
         self.eficiencia = json.get('eficiencia')
         self.area = json.get('area')
-        self.obervacio = json.get('observacio')
+        self.observacio = json.get('observacio')
         update_geom(self.the_geom, json)
 
     def __json__(self, request):
