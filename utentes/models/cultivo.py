@@ -69,8 +69,6 @@ class ActividadesCultivos(Base):
 
         }
 
-
-
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadeSchema['cultivos'])
+        validator = Validator(actividades_schema.ActividadeSchema['Cultivos'])
         return validator.validate(json)

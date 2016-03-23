@@ -41,8 +41,6 @@ class ActividadesReses(Base):
         json['id'] = self.gid
         return json
 
-
-
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadeSchema['Reses'])
         return validator.validate(json)
