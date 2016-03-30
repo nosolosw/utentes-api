@@ -99,7 +99,7 @@ class Exploracao(Base):
         self.c_licencia = to_decimal(json.get('c_licencia'))
         self.c_real     = to_decimal(json.get('c_real'))
         self.c_estimado = to_decimal(json.get('c_estimado'))
-        update_geom(self.the_geom, json)
+        self.the_geom = update_geom(self.the_geom, json)
         if self.the_geom is None:
             self.area = None
         else:

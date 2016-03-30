@@ -106,12 +106,16 @@ def update_array(olds, news_json, factory):
         olds.append(new)
 
 
-def update_geom(updatable, json, geom_key='geometry'):
-    g = json.get(geom_key)
+def update_geom(org_geom, json):
+    to_update = json.get('geometry_edited')
+    if not to_update:
+        return org_geom
+
+    g = json.get('geometry')
     if not g:
-        return
+        return None
     from geoalchemy2.elements import WKTElement
     from utentes.lib.geomet import wkt
     the_geom = WKTElement(wkt.dumps(g), srid=4326)
     the_geom = the_geom.ST_Multi().ST_Transform(32737)
-    updatable = the_geom
+    return the_geom
