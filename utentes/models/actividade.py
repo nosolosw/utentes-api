@@ -116,6 +116,12 @@ class ActividadesAgriculturaRega(Actividade):
         update_array(self.cultivos,
                     json.get('cultivos'),
                     ActividadesCultivos.create_from_json)
+        cult_id_sequence = [int(seq.cult_id.split('-')[2]) for seq in self.cultivos if seq.cult_id]
+        next_cult_id_sequence = max(cult_id_sequence) + 1
+        for cultivo in self.cultivos:
+            if not cultivo.cult_id:
+                cultivo.cult_id = json.get('exp_id') + '-{:03d}'.format(next_cult_id_sequence)
+                next_cult_id_sequence += 1
 
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadeSchema['Agricultura-Regadia'])

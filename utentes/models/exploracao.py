@@ -67,19 +67,21 @@ class Exploracao(Base):
                               passive_deletes=True)
 
     def update_from_json(self, json, lic_nro_sequence):
+        actividade_json = json.get('actividade')
+        actividade_json['exp_id'] = json.get('exp_id')
         if not self.actividade:
-            actv = Actividade.create_from_json(json.get('actividade'))
+            actv = Actividade.create_from_json(actividade_json)
             msgs = actv.validate(json.get('actividade'))
             if len(msgs) > 0:
                 from utentes.lib.schema_validator.validation_exception import ValidationException
                 raise ValidationException({'error': msgs})
             self.actividade = actv
         elif self.actividade:
-            msgs = self.actividade.validate(json.get('actividade'))
+            msgs = self.actividade.validate(actividade_json)
             if len(msgs) > 0:
                 from utentes.lib.schema_validator.validation_exception import ValidationException
                 raise ValidationException({'error': msgs})
-            self.actividade.update_from_json(json.get('actividade'))
+            self.actividade.update_from_json(actividade_json)
 
         self.gid        = json.get('id')
         self.exp_id     = json.get('exp_id')
