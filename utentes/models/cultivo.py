@@ -13,7 +13,11 @@ from utentes.models.base import (
     PGSQL_SCHEMA_UTENTES,
     update_geom
 )
-import actividades_schema
+from actividades_schema import ActividadeSchema
+from utentes.models.actividade import (
+    Actividade,
+    ActividadesAgriculturaRega
+)
 
 
 class ActividadesCultivos(Base):

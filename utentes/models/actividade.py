@@ -11,7 +11,6 @@ from utentes.models.base import (
 )
 from utentes.lib.schema_validator.validator import Validator
 import actividades_schema
-from utentes.models.cultivo import ActividadesCultivos
 from utentes.models.reses import ActividadesReses
 
 

@@ -66,6 +66,11 @@ def main(global_config, **settings):
     config.add_route('utentes', '/api/utentes')
     config.add_route('utentes_id', '/api/utentes/{id}')
 
+    # GET    /api/cultivos      = Return all cultivos
+    # PUT    /api/utentes/{id} = Update cultivo
+    config.add_route('cultivos', '/api/cultivos')
+    config.add_route('cultivos_id', '/api/cultivos/{id}')
+
     # GET /domains = Return all domains (utentes included)
     config.add_route('domains', '/api/domains')
 

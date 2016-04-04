@@ -7,4 +7,5 @@ error_msgs = {
     'body_not_valid': 'Os dados recibidos nao som un JSON válido',
     'exploracao_already_exists': 'A exploracao ja existe',
     'exploracao_already_exists': 'O utente ja existe',
+    'no_cultivo_gid': 'Nao existe cultivo co gid indicado',
 }
