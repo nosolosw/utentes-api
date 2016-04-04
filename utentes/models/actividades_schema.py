@@ -52,8 +52,8 @@ ActividadeSchema['Cultivos'] = [{
   'rules':     ['NOT_NULL', 'IS_NUMERIC']
 }, {
   'fieldname': 'area',
-  'message':   'area non pode estar vacío',
-  'rules':     ['NOT_NULL', 'IS_NUMERIC']
+  'message':   'area não tem o formato correcto',
+  'rules':     ['IS_NUMERIC']
 }]
 
 ActividadeSchema['Indústria'] = [{
