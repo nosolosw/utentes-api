@@ -21,7 +21,13 @@ def build_json(request, exploracao):
     expected_json['licencias'] = [f.__json__(request) for f in expected_json['licencias']]
     expected_json['actividade'] = expected_json['actividade'].__json__(request)
     if expected_json['actividade'].get('cultivos'):
-        expected_json['actividade']['cultivos'] = [f.__json__(request) for f in expected_json['actividade']['cultivos']]
+        cultivos = []
+        for c in expected_json['actividade']['cultivos']['features']:
+            cultivo = c.__json__(request)
+            cultivo.update(cultivo.pop('properties'))
+            cultivos.append(cultivo)
+        expected_json['actividade']['cultivos'] = cultivos
+
     if expected_json['actividade'].get('reses'):
         expected_json['actividade']['reses'] = [f.__json__(request) for f in expected_json['actividade']['reses']]
     return expected_json
@@ -670,6 +676,28 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         self.assertEquals(reses[1].gid, 2)
         self.assertEquals(reses[2].c_estimado, 50)
         self.assertEquals(reses[2].c_res, 5000)
+
+
+    def test_update_exploracao_update_actividade_regadia_create_cultivo(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-022').first()
+        old_len = len(expected.actividade.cultivos)
+        self.request.matchdict.update(dict(id=expected.gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['actividade']['cultivos'].append({
+            'cultivo': 'Verduras',
+            'c_estimado': 5,
+            'rega': 'Gravidade',
+            'eficiencia': 55,
+            'observacio': 'observacio'
+        })
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-022').first()
+        cultivos = actual.actividade.cultivos
+        self.assertEquals(old_len + 1, len(cultivos))
+        self.assertEquals(cultivos[2].c_estimado, 5)
+        self.assertEquals(cultivos[2].eficiencia, 55)
+        self.assertEquals(cultivos[2].cult_id, '2010-022-003')
 
 
 if __name__ == '__main__':
