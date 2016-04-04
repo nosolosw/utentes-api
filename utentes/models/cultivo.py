@@ -14,10 +14,6 @@ from utentes.models.base import (
     update_geom
 )
 from actividades_schema import ActividadeSchema
-from utentes.models.actividade import (
-    Actividade,
-    ActividadesAgriculturaRega
-)
 
 
 class ActividadesCultivos(Base):
@@ -33,7 +29,8 @@ class ActividadesCultivos(Base):
     eficiencia = Column(Numeric(10, 2), nullable=False)
     area = Column(Numeric(10, 2), nullable=False)
     observacio = Column(Text)
-    the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True, nullable=False)
+    the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
+
 
     @staticmethod
     def create_from_json(json):
@@ -52,6 +49,10 @@ class ActividadesCultivos(Base):
         self.area = json.get('area')
         self.observacio = json.get('observacio')
         self.the_geom = update_geom(self.the_geom, json)
+        if self.the_geom is None:
+            self.area = None
+        else:
+            self.area = self.the_geom.ST_Area()
 
     def __json__(self, request):
         the_geom = None
@@ -77,5 +78,5 @@ class ActividadesCultivos(Base):
         }
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadeSchema['Cultivos'])
+        validator = Validator(ActividadeSchema['Cultivos'])
         return validator.validate(json)

@@ -43,22 +43,22 @@ def cultivos_update(request):
         raise badrequest_exception({'error': msgs})
 
     try:
-        e = request.db.query(Utente).filter(Utente.gid == gid).one()
-        e.update_from_json(request.json_body)
-        request.db.add(e)
+        cultivo = request.db.query(ActividadesCultivos).filter(ActividadesCultivos.gid == gid).one()
+        cultivo.update_from_json(request.json_body)
+        request.db.add(cultivo)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
         raise badrequest_exception({
-            'error': error_msgs['no_gid'],
+            'error': error_msgs['no_cultivo_gid'],
             'gid': gid
         })
     except ValueError as ve:
         log.error(ve)
         raise badrequest_exception({'error': error_msgs['body_not_valid']})
 
-    return e
+    return cultivo
 
 
 
 def validate_entities(body):
-    return Validator(UTENTE_SCHEMA).validate(body)
+    return Validator(ActividadeSchema['Cultivos']).validate(body)
