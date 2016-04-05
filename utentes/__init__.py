@@ -71,6 +71,11 @@ def main(global_config, **settings):
     config.add_route('cultivos', '/api/cultivos')
     config.add_route('cultivos_id', '/api/cultivos/{id}')
 
+    # GET    /api/settings      = Return all settings
+    # PUT    /api/settings/{property} = Update property
+    config.add_route('settings', '/api/settings')
+    config.add_route('settings_property', '/api/settings/{property}')
+
     # GET /domains = Return all domains (utentes included)
     config.add_route('domains', '/api/domains')
 
