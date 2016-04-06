@@ -50,16 +50,24 @@ class IsBoolean():
         return value not in [True, False, None]
 
 
+class IsArrayNotVoid():
+    def fails(self, value):
+        if isinstance(value, list) and (len(value) > 0):
+            return False
+        return True
+
+
 class Validator():
 
     def __init__(self, schemaValidateFrom):
         self.messages = []
         self.schema = schemaValidateFrom
         self.rules = {
-            'NOT_NULL':   IsNotNull(),
-            'IS_DATE':    IsDate(),
-            'IS_NUMERIC': IsNumeric(),
-            'IS_BOOLEAN': IsBoolean(),
+            'NOT_NULL':       IsNotNull(),
+            'IS_DATE':        IsDate(),
+            'IS_NUMERIC':     IsNumeric(),
+            'IS_BOOLEAN':     IsBoolean(),
+            'ARRAY_NOT_VOID': IsArrayNotVoid()
         }
 
     def validate(self, model):

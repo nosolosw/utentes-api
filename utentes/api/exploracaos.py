@@ -46,9 +46,7 @@ def exploracaos_get(request):
 def exploracaos_delete(request):
     gid = request.matchdict['id']
     if not gid:
-        raise badrequest_exception({
-            'error': error_msgs['gid_obligatory']
-        })
+        raise badrequest_exception({'error': error_msgs['gid_obligatory']})
     try:
         e = request.db.query(Exploracao).filter(Exploracao.gid == gid).one()
         request.db.delete(e)

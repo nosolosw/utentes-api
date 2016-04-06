@@ -12,10 +12,11 @@ from utentes.models.utente import Utente
 
 class ExploracaoCreateTests(DBIntegrationTest):
 
-    def test_create_exploracao(self):
-        EXP_ID = '2022-001'
+    EXP_ID = '2022-001'
+
+    def build_json(self):
         expected_json = {}
-        expected_json['exp_id']     = EXP_ID
+        expected_json['exp_id']     = self.EXP_ID
         expected_json['exp_name']   = 'new name'
         expected_json['pagos']      = None
         expected_json['d_soli']     = '2001-01-01'
@@ -76,9 +77,12 @@ class ExploracaoCreateTests(DBIntegrationTest):
             'metodo_est': 'manual',
             'observacio': 'observacio'
         }]
-        self.request.json_body = expected_json
+        return expected_json
+
+    def test_create_exploracao(self):
+        self.request.json_body = self.build_json()
         exploracaos_create(self.request)
-        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == EXP_ID).first()
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == self.EXP_ID).first()
         utente = self.request.db.query(Utente).filter(Utente.nome == 'nome').first()
         licencia = actual.licencias[0]
         fonte = actual.fontes[0]
@@ -137,9 +141,13 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals('observacio', fonte.observacio)
 
     def test_create_exploracao_validation_fails(self):
-        expected_json = {}
+        expected_json = self.build_json()
         expected_json['exp_name'] = None
-        expected_json['fontes'] = []
+        self.request.json_body = expected_json
+        self.assertRaises(HTTPBadRequest, exploracaos_create, self.request)
+
+    def test_create_exploracao_validation_fails_due_void_licenses_array(self):
+        expected_json = self.build_json()
         expected_json['licencias'] = []
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_create, self.request)

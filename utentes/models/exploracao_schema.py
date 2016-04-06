@@ -60,4 +60,8 @@ EXPLORACAO_SCHEMA = [{
   'fieldname': 'actividade',
   'message':   'A exploracão ten que ter asignado uma actividade',
   'rules':     ['NOT_NULL']
+}, {
+  'fieldname': 'licencias',
+  'message':   'A exploracão ten que ter asignado uma licencia',
+  'rules':     ['ARRAY_NOT_VOID']
 }];
