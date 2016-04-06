@@ -15,7 +15,7 @@ class Licencia(Base):
     lic_nro    = Column(Text, nullable=False, unique=True)
     lic_tipo   = Column(Text, nullable=False)
     cadastro   = Column(Text)
-    estado     = Column(Text)
+    estado     = Column(Text, nullable=False)
     d_emissao  = Column(Date)
     d_validade = Column(Date)
     c_soli_tot = Column(Numeric(10, 2))

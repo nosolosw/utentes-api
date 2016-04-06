@@ -9,6 +9,10 @@ LICENCIA_SCHEMA = [{
   'message':   'Nro de licencia não tem o formato correcto',
   'rules':     ['LIC_NRO_FORMAT']
 }, {
+  'fieldname': 'estado',
+  'message':   'A licencia debe ter un estado',
+  'rules':     ['NOT_NULL']
+}, {
   'fieldname': 'd_emissao',
   'message':   'd_emissao não tem o formato correcto',
   'rules':     ['IS_DATE']
