@@ -11,7 +11,7 @@ from utentes.models.domain import Domain
     request_method='GET',
     renderer='json')
 def domains_get(request):
-    domains = request.db.query(Domain).order_by(Domain.category, Domain.ordering, Domain.value).all()
+    domains = request.db.query(Domain).order_by(Domain.category, Domain.ordering, Domain.key).all()
     domains.append({
         'category': 'utente',
         'text':     '',
