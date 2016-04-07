@@ -7,6 +7,7 @@ from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
 from geoalchemy2.functions import GenericFunction
 
+from utentes.lib.schema_validator.validation_exception import ValidationException
 from utentes.lib.formatter.formatter import to_decimal, to_date
 from utentes.models.base import (
     Base,
@@ -66,20 +67,38 @@ class Exploracao(Base):
                               uselist=False,
                               passive_deletes=True)
 
+    def validate_activity(self, activity, attributes):
+        msgs = []
+        statuses = [lic.estado for lic in self.licencias]
+        not_validatable_status = [
+            'Irregular',
+            'Denegada',
+            'Pendente solicitação utente',
+            'Pendente revisão solicitação (Direcção)',
+            'Pendente revisão solicitação (D. Jurídico)',
+            'Pendente aprobação tecnica (D. Cadastro)'
+        ]
+        to_validate_activity = False
+        for status in statuses:
+            if status not in not_validatable_status:
+                to_validate_activity = True
+
+        if to_validate_activity:
+            msgs = activity.validate(attributes)
+        return msgs
+
     def update_from_json(self, json, lic_nro_sequence):
         actividade_json = json.get('actividade')
         actividade_json['exp_id'] = json.get('exp_id')
         if not self.actividade:
             actv = Actividade.create_from_json(actividade_json)
-            msgs = actv.validate(json.get('actividade'))
+            msgs = self.validate_activity(actv, json.get('actividade'))
             if len(msgs) > 0:
-                from utentes.lib.schema_validator.validation_exception import ValidationException
                 raise ValidationException({'error': msgs})
             self.actividade = actv
         elif self.actividade:
-            msgs = self.actividade.validate(actividade_json)
+            msgs = self.validate_activity(self.actividade, actividade_json)
             if len(msgs) > 0:
-                from utentes.lib.schema_validator.validation_exception import ValidationException
                 raise ValidationException({'error': msgs})
             self.actividade.update_from_json(actividade_json)
 

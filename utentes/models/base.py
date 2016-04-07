@@ -2,7 +2,16 @@
 
 import json
 
+from pyramid.httpexceptions import HTTPBadRequest
+from pyramid.httpexceptions import HTTPMethodNotAllowed
+from pyramid.httpexceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPUnauthorized
 from sqlalchemy.ext.declarative import declarative_base
+from geoalchemy2.elements import WKTElement
+
+from utentes.lib.geomet import wkt
+from utentes.lib.schema_validator.validation_exception import ValidationException
+
 
 PGSQL_SCHEMA_UTENTES = 'utentes'
 PGSQL_SCHEMA_DOMAINS = 'domains'
@@ -23,25 +32,21 @@ Base = declarative_base(cls=BaseClass)
 
 def unauthorized_exception(body=None):
     body = body or {'error': 'No autorizado'}
-    from pyramid.httpexceptions import HTTPUnauthorized
     return build_exception(HTTPUnauthorized, body)
 
 
 def badrequest_exception(body=None):
     body = body or {'error': 'Peticion incorrecta'}
-    from pyramid.httpexceptions import HTTPBadRequest
     return build_exception(HTTPBadRequest, body)
 
 
 def notfound_exception(body=None):
     body = body or {'error': 'No encontrado'}
-    from pyramid.httpexceptions import HTTPNotFound
     return build_exception(HTTPNotFound, body)
 
 
 def methodnotallowed_exception(body=None):
     body = body or {'error': 'No permitido'}
-    from pyramid.httpexceptions import HTTPMethodNotAllowed
     return build_exception(HTTPMethodNotAllowed, body)
 
 
@@ -57,8 +62,7 @@ class APIAction(object):
     OK = 'ok'
     FAILED = 'failed'
 
-    def __init__(self, operation="", status="", exp_type="", exp_id="",
-                 user_name=""):
+    def __init__(self, operation="", status="", exp_type="", exp_id="", user_name=""):
         self.operation = operation
         self.status    = status
         self.exp_type  = exp_type
@@ -82,11 +86,10 @@ def update_array(olds, news_json, factory):
         new = factory(n)
         msgs = new.validate(n)
         if len(msgs) > 0:
-            from utentes.lib.schema_validator.validation_exception import ValidationException
             raise ValidationException({'error': msgs})
         news.append(new)
         if n.get('id'):
-           update_dict[n.get('id')] = n
+            update_dict[n.get('id')] = n
 
     # this needs objects to declare when they are equals
     # by declaring the method __eq__
@@ -114,8 +117,6 @@ def update_geom(org_geom, json):
     g = json.get('geometry')
     if not g:
         return None
-    from geoalchemy2.elements import WKTElement
-    from utentes.lib.geomet import wkt
     the_geom = WKTElement(wkt.dumps(g), srid=4326)
     the_geom = the_geom.ST_Multi().ST_Transform(32737)
     return the_geom

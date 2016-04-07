@@ -29,8 +29,7 @@ class ActividadesCultivos(Base):
     eficiencia = Column(Numeric(10, 2), nullable=False)
     area = Column(Numeric(10, 2), nullable=False)
     observacio = Column(Text)
-    the_geom   = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
-
+    the_geom = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
 
     @staticmethod
     def create_from_json(json):
@@ -40,15 +39,15 @@ class ActividadesCultivos(Base):
 
     def update_from_json(self, json):
         # actividade - handled by sqlalchemy relationship
-        self.gid = json.get('id')
-        self.cult_id = json.get('cult_id')
+        self.gid        = json.get('id')
+        self.cult_id    = json.get('cult_id')
         self.c_estimado = json.get('c_estimado')
-        self.cultivo = json.get('cultivo')
-        self.rega = json.get('rega')
+        self.cultivo    = json.get('cultivo')
+        self.rega       = json.get('rega')
         self.eficiencia = json.get('eficiencia')
-        self.area = json.get('area')
+        self.area       = json.get('area')
         self.observacio = json.get('observacio')
-        self.the_geom = update_geom(self.the_geom, json)
+        self.the_geom   = update_geom(self.the_geom, json)
         if self.the_geom is None:
             self.area = None
         else:
@@ -63,14 +62,14 @@ class ActividadesCultivos(Base):
         return {
             'type': 'Feature',
             'properties': {
-                'id': self.gid,
-                'cult_id': self.cult_id,
+                'id':         self.gid,
+                'cult_id':    self.cult_id,
                 'actividade': self.actividade,
                 'c_estimado': self.c_estimado,
-                'cultivo': self.cultivo,
-                'rega': self.rega,
+                'cultivo':    self.cultivo,
+                'rega':       self.rega,
                 'eficiencia': self.eficiencia,
-                'area': self.area,
+                'area':       self.area,
                 'observacio': self.observacio,
             },
             'geometry': the_geom

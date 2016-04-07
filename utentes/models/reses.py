@@ -31,8 +31,8 @@ class ActividadesReses(Base):
         self.gid        = json.get('id')
         self.c_estimado = json.get('c_estimado')
         self.reses_tipo = json.get('reses_tipo')
-        self.reses_nro = json.get('reses_nro')
-        self.c_res = json.get('c_res')
+        self.reses_nro  = json.get('reses_nro')
+        self.c_res      = json.get('c_res')
         self.observacio = json.get('observacio')
 
     def __json__(self, request):
