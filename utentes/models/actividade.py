@@ -88,6 +88,8 @@ class ActividadesAgriculturaRega(Actividade):
     __tablename__ = 'actividades_agricultura_rega'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
+    CULTIVO_NRO_SEQUENCE_FIRST = 1
+
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
 
@@ -95,10 +97,10 @@ class ActividadesAgriculturaRega(Actividade):
         'polymorphic_identity': u'Agricultura-Regadia',
     }
 
-    cultivos  = relationship('ActividadesCultivos',
-                              cascade="all, delete-orphan",
-                              order_by='ActividadesCultivos.gid',
-                              passive_deletes=True)
+    cultivos = relationship('ActividadesCultivos',
+                            cascade="all, delete-orphan",
+                            order_by='ActividadesCultivos.gid',
+                            passive_deletes=True)
 
     def __json__(self, request):
         json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
@@ -110,15 +112,21 @@ class ActividadesAgriculturaRega(Actividade):
         }
         return json
 
+    def calculate_next_sequence(self, cultivos):
+        cult_id_sequence = [int(seq.cult_id.split('-')[2]) for seq in self.cultivos if seq.cult_id]
+        if len(cult_id_sequence) == 0:
+            return ActividadesAgriculturaRega.CULTIVO_NRO_SEQUENCE_FIRST
+        else:
+            return max(cult_id_sequence) + 1
+
     def update_from_json(self, json):
         self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
         update_array(self.cultivos,
-                    json.get('cultivos'),
-                    ActividadesCultivos.create_from_json)
-        cult_id_sequence = [int(seq.cult_id.split('-')[2]) for seq in self.cultivos if seq.cult_id]
-        next_cult_id_sequence = max(cult_id_sequence) + 1
+                     json.get('cultivos'),
+                     ActividadesCultivos.create_from_json)
+        next_cult_id_sequence = self.calculate_next_sequence(self.cultivos)
         for cultivo in self.cultivos:
             if not cultivo.cult_id:
                 cultivo.cult_id = json.get('exp_id') + '-{:03d}'.format(next_cult_id_sequence)
