@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Column, Integer, Text, text
+from sqlalchemy import Column, Integer, Text
 
 from .base import DeclarativeBase, PGSQL_SCHEMA_DOMAINS
 
@@ -12,7 +12,7 @@ class Domain(DeclarativeBase):
     category = Column(Text, nullable=False, primary_key=True)
     key = Column(Text, nullable=False, primary_key=True)
     value = Column(Text)
-    ordering = Column(Text)
+    ordering = Column(Integer)
     parent = Column(Text, primary_key=True)
 
     def __json__(self, request):
