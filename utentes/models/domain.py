@@ -14,6 +14,7 @@ class Domain(DeclarativeBase):
     value = Column(Text)
     ordering = Column(Integer)
     parent = Column(Text, primary_key=True)
+    tooltip = Column(Text)
 
     def __json__(self, request):
         return {
@@ -21,5 +22,6 @@ class Domain(DeclarativeBase):
             'text':     self.key,
             'alias':    self.value,
             'order':    self.ordering,
-            'parent':   self.parent
+            'parent':   self.parent,
+            'tooltip': self.tooltip
         }
