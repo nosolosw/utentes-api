@@ -88,20 +88,6 @@ class Exploracao(Base):
         return msgs
 
     def update_from_json(self, json, lic_nro_sequence):
-        actividade_json = json.get('actividade')
-        actividade_json['exp_id'] = json.get('exp_id')
-        if not self.actividade:
-            actv = Actividade.create_from_json(actividade_json)
-            msgs = self.validate_activity(actv, json.get('actividade'), json)
-            if len(msgs) > 0:
-                raise ValidationException({'error': msgs})
-            self.actividade = actv
-        elif self.actividade:
-            msgs = self.validate_activity(self.actividade, actividade_json, json)
-            if len(msgs) > 0:
-                raise ValidationException({'error': msgs})
-            self.actividade.update_from_json(actividade_json)
-
         self.gid        = json.get('id')
         self.exp_id     = json.get('exp_id')
         self.exp_name   = json.get('exp_name')
@@ -126,6 +112,8 @@ class Exploracao(Base):
         else:
             self.area = self.the_geom.ST_Area() / 10000
 
+        self.update_and_validate_activity(json)
+
         # update relationships
         update_array(self.fontes,
                      json.get('fontes'),
@@ -138,6 +126,32 @@ class Exploracao(Base):
             if not licencia.lic_nro:
                 licencia.lic_nro = self.exp_id + '-{:03d}'.format(lic_nro_sequence)
                 lic_nro_sequence += 1
+
+    def update_and_validate_activity(self, json):
+        actividade_json = json.get('actividade')
+        actividade_json['exp_id'] = json.get('exp_id')
+        if json.get('geometry_edited') and actividade_json.get('tipo') == u'Indústria':
+            # None is different that 0 but both are falsy
+            if self.area is None:
+                actividade_json['c_estimado'] = None
+            else:
+                actividade_json['c_estimado'] = self.area*0.25*86400*30/1000
+
+            self.c_estimado = actividade_json['c_estimado']
+
+        if not self.actividade:
+            actv = Actividade.create_from_json(actividade_json)
+            msgs = self.validate_activity(actv, json.get('actividade'), json)
+            if len(msgs) > 0:
+                raise ValidationException({'error': msgs})
+            self.actividade = actv
+        elif self.actividade:
+            msgs = self.validate_activity(self.actividade, actividade_json, json)
+            if len(msgs) > 0:
+                raise ValidationException({'error': msgs})
+            self.actividade.update_from_json(actividade_json)
+
+
 
     @staticmethod
     def create_from_json(body):

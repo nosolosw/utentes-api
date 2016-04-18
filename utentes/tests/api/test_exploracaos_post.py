@@ -166,6 +166,73 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(rega, actual.actividade.tipo)
         self.assertEquals(0, len(actual.actividade.cultivos))
 
+    def test_all_activities_can_be_created_without_validations_fails(self):
+        expected_json = self.build_json()
+
+        exp_id = '9999-999'
+        expected_json['actividade'] = {'tipo':u'Abastecimento', 'c_estimado':None}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Abastecimento', actual.actividade.tipo)
+
+        exp_id = '9999-998'
+        expected_json['actividade'] = {'tipo':u'Agricultura-Regadia', 'cultivos':[]}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Agricultura-Regadia', actual.actividade.tipo)
+
+        exp_id = '9999-997'
+        expected_json['actividade'] = {'tipo':u'Indústria'}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Indústria', actual.actividade.tipo)
+
+        exp_id = '9999-996'
+        expected_json['actividade'] = {'tipo':u'Pecuária', 'reses':[]}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Pecuária', actual.actividade.tipo)
+
+        exp_id = '9999-995'
+        expected_json['actividade'] = {'tipo':u'Piscicultura'}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Piscicultura', actual.actividade.tipo)
+
+        exp_id = '9999-994'
+        expected_json['actividade'] = {'tipo':u'Producção de energia'}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Producção de energia', actual.actividade.tipo)
+
+        exp_id = '9999-993'
+        expected_json['actividade'] = {'tipo':u'Saneamento'}
+        expected_json['exp_id'] = exp_id
+        self.request.json_body = expected_json
+        exploracaos_create(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
+        self.assertEquals(exp_id, actual.exp_id)
+        self.assertEquals(u'Saneamento', actual.actividade.tipo)
+
+
 
 if __name__ == '__main__':
     unittest.main()
