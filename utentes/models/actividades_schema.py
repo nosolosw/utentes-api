@@ -63,7 +63,7 @@ ActividadeSchema['Indústria'] = [{
 },{
   'fieldname': 'c_estimado',
   'message':   'c_estimado não tem o formato correcto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'NOT_NULL']
 }, {
   'fieldname': 'eval_impac',
   'message':   'eval_impac não tem o formato correcto',
