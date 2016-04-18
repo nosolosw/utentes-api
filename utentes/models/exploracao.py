@@ -71,12 +71,12 @@ class Exploracao(Base):
         msgs = []
         statuses = [lic.estado for lic in self.licencias]
         not_validatable_status = [
-            'Irregular',
-            'Denegada',
-            'Pendente solicitação utente',
-            'Pendente revisão solicitação (Direcção)',
-            'Pendente revisão solicitação (D. Jurídico)',
-            'Pendente aprobação tecnica (D. Cadastro)'
+            u'Irregular',
+            u'Denegada',
+            u'Pendente solicitação utente',
+            u'Pendente revisão solicitação (Direcção)',
+            u'Pendente revisão solicitação (D. Jurídico)',
+            u'Pendente aprobação tecnica (D. Cadastro)'
         ]
         to_validate_activity = False
         for status in statuses:
