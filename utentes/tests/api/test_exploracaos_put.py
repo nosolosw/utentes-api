@@ -542,6 +542,7 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         expected_json = build_json(self.request, expected)
         expected_json['utente']['observacio'] = ' foo - bar '
         expected_json['observacio'] = ' foo - bar '
+        expected_json['licencias'][0]['estado'] = u'Licenciada'
         expected_json['actividade']['c_estimado'] = 'TEXT'
         self.request.json_body = expected_json
         from pyramid.httpexceptions import HTTPBadRequest
@@ -552,6 +553,23 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         self.assertNotEquals(' foo - bar ', actual.utente_rel.observacio)
         self.assertEquals(expected.observacio, actual.observacio)
         self.assertNotEquals(' foo - bar ', actual.observacio)
+
+    def test_update_exploracao_update_actividade_not_run_activity_validations(self):
+        expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
+        gid = expected.gid
+        self.request.matchdict.update(dict(id=gid))
+        expected_json = build_json(self.request, expected)
+        expected_json['utente']['observacio'] = ' foo - bar '
+        expected_json['observacio'] = ' foo - bar '
+        expected_json['licencias'][0]['estado'] = u'Denegada'
+        expected_json['actividade']['c_estimado'] = None
+        self.request.json_body = expected_json
+        exploracaos_update(self.request)
+        actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
+        self.assertEquals(' foo - bar ', actual.utente_rel.observacio)
+        self.assertEquals(u'Denegada', actual.licencias[0].estado)
+        self.assertIsNone(actual.actividade.c_estimado)
+        self.assertEquals(' foo - bar ', actual.observacio)
 
     def test_update_exploracao_change_actividade(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()

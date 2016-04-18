@@ -67,9 +67,9 @@ class Exploracao(Base):
                               uselist=False,
                               passive_deletes=True)
 
-    def validate_activity(self, activity, attributes):
+    def validate_activity(self, activity, attributes, json):
         msgs = []
-        statuses = [lic.estado for lic in self.licencias]
+        statuses = [lic['estado'] for lic in json['licencias']]
         not_validatable_status = [
             u'Irregular',
             u'Denegada',
@@ -92,12 +92,12 @@ class Exploracao(Base):
         actividade_json['exp_id'] = json.get('exp_id')
         if not self.actividade:
             actv = Actividade.create_from_json(actividade_json)
-            msgs = self.validate_activity(actv, json.get('actividade'))
+            msgs = self.validate_activity(actv, json.get('actividade'), json)
             if len(msgs) > 0:
                 raise ValidationException({'error': msgs})
             self.actividade = actv
         elif self.actividade:
-            msgs = self.validate_activity(self.actividade, actividade_json)
+            msgs = self.validate_activity(self.actividade, actividade_json, json)
             if len(msgs) > 0:
                 raise ValidationException({'error': msgs})
             self.actividade.update_from_json(actividade_json)
