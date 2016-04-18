@@ -109,7 +109,7 @@ class ExploracaoUpdateTests(DBIntegrationTest):
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
         # SELECT st_area(st_transform(ST_GeomFromText( 'MULTIPOLYGON(((40.3566078671374 -12.8577371684984, 40.3773594643965 -12.8576290475983, 40.3774400124151 -12.8723906015176, 40.3566872025163 -12.8724988506617, 40.3566078671374 -12.8577371684984)))', 4326 ), 32737));
-        self.assertAlmostEquals(3677662.41, float(actual.area))
+        self.assertAlmostEquals(367.77, float(actual.area))
 
     def test_update_exploracao_delete_the_geom(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()

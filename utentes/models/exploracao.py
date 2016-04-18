@@ -124,7 +124,7 @@ class Exploracao(Base):
         if self.the_geom is None:
             self.area = None
         else:
-            self.area = self.the_geom.ST_Area()
+            self.area = self.the_geom.ST_Area() / 10000
 
         # update relationships
         update_array(self.fontes,

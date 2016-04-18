@@ -74,7 +74,7 @@ class CultivosUpdateTests(DBIntegrationTest):
         self.request.json_body = expected_json
         cultivos_update(self.request)
         actual = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.gid == gid).first()
-        self.assertAlmostEquals(3677662.41, float(actual.area))
+        self.assertAlmostEquals(367.77, float(actual.area))
 
     def test_not_update_cultivo_the_geom(self):
         expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
