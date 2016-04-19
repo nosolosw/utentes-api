@@ -48,8 +48,8 @@ ActividadeSchema['Cultivos'] = [{
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'eficiencia',
-  'message':   'eficiencia non pode estar vacío',
-  'rules':     ['NOT_NULL', 'IS_NUMERIC']
+  'message':   'eficiencia não tem o formato correcto',
+  'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'area',
   'message':   'area não tem o formato correcto',

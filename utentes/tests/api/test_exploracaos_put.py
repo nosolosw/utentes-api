@@ -383,13 +383,13 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         lic_gid = expected.licencias[0].gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
-        expected_json['licencias'] = []
+        expected_json['licencias'] = [expected_json['licencias'][0]]
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
         lic_count = self.request.db.query(Licencia).filter(Licencia.gid == lic_gid).count()
-        self.assertEquals(0, len(actual.licencias))
-        self.assertEquals(0, lic_count)
+        self.assertEquals(1, len(actual.licencias))
+        self.assertEquals(1, lic_count)
 
 
 class ExploracaoUpdateUtenteTests(DBIntegrationTest):
@@ -597,31 +597,24 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         self.request.matchdict.update(dict(id=expected.gid))
         expected_json = build_json(self.request, expected)
-        expected_json['actividade']['reses'] = [res for res in expected_json['actividade']['reses'] if res['id'] != 2]
+        expected_json['actividade']['reses'] = [ res for res in expected_json['actividade']['reses'][0:-1] ]
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         reses = actual.actividade.reses
         self.assertEquals(2, len(reses))
-        self.assertEquals(reses[0].gid, 1)
-        self.assertEquals(reses[1].gid, 3)
 
     def test_update_exploracao_update_actividade_pecuaria_update_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         self.request.matchdict.update( dict(id=expected.gid))
         expected_json = build_json(self.request, expected)
-        for res in expected_json['actividade']['reses']:
-            if res['id'] == 1:
-                res['c_estimado'] = 9999.88
+        expected_json['actividade']['reses'][0]['c_estimado'] = 9999.88
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         reses = actual.actividade.reses
         self.assertEquals(3, len(reses))
         self.assertEquals(float(reses[0].c_estimado), 9999.88)
-        self.assertEquals(reses[0].gid, 1)
-        self.assertEquals(reses[1].gid, 2)
-        self.assertEquals(reses[2].gid, 3)
 
     def test_update_exploracao_update_actividade_pecuaria_create_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
@@ -642,9 +635,7 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         self.assertEquals(old_len + 1, len(reses))
         self.assertEquals(reses[3].c_estimado, 40)
         self.assertEquals(reses[3].c_res, 4000)
-        self.assertEquals(reses[0].gid, 1)
-        self.assertEquals(reses[1].gid, 2)
-        self.assertEquals(reses[2].gid, 3)
+
 
     def test_update_exploracao_update_actividade_pecuaria_create_res_with_same_res_tipo(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
@@ -674,24 +665,20 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         self.request.matchdict.update(dict(id=expected.gid))
         expected_json = build_json(self.request, expected)
-        expected_json['actividade']['reses'] = [res for res in expected_json['actividade']['reses'] if res['id'] != 3]
+        expected_json['actividade']['reses'] = [res for res in expected_json['actividade']['reses'][0:-1]]
         expected_json['actividade']['reses'].append({
             'c_estimado': 50,
             'reses_tipo': 'Vacuno (Vacas)',
             'reses_nro': 500,
             'c_res': 5000,
         })
-        for res in expected_json['actividade']['reses']:
-            if res.get('id') == 2:
-                res['c_estimado'] = 9999.77
+        expected_json['actividade']['reses'][1]['c_estimado'] = 9999.77
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         reses = actual.actividade.reses
         self.assertEquals(3, len(reses))
         self.assertEquals(float(reses[1].c_estimado), 9999.77)
-        self.assertEquals(reses[0].gid, 1)
-        self.assertEquals(reses[1].gid, 2)
         self.assertEquals(reses[2].c_estimado, 50)
         self.assertEquals(reses[2].c_res, 5000)
 
@@ -713,9 +700,9 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-022').first()
         cultivos = actual.actividade.cultivos
         self.assertEquals(old_len + 1, len(cultivos))
-        self.assertEquals(cultivos[2].c_estimado, 5)
-        self.assertEquals(cultivos[2].eficiencia, 55)
-        self.assertEquals(cultivos[2].cult_id, '2010-022-003')
+        self.assertEquals(cultivos[old_len].c_estimado, 5)
+        self.assertEquals(cultivos[old_len].eficiencia, 55)
+        self.assertEquals(cultivos[old_len].cult_id, '2010-022-004')
 
 
 if __name__ == '__main__':
