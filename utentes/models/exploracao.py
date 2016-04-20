@@ -130,14 +130,6 @@ class Exploracao(Base):
     def update_and_validate_activity(self, json):
         actividade_json = json.get('actividade')
         actividade_json['exp_id'] = json.get('exp_id')
-        if json.get('geometry_edited') and actividade_json.get('tipo') == u'Indústria':
-            # None is different that 0 but both are falsy
-            if self.area is None:
-                actividade_json['c_estimado'] = None
-            else:
-                actividade_json['c_estimado'] = self.area*0.25*86400*30/1000
-
-            self.c_estimado = actividade_json['c_estimado']
 
         if not self.actividade:
             actv = Actividade.create_from_json(actividade_json)
