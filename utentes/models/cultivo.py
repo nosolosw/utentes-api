@@ -27,7 +27,7 @@ class ActividadesCultivos(Base):
     cultivo = Column(Text, nullable=False)
     rega = Column(Text, nullable=False)
     eficiencia = Column(Numeric(10, 2))
-    area = Column(Numeric(10, 2), nullable=False)
+    area = Column(Numeric(10, 4), nullable=False)
     observacio = Column(Text)
     the_geom = Column(Geometry('MULTIPOLYGON', '32737'), index=True)
 

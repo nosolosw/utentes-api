@@ -211,7 +211,7 @@ class ActividadesPiscicultura(Actividade):
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
-    area = Column(Numeric(10, 2))
+    area = Column(Numeric(10, 4))
     v_reservas = Column(Numeric(10, 2))
 
     __mapper_args__ = {
