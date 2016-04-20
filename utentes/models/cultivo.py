@@ -11,7 +11,8 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
-    update_geom
+    update_geom,
+    update_area
 )
 from actividades_schema import ActividadeSchema
 
@@ -48,10 +49,7 @@ class ActividadesCultivos(Base):
         self.area       = json.get('area')
         self.observacio = json.get('observacio')
         self.the_geom   = update_geom(self.the_geom, json)
-        if self.the_geom is None:
-            self.area = None
-        else:
-            self.area = self.the_geom.ST_Area() / 10000
+        update_area(self, json)
 
     def __json__(self, request):
         the_geom = None
