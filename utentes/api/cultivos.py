@@ -7,6 +7,8 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import badrequest_exception
 from utentes.models.actividades_schema import ActividadeSchema
 from utentes.models.cultivo import ActividadesCultivos
+from utentes.models.actividade import Actividade, ActividadesAgriculturaRega
+from utentes.models.exploracao import Exploracao
 
 
 @view_config(route_name='cultivos', request_method='GET', renderer='json')
@@ -46,6 +48,16 @@ def cultivos_update(request):
         cultivo = request.db.query(ActividadesCultivos).filter(ActividadesCultivos.gid == gid).one()
         cultivo.update_from_json(request.json_body)
         request.db.add(cultivo)
+        request.db.commit()
+        actv = request.db.query(Actividade).filter(Actividade.gid ==cultivo.actividade).one()
+        c_estimado_actv = 0
+        for cultivo in actv.cultivos:
+            c_estimado_actv += cultivo.c_estimado
+        actv.c_estimado = c_estimado_actv
+        request.db.add(actv)
+        exp = request.db.query(Exploracao).filter(Exploracao.gid == actv.exploracao).one()
+        exp.c_estimado = c_estimado_actv
+        request.db.add(exp)
         request.db.commit()
     except(MultipleResultsFound, NoResultFound):
         raise badrequest_exception({

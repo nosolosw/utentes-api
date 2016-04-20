@@ -122,7 +122,6 @@ class ActividadesAgriculturaRega(Actividade):
     def update_from_json(self, json):
         self.gid = json.get('id')
         self.tipo = json.get('tipo')
-        self.c_estimado = json.get('c_estimado')
         update_array(self.cultivos,
                      json.get('cultivos'),
                      ActividadesCultivos.create_from_json)
@@ -131,6 +130,9 @@ class ActividadesAgriculturaRega(Actividade):
             if not cultivo.cult_id:
                 cultivo.cult_id = json.get('exp_id') + '-{:03d}'.format(next_cult_id_sequence)
                 next_cult_id_sequence += 1
+
+        # self.c_estimado = json.get('c_estimado')
+        self.c_estimado = reduce(lambda x,y: x + y.c_estimado, self.cultivos, 0)
 
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadeSchema['Agricultura-Regadia'])

@@ -51,6 +51,16 @@ class ActividadesCultivos(Base):
         self.the_geom   = update_geom(self.the_geom, json)
         update_area(self, json)
 
+        if json.get('geometry_edited'):
+            if self.area is None:
+                self.c_estimado = None
+            elif self.rega == 'Regional':
+                self.c_estimado = self.area * 10000/12
+            elif self.eficiencia is None:
+                self.c_estimado = None
+            else:
+                self.c_estimado = (self.area*30*86400*0.21) / (1000*self.eficiencia)
+
     def __json__(self, request):
         the_geom = None
         if self.the_geom is not None:

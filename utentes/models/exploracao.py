@@ -142,6 +142,9 @@ class Exploracao(Base):
                 raise ValidationException({'error': msgs})
             self.actividade.update_from_json(actividade_json)
 
+        if actividade_json.get('tipo') == u'Agricultura-Regadia':
+            self.c_estimado = self.actividade.c_estimado
+
 
 
     @staticmethod
