@@ -53,11 +53,11 @@ class ActividadesCultivos(Base):
 
         if json.get('geometry_edited'):
             if self.area is None:
-                self.c_estimado = None
+                self.c_estimado = 0
             elif self.rega == 'Regional':
                 self.c_estimado = self.area * 10000/12
             elif self.eficiencia is None:
-                self.c_estimado = None
+                self.c_estimado = 0
             else:
                 self.c_estimado = (self.area*30*86400*0.21) / (1000*self.eficiencia)
 

@@ -43,7 +43,6 @@ class CultivosUpdateTests(DBIntegrationTest):
         expected_json['eficiencia'] = 33
         # expected_json['area'] = 333 auto update from the_geom
         expected_json['observacio'] = 'uma observacio'
-        expected_json['the_geom'] = None
         self.request.json_body = expected_json
         cultivos_update(self.request)
         actual = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.gid == gid).first()
@@ -51,7 +50,7 @@ class CultivosUpdateTests(DBIntegrationTest):
         self.assertEquals(3, actual.c_estimado)
         self.assertEquals('Gravidade', actual.rega)
         self.assertEquals(33, actual.eficiencia)
-        self.assertIsNone(actual.area)
+        self.assertEquals(1, actual.area)
         self.assertEquals('uma observacio', actual.observacio)
         self.assertIsNone(actual.the_geom)
 
