@@ -13,13 +13,13 @@ class Fonte(Base):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.fontes_gid_seq'::regclass)"))
-    tipo_agua  = Column(Text, nullable=False)
+    tipo_agua  = Column(Text, nullable=False, doc='Tipo de água')
     tipo_fonte = Column(Text)
     lat_lon    = Column(Text)
-    d_dado     = Column(Date)
-    c_soli     = Column(Numeric(10, 2))
-    c_max      = Column(Numeric(10, 2))
-    c_real     = Column(Numeric(10, 2))
+    d_dado     = Column(Date, doc='Data toma de dados')
+    c_soli     = Column(Numeric(10, 2), doc='C. solicitado')
+    c_max      = Column(Numeric(10, 2), doc='Máximo caudal extraíble')
+    c_real     = Column(Numeric(10, 2), doc="Consumo real")
     contador   = Column(Boolean)
     metodo_est = Column(Text)
     observacio = Column(Text)

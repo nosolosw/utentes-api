@@ -2,15 +2,15 @@
 
 EXPLORACAO_SCHEMA = [{
   'fieldname': 'exp_id',
-  'message':   'Nro de exploracão non pode estar vacío',
+  'message':   'Nro de exploracão não pode estar vazio',
   'rules':     ['NOT_NULL']
 },{
   'fieldname': 'exp_id',
-  'message': 'Nro de exploracão não tem o formato correcto',
-  'rules': ['EXP_ID_FORMAT']
+  'message':   'Nro de exploracão não tem o formato correcto',
+  'rules':     ['EXP_ID_FORMAT']
 }, {
   'fieldname': 'exp_name',
-  'message':   'Nome da exploracão non pode estar vacío',
+  'message':   'Nome da exploracão não pode estar vazio',
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'd_soli',
@@ -18,15 +18,15 @@ EXPLORACAO_SCHEMA = [{
   'rules':     ['IS_DATE']
 }, {
   'fieldname': 'loc_provin',
-  'message':   'A provincia da exploracão non pode estar vacío',
+  'message':   'A provincia da exploracão não pode estar vazio',
   'rules':     ['NOT_NULL']
 },{
   'fieldname': 'loc_distri',
-  'message':   'O distrito da exploracão non pode estar vacío',
+  'message':   'O distrito da exploracão não pode estar vazio',
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'loc_posto',
-  'message':   'O posto da exploracão non pode estar vacío',
+  'message':   'O posto da exploracão não pode estar vazio',
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'c_soli',
@@ -34,7 +34,7 @@ EXPLORACAO_SCHEMA = [{
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_licencia',
-  'message':   'Consumo licencia não tem o formato correcto',
+  'message':   'Consumo licenciado não tem o formato correcto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_real',
@@ -50,18 +50,18 @@ EXPLORACAO_SCHEMA = [{
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'utente',
-  'message':   'A exploracão ten que ter asignado un utente',
+  'message':   'A exploracão debe ter uma utente',
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'pagos',
-  'message':   'Pagos não tem o formato correcto',
+  'message':   'Pagamentos não tem o formato correcto',
   'rules':     ['IS_BOOLEAN']
 }, {
   'fieldname': 'actividade',
-  'message':   'A exploracão ten que ter asignado uma actividade',
+  'message':   'A exploracão debe ter uma actividade',
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'licencias',
-  'message':   'A exploracão ten que ter asignado uma licencia',
+  'message':   'A exploracão debe ter uma licença',
   'rules':     ['ARRAY_NOT_VOID']
 }];
