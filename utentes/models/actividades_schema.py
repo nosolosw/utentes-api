@@ -36,7 +36,7 @@ ActividadeSchema['Agricultura-Regadia'] = [{
 
 ActividadeSchema['Cultivos'] = [{
   'fieldname': 'c_estimado',
-  'message':   'Consumo estimado da actividade não tem o formato correto o está vazio',
+  'message':   'Consumo estimado do cultivo não tem o formato correto o está vazio',
   'rules':     ['NOT_NULL', 'IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'cultivo',
@@ -52,8 +52,8 @@ ActividadeSchema['Cultivos'] = [{
   'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'area',
-  'message':   'Área não tem o formato correto',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+  'message':   'Área não tem o formato correto o está vazio',
+  'rules':     ['NOT_NULL', 'IS_NUMERIC', 'INT_LESS_THAN_8']
 }];
 
 ActividadeSchema['Indústria'] = [{
@@ -112,7 +112,7 @@ ActividadeSchema['Piscicultura'] = [{
   'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'area',
-  'message':   'Área não pode estar vazio',
+  'message':   'Área não tem o formato correto',
   'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'v_reservas',
