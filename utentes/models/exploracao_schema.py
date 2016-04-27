@@ -31,23 +31,23 @@ EXPLORACAO_SCHEMA = [{
 }, {
   'fieldname': 'c_soli',
   'message':   'Consumo solicitado não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_licencia',
   'message':   'Consumo licenciado não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_real',
   'message':   'Consumo real não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_estimado',
   'message':   'Consumo estimado não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'area',
   'message':   'Área não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'utente',
   'message':   'A exploracão debe ter um utemte',

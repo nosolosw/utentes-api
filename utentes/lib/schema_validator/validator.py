@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import dateutil.parser
+import math
 
 
 class IsNotNull():
@@ -41,6 +42,16 @@ class IsNumeric():
             return True
         return False
 
+class IntLessThan8():
+    '''
+    The int part of the received number has less that
+    8 digits
+    '''
+    def fails(self, value):
+        if not value:
+            return False
+        intLength = len(str(math.trunc(value)))
+        return intLength > 8
 
 class IsBoolean():
     '''
@@ -67,7 +78,8 @@ class Validator():
             'IS_DATE':        IsDate(),
             'IS_NUMERIC':     IsNumeric(),
             'IS_BOOLEAN':     IsBoolean(),
-            'ARRAY_NOT_VOID': IsArrayNotVoid()
+            'ARRAY_NOT_VOID': IsArrayNotVoid(),
+            'INT_LESS_THAN_8': IntLessThan8()
         }
 
     def validate(self, model):

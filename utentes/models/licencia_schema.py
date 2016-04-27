@@ -23,29 +23,29 @@ LICENCIA_SCHEMA = [{
 }, {
   'fieldname': 'c_soli_tot',
   'message':   'O consumo solicitado da licença não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_soli_int',
   'message':   'Consumo solicitado intermedio da licença não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_soli_fon',
   'message':   'Consumo solicitado das fontes não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_licencia',
   'message':   'Consumo licenciado não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_real_tot',
   'message':   'Consumo real não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_real_int',
   'message':   'Consumo real intermedio não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
   'fieldname': 'c_real_fon',
   'message':   'Consumo real das fontes não tem o formato correto',
-  'rules':     ['IS_NUMERIC']
+  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }];
