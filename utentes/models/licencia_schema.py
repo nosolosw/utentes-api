@@ -6,46 +6,46 @@ LICENCIA_SCHEMA = [{
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'lic_nro',
-  'message':   'Nro de licença não tem o formato correcto',
+  'message':   'Nro de licença não tem o formato correto',
   'rules':     ['LIC_NRO_FORMAT']
 }, {
   'fieldname': 'estado',
-  'message':   'A licença debe ter un estado',
+  'message':   'A licença debe ter um estado',
   'rules':     ['NOT_NULL']
 },{
   'fieldname': 'd_emissao',
-  'message':   'Data emissão não tem o formato correcto',
+  'message':   'Data emissão não tem o formato correto',
   'rules':     ['IS_DATE']
 }, {
   'fieldname': 'd_validade',
-  'message':   'Data validade não tem o formato correcto',
+  'message':   'Data validade não tem o formato correto',
   'rules':     ['IS_DATE']
 }, {
   'fieldname': 'c_soli_tot',
-  'message':   'O consumo solicitado da licença não tem o formato correcto',
+  'message':   'O consumo solicitado da licença não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_soli_int',
-  'message':   'Consumo solicitado intermedio da licença não tem o formato correcto',
+  'message':   'Consumo solicitado intermedio da licença não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_soli_fon',
-  'message':   'Consumo solicitado das fontes não tem o formato correcto',
+  'message':   'Consumo solicitado das fontes não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_licencia',
-  'message':   'Consumo licenciado não tem o formato correcto',
+  'message':   'Consumo licenciado não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_real_tot',
-  'message':   'Consumo real não tem o formato correcto',
+  'message':   'Consumo real não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_real_int',
-  'message':   'Consumo real intermedio não tem o formato correcto',
+  'message':   'Consumo real intermedio não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_real_fon',
-  'message':   'Consumo real das fontes não tem o formato correcto',
+  'message':   'Consumo real das fontes não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }];

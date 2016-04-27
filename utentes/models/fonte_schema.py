@@ -6,18 +6,18 @@ FONTE_SCHEMA = [{
   'rules':     ['NOT_NULL']
 }, {
   'fieldname': 'd_dado',
-  'message':   'Data toma de dados não tem o formato correcto',
+  'message':   'Data toma de dados não tem o formato correto',
   'rules':     ['IS_DATE']
 }, {
   'fieldname': 'c_soli',
-  'message':   'Consumo solicitado não tem o formato correcto',
+  'message':   'Consumo solicitado não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_max',
-  'message':   'Máximo caudal extraíble não tem o formato correcto',
+  'message':   'Máximo caudal extraíble não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }, {
   'fieldname': 'c_real',
-  'message':   'Consumo real não tem o formato correcto',
+  'message':   'Consumo real não tem o formato correto',
   'rules':     ['IS_NUMERIC']
 }];

@@ -89,7 +89,7 @@ def utentes_create(request):
 
     # TODO:320 is this not covered by schema validations?
     if not nome:
-        raise badrequest_exception({'error': 'nome es un campo obligatorio'})
+        raise badrequest_exception({'error': 'nome es um campo obligatorio'})
 
     e = request.db.query(Utente).filter(Utente.nome == nome).first()
     if e:
