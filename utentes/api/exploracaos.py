@@ -175,11 +175,19 @@ def exploracaos_create(request):
     request.db.commit()
     return e
 
+def activity_fail(v):
+    return (v == None) or \
+           (v == '') or \
+           (len(v) == 0) or \
+           (v.get('tipo') == None) or \
+           (v.get('tipo') == 'Actividade non declarada')
 
 def validate_entities(body):
     import re
     validatorExploracao = Validator(EXPLORACAO_SCHEMA)
     validatorExploracao.add_rule('EXP_ID_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}$', v))})
+    validatorExploracao.add_rule('ACTIVITY_NOT_NULL', {'fails': activity_fail})
+
     msgs = validatorExploracao.validate(body)
 
     validatorFonte = Validator(FONTE_SCHEMA)

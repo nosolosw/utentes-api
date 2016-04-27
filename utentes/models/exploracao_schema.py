@@ -59,7 +59,7 @@ EXPLORACAO_SCHEMA = [{
 }, {
   'fieldname': 'actividade',
   'message':   'A exploracão debe ter uma actividade',
-  'rules':     ['NOT_NULL']
+  'rules':     ['ACTIVITY_NOT_NULL']
 }, {
   'fieldname': 'licencias',
   'message':   'A exploracão debe ter uma licença',
