@@ -8,7 +8,8 @@ const BrowserWindow = electron.BrowserWindow;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow,
+  splashWindow;
 
 function createWindow (mainAddr, subpy) {
   // Create the browser window.
@@ -19,6 +20,7 @@ function createWindow (mainAddr, subpy) {
     minHeight: 864,
     "webPreferences": {"nodeIntegration": true},
     title: 'Utentes',
+    show: false,
   });
   mainWindow.maximize();
 
@@ -26,12 +28,15 @@ function createWindow (mainAddr, subpy) {
   // mainWindow.webContents.reloadIgnoringCache();
   mainWindow.webContents.session.clearCache(function(){console.log('Cache cleared')});
   mainWindow.webContents.session.clearStorageData(function(){console.log('StorageData cleared')});
-  // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+
+  mainWindow.webContents.once('did-finish-load', function() {
+    mainWindow.show();
+    splashWindow.close();
+  });
 
 
   mainWindow.on('close', function() {
-    console.log('close')
     mainWindow.webContents.session.clearCache(function(){console.log('Closed: Cache cleared')});
     mainWindow.webContents.session.clearStorageData(function(){console.log('Closed: StorageData cleared')});
   });
@@ -50,9 +55,11 @@ function createWindow (mainAddr, subpy) {
 //   }
 // });
 
-
 app.on('ready', function() {
   // console.log(app.getPath('userData'));
+
+  showSplash();
+
   var spawn = require('child_process').spawn;
   var subpy = spawn('./Python27/python', ['./Python27/Scripts/pserve-script.py',  './utentes-api/production.ini']);
   // var subpy = spawn('../../virtualenvs/sixhiara/bin/pserve', ['production.ini']);
@@ -60,9 +67,24 @@ app.on('ready', function() {
   setTimeout(function(){
     var mainAddr = 'http://localhost:6543/static/utentes-ui/exploracao-search.html';
     createWindow(mainAddr, subpy);
-  }, 3000);
+  }, 4000);
 
 });
+
+function showSplash() {
+  splashWindow = new BrowserWindow({
+    useContentSize: true,
+    width: 400,
+    height: 400,
+    center: true,
+    frame: false,
+    type: 'splash',
+  });
+  splashWindow.on('closed', function() {
+    splashWindow = null;
+  });
+  splashWindow.loadURL('file://' + __dirname + '/splash.html');
+}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
