@@ -19,7 +19,7 @@ function createWindow (mainAddr, subpy) {
     minWidth: 1152,
     minHeight: 864,
     "webPreferences": {"nodeIntegration": true},
-    title: 'Utentes',
+    title: 'Gestão de Utentes',
     show: false,
   });
   mainWindow.maximize();
