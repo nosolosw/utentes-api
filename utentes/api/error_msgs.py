@@ -8,4 +8,5 @@ error_msgs = {
     'exploracao_already_exists': 'A exploracao ja existe',
     'utente_already_exists': 'O utente ja existe',
     'no_cultivo_gid': 'Nao existe cultivo co gid indicado',
+    'bad_import_file': 'Error carregando ficheiro'
 }

@@ -79,5 +79,9 @@ def main(global_config, **settings):
     # GET /domains = Return all domains (utentes included)
     config.add_route('domains', '/api/domains')
 
+    # GET /api/base/fountains = Return a GeoJSON
+    # POST /api/base/fountains = DELETE the table and insert the features in the zip
+    config.add_route('base_fountains', '/api/base/fountains')
+
     config.scan()
     return config.make_wsgi_app()
