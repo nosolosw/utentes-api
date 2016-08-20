@@ -48,7 +48,7 @@ def main(global_config, **settings):
     json_renderer.add_adapter(decimal.Decimal, decimal_adapter)
     config.add_renderer('json', json_renderer)
 
-    config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_static_view('static', 'static', cache_max_age=0)
 
     # GET    /api/exploracaos      = Return all exploracaos
     # POST   /api/exploracaos      = Create a new exploracao, 'exp_id' in body

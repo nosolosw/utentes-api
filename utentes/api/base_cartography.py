@@ -25,8 +25,9 @@ def base_fountains_post(request):
     #     request.db.rollback()
     #     raise badrequest_exception({'error': error_msgs['bad_import_file']})
     try:
-
-        path = request.registry.settings['fontes_json']
+        import os
+        dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+        path = os.path.join(dir_path, 'static', 'utentes-ui', 'offline', 'data', 'json_Fontes.js')
         with open(path, "w") as f:
 	           f.write(json.dumps(body))
         return {'msg': 'Carregadas %d fontes' % len(body['features'])}
