@@ -333,7 +333,7 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
         expected_json['licencias'][0]['cadastro']   = 'cadastro'
-        expected_json['licencias'][0]['estado']     = 'Denegada'
+        expected_json['licencias'][0]['estado']     = u'Não aprovada '
         expected_json['licencias'][0]['d_emissao']  = '1999-9-9'
         expected_json['licencias'][0]['d_validade'] = '1999-8-7'
         expected_json['licencias'][0]['c_soli_tot'] = 23.45
@@ -350,7 +350,7 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         self.assertEquals(lic_gid, actual.licencias[0].gid)
         self.assertEquals(lic_nro, actual.licencias[0].lic_nro)
         self.assertEquals('cadastro', actual.licencias[0].cadastro)
-        self.assertEquals('Denegada', actual.licencias[0].estado)
+        self.assertEquals(u'Não aprovada', actual.licencias[0].estado)
         self.assertEquals('1999-09-09', actual.licencias[0].d_emissao.isoformat())
         self.assertEquals('1999-08-07', actual.licencias[0].d_validade.isoformat())
         self.assertEquals(23.45, float(actual.licencias[0].c_soli_tot))
@@ -561,13 +561,13 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         expected_json = build_json(self.request, expected)
         expected_json['utente']['observacio'] = ' foo - bar '
         expected_json['observacio'] = ' foo - bar '
-        expected_json['licencias'][0]['estado'] = u'Denegada'
+        expected_json['licencias'][0]['estado'] = u'Não aprovada'
         expected_json['actividade']['c_estimado'] = None
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(' foo - bar ', actual.utente_rel.observacio)
-        self.assertEquals(u'Denegada', actual.licencias[0].estado)
+        self.assertEquals(u'Não aprovada', actual.licencias[0].estado)
         self.assertIsNone(actual.actividade.c_estimado)
         self.assertEquals(' foo - bar ', actual.observacio)
 

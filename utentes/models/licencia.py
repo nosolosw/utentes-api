@@ -49,8 +49,6 @@ class Licencia(Base):
         self.c_real_tot = to_decimal(json.get('c_real_tot'))
         self.c_real_int = to_decimal(json.get('c_real_int'))
         self.c_real_fon = to_decimal(json.get('c_real_fon'))
-        # self.exploracao = json.get('exploracao')
-
 
     def __json__(self, request):
         return {
@@ -73,3 +71,14 @@ class Licencia(Base):
 
     def validate(self, json):
         return []
+
+    @staticmethod
+    def implies_validate_activity(estado):
+        return estado not in [
+        u'Irregular',
+        u'Não aprovada',
+        u'Pendente de solicitação do utente',
+        u'Pendente de revisão da solicitação (Direcção)',
+        u'Pendente de revisão da solicitação (D. Jurídico)',
+        u'Pendente de aprovação tecnica (R. Cadastro)',
+        ]

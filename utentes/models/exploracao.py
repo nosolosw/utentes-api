@@ -70,21 +70,8 @@ class Exploracao(Base):
 
     def validate_activity(self, activity, attributes, json):
         msgs = []
-        statuses = [lic['estado'] for lic in json['licencias']]
-        not_validatable_status = [
-            u'Irregular',
-            u'Denegada',
-            u'Pendente solicitação utente',
-            u'Pendente revisão solicitação (Direcção)',
-            u'Pendente revisão solicitação (D. Jurídico)',
-            u'Pendente aprobação tecnica (D. Cadastro)'
-        ]
-        to_validate_activity = False
-        for status in statuses:
-            if status not in not_validatable_status:
-                to_validate_activity = True
-
-        if to_validate_activity:
+        statuses = [Licencia.implies_validate_activity(lic['estado']) for lic in json['licencias']]
+        if any(statuses):
             msgs = activity.validate(attributes)
         return msgs
 
