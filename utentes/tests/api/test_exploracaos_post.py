@@ -153,7 +153,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertRaises(HTTPBadRequest, exploracaos_create, self.request)
 
     def test_create_exploracao_actividade_rega_without_cultivos(self):
-        rega = u'Agricultura-Regadia'
+        rega = u'Agricultura de Regadio'
         expected_json = self.build_json()
         expected_json['actividade'] = {
             'tipo': rega,
@@ -179,13 +179,13 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Abastecimento', actual.actividade.tipo)
 
         exp_id = '9999-998'
-        expected_json['actividade'] = {'tipo':u'Agricultura-Regadia', 'cultivos':[]}
+        expected_json['actividade'] = {'tipo':u'Agricultura de Regadio', 'cultivos':[]}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
         self.assertEquals(exp_id, actual.exp_id)
-        self.assertEquals(u'Agricultura-Regadia', actual.actividade.tipo)
+        self.assertEquals(u'Agricultura de Regadio', actual.actividade.tipo)
 
         exp_id = '9999-997'
         expected_json['actividade'] = {'tipo':u'Indústria'}

@@ -20,7 +20,7 @@ ActividadeSchema['Abastecimento'] = [{
   'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8', 'NOT_NULL']
 }];
 
-ActividadeSchema['Agricultura-Regadia'] = [{
+ActividadeSchema['Agricultura de Regadio'] = [{
   'fieldname': 'tipo',
   'message':   'Tipo de actividade não pode estar vazio',
   'rules':     ['NOT_NULL']

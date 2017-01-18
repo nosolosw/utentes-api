@@ -40,7 +40,7 @@ class Actividade(Base):
     def create_from_json(json):
         classes = {
             u'Abastecimento':        ActividadesAbastecemento,
-            u'Agricultura-Regadia':  ActividadesAgriculturaRega,
+            u'Agricultura de Regadio':  ActividadesAgriculturaRega,
             u'Indústria':            ActividadesIndustria,
             u'Pecuária':             ActividadesPecuaria,
             u'Piscicultura':         ActividadesPiscicultura,
@@ -94,7 +94,7 @@ class ActividadesAgriculturaRega(Actividade):
     c_estimado = Column(Numeric(10, 2))
 
     __mapper_args__ = {
-        'polymorphic_identity': u'Agricultura-Regadia',
+        'polymorphic_identity': u'Agricultura de Regadio',
     }
 
     cultivos = relationship('ActividadesCultivos',
@@ -135,7 +135,7 @@ class ActividadesAgriculturaRega(Actividade):
         self.c_estimado = reduce(lambda x,y: x + y.c_estimado, self.cultivos, 0)
 
     def validate(self, json):
-        validator = Validator(actividades_schema.ActividadeSchema['Agricultura-Regadia'])
+        validator = Validator(actividades_schema.ActividadeSchema['Agricultura de Regadio'])
         return validator.validate(json)
 
 
