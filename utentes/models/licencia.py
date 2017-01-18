@@ -25,6 +25,11 @@ class Licencia(Base):
     c_real_tot = Column(Numeric(10, 2), doc='')
     c_real_int = Column(Numeric(10, 2), doc='')
     c_real_fon = Column(Numeric(10, 2), doc='')
+    taxa_fixa = Column(Numeric(10, 2), nullable=False, doc='Taxa fixa')
+    taxa_uso = Column(Numeric(10, 2), nullable=False, doc='Taxa de uso')
+    pago_mes = Column(Numeric(10, 2), doc='Valor pago mensual')
+    iva = Column(Integer, nullable=False, doc='IVA')
+    pago_iva = Column(Numeric(10, 2), doc='Valor com IVA')
     exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
 
     @staticmethod
@@ -49,6 +54,11 @@ class Licencia(Base):
         self.c_real_tot = to_decimal(json.get('c_real_tot'))
         self.c_real_int = to_decimal(json.get('c_real_int'))
         self.c_real_fon = to_decimal(json.get('c_real_fon'))
+        self.taxa_fixa = to_decimal(json.get('taxa_fixa'))
+        self.taxa_uso = to_decimal(json.get('taxa_uso'))
+        self.pago_mes = to_decimal(json.get('pago_mes'))
+        self.iva = json.get('iva')
+        self.pago_iva = to_decimal(json.get('pago_iva'))
 
     def __json__(self, request):
         return {
@@ -66,6 +76,11 @@ class Licencia(Base):
             'c_real_tot': self.c_real_tot,
             'c_real_int': self.c_real_int,
             'c_real_fon': self.c_real_fon,
+            'taxa_fixa': self.taxa_fixa,
+            'taxa_uso': self.taxa_uso,
+            'pago_mes': self.pago_mes,
+            'iva': self.iva,
+            'pago_iva': self.pago_iva,
             'exploracao': self.exploracao,
         }
 
