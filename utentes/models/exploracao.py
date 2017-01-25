@@ -68,13 +68,6 @@ class Exploracao(Base):
                               uselist=False,
                               passive_deletes=True)
 
-    def validate_activity(self, activity, attributes, json):
-        msgs = []
-        statuses = [Licencia.implies_validate_activity(lic['estado']) for lic in json['licencias']]
-        if any(statuses):
-            msgs = activity.validate(attributes)
-        return msgs
-
     def update_from_json(self, json, lic_nro_sequence):
         self.gid        = json.get('id')
         self.exp_id     = json.get('exp_id')
@@ -96,7 +89,6 @@ class Exploracao(Base):
         self.c_estimado = to_decimal(json.get('c_estimado'))
         self.the_geom = update_geom(self.the_geom, json)
         update_area(self, json)
-
 
         self.update_and_validate_activity(json)
 
@@ -132,7 +124,12 @@ class Exploracao(Base):
         if actividade_json.get('tipo') == u'Agricultura de Regadio':
             self.c_estimado = self.actividade.c_estimado
 
-
+    def validate_activity(self, activity, attributes, json):
+        msgs = []
+        statuses = [Licencia.implies_validate_activity(lic['estado']) for lic in json['licencias']]
+        if any(statuses):
+            msgs = activity.validate(attributes)
+        return msgs
 
     @staticmethod
     def create_from_json(body):

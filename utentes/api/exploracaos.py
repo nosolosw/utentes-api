@@ -10,6 +10,7 @@ from utentes.models.base import badrequest_exception
 from utentes.models.utente import Utente
 from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.exploracao import Exploracao
+from utentes.models.licencia import Licencia
 from utentes.models.exploracao_schema import EXPLORACAO_SCHEMA
 from utentes.models.licencia_schema import LICENCIA_SCHEMA
 from utentes.models.fonte_schema import FONTE_SCHEMA
@@ -197,6 +198,7 @@ def validate_entities(body):
     validatorLicencia = Validator(LICENCIA_SCHEMA)
     validatorLicencia.add_rule('LIC_NRO_FORMAT', {'fails': lambda v: v and (not re.match('^\d{4}-\d{3}-\d{3}$', v))})
     for lic in body.get('licencias'):
-        msgs = msgs + validatorLicencia.validate(lic)
+        if Licencia.implies_validate_activity(lic.get('estado')):
+            msgs = msgs + validatorLicencia.validate(lic)
 
     return msgs

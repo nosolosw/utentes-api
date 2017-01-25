@@ -94,6 +94,7 @@ class Licencia(Base):
         u'Não aprovada',
         u'Pendente de solicitação do utente',
         u'Pendente de revisão da solicitação (Direcção)',
+        u'Pendente de revisão da solicitação (Chefe DT)',
         u'Pendente de revisão da solicitação (D. Jurídico)',
-        u'Pendente de aprovação tecnica (R. Cadastro)',
+        u'Pendente de aprovação técnica (R. Cadastro)',
         ]
