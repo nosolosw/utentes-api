@@ -11,8 +11,7 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
-    update_geom,
-    update_area
+    update_geom
 )
 from actividades_schema import ActividadeSchema
 
@@ -49,7 +48,6 @@ class ActividadesCultivos(Base):
         self.area       = json.get('area')
         self.observacio = json.get('observacio')
         self.the_geom   = update_geom(self.the_geom, json)
-        update_area(self, json)
 
         if json.get('geometry_edited'):
             if self.area is None:

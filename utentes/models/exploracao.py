@@ -13,8 +13,7 @@ from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
     update_array,
-    update_geom,
-    update_area
+    update_geom
 )
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
@@ -88,7 +87,6 @@ class Exploracao(Base):
         self.c_real     = to_decimal(json.get('c_real'))
         self.c_estimado = to_decimal(json.get('c_estimado'))
         self.the_geom = update_geom(self.the_geom, json)
-        update_area(self, json)
 
         self.update_and_validate_activity(json)
 
