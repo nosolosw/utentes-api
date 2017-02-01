@@ -3,3 +3,4 @@ utentes/static/utentes-ui
 utentes.egg-info
 *~
 node_modules
+.idea
