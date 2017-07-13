@@ -11,12 +11,18 @@ API for utentes project
     $ psql -h localhost -U postgres -c "CREATE ROLE utentes LOGIN PASSWORD 'XXXX'"
     $ echo "" >> ~/.pgpass
     $ echo "*:*:*:utentes:XXXX" >> ~/.pgpass
-    $ createdb -h localhost -U postgres -T template0 --owner utentes sixhiara
+    $ createdb -h localhost -U postgres -T template0 --owner utentes aranorte
+    $ sqitch deploy
 
 
 # Tests
 
- $ pg_prove -r --ext .sql -d sixhiara -U postgres -h localhost tests/
+     $ pg_prove -r --ext .sql -d sixhiara -U postgres -h localhost tests/
+ 
+# Launch server
+    
+    $ workon utentes
+    $ pserve development.ini --reload
 
 # Nomenclatura de virtualenvwrapper
 
