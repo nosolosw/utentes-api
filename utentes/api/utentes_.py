@@ -7,7 +7,10 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import badrequest_exception
 from utentes.models.utente_schema import UTENTE_SCHEMA
 from utentes.models.utente import Utente
+from error_msgs import error_msgs
 
+import logging
+log = logging.getLogger(__name__)
 
 @view_config(route_name='utentes', request_method='GET', renderer='json')
 @view_config(route_name='utentes_id', request_method='GET', renderer='json')

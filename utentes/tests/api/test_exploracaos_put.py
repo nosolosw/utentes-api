@@ -3,7 +3,7 @@
 
 import unittest
 from pyramid.httpexceptions import HTTPBadRequest
-
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from utentes.tests.api import DBIntegrationTest
 from utentes.models.exploracao import Exploracao
 from utentes.models.utente import Utente

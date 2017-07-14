@@ -7,8 +7,13 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import badrequest_exception
 from utentes.models.actividades_schema import ActividadeSchema
 from utentes.models.cultivo import ActividadesCultivos
-from utentes.models.actividade import Actividade, ActividadesAgriculturaRega
+from utentes.models.actividade import Actividade
 from utentes.models.exploracao import Exploracao
+
+from error_msgs import error_msgs
+
+import logging
+log = logging.getLogger(__name__)
 
 
 @view_config(route_name='cultivos', request_method='GET', renderer='json')
