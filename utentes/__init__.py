@@ -55,8 +55,8 @@ def main(global_config, **settings):
     # GET    /api/exploracaos/{id} = Return individual exploracao
     # PUT    /api/exploracaos/{id} = Update exploracao
     # DELETE /api/exploracaos/{id} = Delete exploracao
-    config.add_route('exploracaos',     '/api/exploracaos')
-    config.add_route('exploracaos_id',  '/api/exploracaos/{id}')
+    config.add_route('exploracaos', '/api/exploracaos')
+    config.add_route('exploracaos_id', '/api/exploracaos/{id}')
 
     # GET    /api/utentes      = Return all utentes
     # POST   /api/utentes      = Create a new utente, 'nome' in body

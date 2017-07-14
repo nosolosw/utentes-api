@@ -25,5 +25,5 @@ class Setting(DeclarativeBase):
     def __json__(self, request):
         return {
             'property': self.property,
-            'value':    self.value
+            'value': self.value
         }

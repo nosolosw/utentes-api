@@ -19,9 +19,9 @@ class Domain(DeclarativeBase):
     def __json__(self, request):
         return {
             'category': self.category,
-            'text':     self.key,
-            'alias':    self.value,
-            'order':    self.ordering,
-            'parent':   self.parent,
+            'text': self.key,
+            'alias': self.value,
+            'order': self.ordering,
+            'parent': self.parent,
             'tooltip': self.tooltip
         }

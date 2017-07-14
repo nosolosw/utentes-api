@@ -204,7 +204,7 @@ def _dump_multilinestring(obj, fmt):
     coords = obj['coordinates']
     mlls = 'MULTILINESTRING (%s)'
     linestrs = ('(%s)' % ', '.join(' '.join(fmt % c for c in pt)
-                for pt in linestr) for linestr in coords)
+                                   for pt in linestr) for linestr in coords)
     mlls %= ', '.join(ls for ls in linestrs)
     return mlls
 
@@ -508,7 +508,7 @@ def _load_geometrycollection(tokens, string):
 
 
 _dumps_registry = {
-    'Point':  _dump_point,
+    'Point': _dump_point,
     'LineString': _dump_linestring,
     'Polygon': _dump_polygon,
     'MultiPoint': _dump_multipoint,

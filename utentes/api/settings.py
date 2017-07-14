@@ -8,7 +8,8 @@ from utentes.models.base import badrequest_exception
 
 @view_config(route_name='settings', request_method='GET', renderer='json')
 def settings_get(request):
-    return { s.property:s.value for s in request.db.query(Setting) }
+    return {s.property: s.value for s in request.db.query(Setting)}
+
 
 @view_config(route_name='settings_property', request_method='PUT', renderer='json')
 def settings_update(request):

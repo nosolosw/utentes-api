@@ -20,9 +20,17 @@ class ActividadesCultivos(Base):
     __tablename__ = 'actividades_cultivos'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.actividades_cultivos_gid_seq'::regclass)"))
+    gid = Column(
+        Integer,
+        primary_key=True,
+        server_default=text("nextval('utentes.actividades_cultivos_gid_seq'::regclass)"))
     cult_id = Column(Text, nullable=False, unique=True)
-    actividade = Column(ForeignKey(u'utentes.actividades_agricultura_rega.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
+    actividade = Column(
+        ForeignKey(
+            u'utentes.actividades_agricultura_rega.gid',
+            ondelete=u'CASCADE',
+            onupdate=u'CASCADE'),
+        nullable=False)
     c_estimado = Column(Numeric(10, 2), nullable=False)
     cultivo = Column(Text, nullable=False)
     rega = Column(Text, nullable=False)
@@ -39,25 +47,25 @@ class ActividadesCultivos(Base):
 
     def update_from_json(self, json):
         # actividade - handled by sqlalchemy relationship
-        self.gid        = json.get('id')
-        self.cult_id    = json.get('cult_id')
+        self.gid = json.get('id')
+        self.cult_id = json.get('cult_id')
         self.c_estimado = json.get('c_estimado')
-        self.cultivo    = json.get('cultivo')
-        self.rega       = json.get('rega')
+        self.cultivo = json.get('cultivo')
+        self.rega = json.get('rega')
         self.eficiencia = json.get('eficiencia')
-        self.area       = json.get('area')
+        self.area = json.get('area')
         self.observacio = json.get('observacio')
-        self.the_geom   = update_geom(self.the_geom, json)
+        self.the_geom = update_geom(self.the_geom, json)
 
         if json.get('geometry_edited'):
             if self.area is None:
                 self.c_estimado = 0
             elif self.rega == 'Regional':
-                self.c_estimado = self.area * 10000/12
+                self.c_estimado = self.area * 10000 / 12
             elif self.eficiencia is None:
                 self.c_estimado = 0
             else:
-                self.c_estimado = (self.area*30*86400*0.21) / (1000*self.eficiencia)
+                self.c_estimado = (self.area * 30 * 86400 * 0.21) / (1000 * self.eficiencia)
 
     def __json__(self, request):
         the_geom = None
@@ -68,14 +76,14 @@ class ActividadesCultivos(Base):
         return {
             'type': 'Feature',
             'properties': {
-                'id':         self.gid,
-                'cult_id':    self.cult_id,
+                'id': self.gid,
+                'cult_id': self.cult_id,
                 'actividade': self.actividade,
                 'c_estimado': self.c_estimado,
-                'cultivo':    self.cultivo,
-                'rega':       self.rega,
+                'cultivo': self.cultivo,
+                'rega': self.rega,
                 'eficiencia': self.eficiencia,
-                'area':       self.area,
+                'area': self.area,
                 'observacio': self.observacio,
             },
             'geometry': the_geom

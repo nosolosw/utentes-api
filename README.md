@@ -55,3 +55,10 @@ Tras añadir las líneas a .bashrc hacer un:
 virtualenvwrapper permite añadir hooks tras la activación del entorno. Si, como mostramos a continuación ligamos un entorno virtual a un directorio de proyecto (donde tendremos el código fuente), podemos hacer que al activar el entorno hagamos cd automáticamente al proyecto:
 
     $ echo 'cdproject' >>  $WORKON_HOME/postactivate
+
+
+# Contributing
+
+Editor preferences are available as .editorconfig file for easy use in common text editors. Read more and [download the plugin for your editor](http://editorconfig.org).
+
+Please do not push files to the master branch that not passes the flake8 tests specified in setup.cfg. Just Install in your virtualenv flake `pip install flake8`, and execute it from within this folder with `flake8 *`

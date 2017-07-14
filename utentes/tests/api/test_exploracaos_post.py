@@ -16,46 +16,46 @@ class ExploracaoCreateTests(DBIntegrationTest):
 
     def build_json(self):
         expected_json = {}
-        expected_json['exp_id']     = self.EXP_ID
-        expected_json['exp_name']   = 'new name'
-        expected_json['pagos']      = None
-        expected_json['d_soli']     = '2001-01-01'
+        expected_json['exp_id'] = self.EXP_ID
+        expected_json['exp_name'] = 'new name'
+        expected_json['pagos'] = None
+        expected_json['d_soli'] = '2001-01-01'
         expected_json['observacio'] = 'new observ'
         expected_json['loc_provin'] = 'Niassa'
         expected_json['loc_distri'] = 'Lago'
-        expected_json['loc_posto']  = 'Cobue'
+        expected_json['loc_posto'] = 'Cobue'
         expected_json['loc_nucleo'] = 'new loc_nucleo'
         expected_json['loc_endere'] = 'new enderezo'
-        expected_json['loc_bacia']  = 'Megaruma'
+        expected_json['loc_bacia'] = 'Megaruma'
         expected_json['loc_subaci'] = 'Megaruma'
-        expected_json['loc_rio']    = 'Megaruma'
-        expected_json['c_soli']     = 19.02
+        expected_json['loc_rio'] = 'Megaruma'
+        expected_json['c_soli'] = 19.02
         expected_json['c_licencia'] = 29
-        expected_json['c_real']     = 92
+        expected_json['c_real'] = 92
         expected_json['c_estimado'] = 42.23
-        expected_json['utente']     = {
-            'nome':       'nome',
-            'nuit':       'nuit',
-            'entidade':   'entidade',
+        expected_json['utente'] = {
+            'nome': 'nome',
+            'nuit': 'nuit',
+            'entidade': 'entidade',
             'reg_comerc': 'reg_comerc',
-            'reg_zona':   'reg_zona',
+            'reg_zona': 'reg_zona',
             'loc_provin': 'Niassa',
             'loc_distri': 'Lago',
-            'loc_posto':  'Cobue',
+            'loc_posto': 'Cobue',
             'loc_nucleo': 'loc_nucleo',
             'observacio': 'observacio'
         }
         expected_json['actividade'] = {
-            'tipo':       'Saneamento',
+            'tipo': 'Saneamento',
             'c_estimado': None,
             'habitantes': 120000
         }
         expected_json['licencias'] = [{
-            'lic_nro':    None,
-            'lic_tipo':   'Subterrânea',
-            'cadastro':   'cadastro',
-            'estado':     'Irregular',
-            'd_emissao':  '2020-2-2',
+            'lic_nro': None,
+            'lic_tipo': 'Subterrânea',
+            'cadastro': 'cadastro',
+            'estado': 'Irregular',
+            'd_emissao': '2020-2-2',
             'd_validade': '2010-10-10',
             'c_soli_tot': 4.3,
             'c_soli_int': 2.3,
@@ -170,7 +170,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         expected_json = self.build_json()
 
         exp_id = '9999-999'
-        expected_json['actividade'] = {'tipo':u'Abastecimento', 'c_estimado':None}
+        expected_json['actividade'] = {'tipo': u'Abastecimento', 'c_estimado': None}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
@@ -179,7 +179,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Abastecimento', actual.actividade.tipo)
 
         exp_id = '9999-998'
-        expected_json['actividade'] = {'tipo':u'Agricultura de Regadio', 'cultivos':[]}
+        expected_json['actividade'] = {'tipo': u'Agricultura de Regadio', 'cultivos': []}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
@@ -188,7 +188,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Agricultura de Regadio', actual.actividade.tipo)
 
         exp_id = '9999-997'
-        expected_json['actividade'] = {'tipo':u'Indústria'}
+        expected_json['actividade'] = {'tipo': u'Indústria'}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
@@ -197,7 +197,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Indústria', actual.actividade.tipo)
 
         exp_id = '9999-996'
-        expected_json['actividade'] = {'tipo':u'Pecuária', 'reses':[]}
+        expected_json['actividade'] = {'tipo': u'Pecuária', 'reses': []}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
@@ -206,7 +206,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Pecuária', actual.actividade.tipo)
 
         exp_id = '9999-995'
-        expected_json['actividade'] = {'tipo':u'Piscicultura'}
+        expected_json['actividade'] = {'tipo': u'Piscicultura'}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
@@ -215,7 +215,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Piscicultura', actual.actividade.tipo)
 
         exp_id = '9999-994'
-        expected_json['actividade'] = {'tipo':u'Producção de energia'}
+        expected_json['actividade'] = {'tipo': u'Producção de energia'}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
@@ -224,14 +224,13 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(u'Producção de energia', actual.actividade.tipo)
 
         exp_id = '9999-993'
-        expected_json['actividade'] = {'tipo':u'Saneamento'}
+        expected_json['actividade'] = {'tipo': u'Saneamento'}
         expected_json['exp_id'] = exp_id
         self.request.json_body = expected_json
         exploracaos_create(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == exp_id).first()
         self.assertEquals(exp_id, actual.exp_id)
         self.assertEquals(u'Saneamento', actual.actividade.tipo)
-
 
 
 if __name__ == '__main__':

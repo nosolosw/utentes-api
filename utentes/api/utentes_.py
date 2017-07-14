@@ -12,6 +12,7 @@ from error_msgs import error_msgs
 import logging
 log = logging.getLogger(__name__)
 
+
 @view_config(route_name='utentes', request_method='GET', renderer='json')
 @view_config(route_name='utentes_id', request_method='GET', renderer='json')
 def utentes_get(request):
@@ -26,7 +27,7 @@ def utentes_get(request):
             raise badrequest_exception({
                 'error': error_msgs['no_gid'],
                 'gid': gid
-                })
+            })
     else:
         return request.db.query(Utente).order_by(Utente.nome).all()
 

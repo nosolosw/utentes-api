@@ -53,21 +53,21 @@ class ExploracaoUpdateTests(DBIntegrationTest):
         gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
-        expected_json['exp_name']   = 'new name'
-        expected_json['pagos']      = None
-        expected_json['d_soli']     = '2001-01-01'
+        expected_json['exp_name'] = 'new name'
+        expected_json['pagos'] = None
+        expected_json['d_soli'] = '2001-01-01'
         expected_json['observacio'] = 'new observ'
         expected_json['loc_provin'] = 'Niassa'
         expected_json['loc_distri'] = 'Lago'
-        expected_json['loc_posto']  = 'Cobue'
+        expected_json['loc_posto'] = 'Cobue'
         expected_json['loc_nucleo'] = 'new loc_nucleo'
         expected_json['loc_endere'] = 'new enderezo'
-        expected_json['loc_bacia']  = 'Megaruma'
+        expected_json['loc_bacia'] = 'Megaruma'
         expected_json['loc_subaci'] = 'Megaruma'
-        expected_json['loc_rio']    = 'Megaruma'
-        expected_json['c_soli']     = 19.02
+        expected_json['loc_rio'] = 'Megaruma'
+        expected_json['c_soli'] = 19.02
         expected_json['c_licencia'] = 29
-        expected_json['c_real']     = 92
+        expected_json['c_real'] = 92
         expected_json['c_estimado'] = 42.23
         self.request.json_body = expected_json
         exploracaos_update(self.request)
@@ -103,12 +103,16 @@ class ExploracaoUpdateTests(DBIntegrationTest):
                 [40.3774400124151, -12.8723906015176],
                 [40.3566872025163, -12.8724988506617],
                 [40.3566078671374, -12.8577371684984]
-                ]]]
+            ]]]
         }
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
-        # SELECT st_area(st_transform(ST_GeomFromText( 'MULTIPOLYGON(((40.3566078671374 -12.8577371684984, 40.3773594643965 -12.8576290475983, 40.3774400124151 -12.8723906015176, 40.3566872025163 -12.8724988506617, 40.3566078671374 -12.8577371684984)))', 4326 ), 32737));
+        # SELECT st_area(st_transform(ST_GeomFromText(
+        # 'MULTIPOLYGON(((40.3566078671374 -12.8577371684984, 40.3773594643965
+        # -12.8576290475983, 40.3774400124151 -12.8723906015176, 40.3566872025163
+        # -12.8724988506617, 40.3566078671374 -12.8577371684984)))', 4326 ),
+        # 32737));
         self.assertAlmostEquals(367.77, float(actual.area))
 
     def test_update_exploracao_delete_the_geom(self):
@@ -136,6 +140,7 @@ class ExploracaoUpdateTests(DBIntegrationTest):
         s = create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(exp_name, actual.exp_name)
+
 
 class ExploracaoUpdateFonteTests(DBIntegrationTest):
 
@@ -240,11 +245,11 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         lic_nro_first = expected.licencias[0].lic_nro
         lic_nro_second = expected.exp_id + '-{:03d}'.format(len(expected.licencias) + 1)
         expected_json['licencias'].append({
-            'lic_nro':    None,
-            'lic_tipo':   'Subterrânea',
-            'cadastro':   'cadastro',
-            'estado':     'Irregular',
-            'd_emissao':  '2020-2-2',
+            'lic_nro': None,
+            'lic_tipo': 'Subterrânea',
+            'cadastro': 'cadastro',
+            'estado': 'Irregular',
+            'd_emissao': '2020-2-2',
             'd_validade': '2010-10-10',
             'c_soli_tot': 4.3,
             'c_soli_int': 2.1,
@@ -267,7 +272,7 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
         expected_json['licencias'].append({
-            'lic_tipo':   None,
+            'lic_tipo': None,
         })
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
@@ -285,10 +290,10 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         lic_nro_second = expected.exp_id + '-002'
         lic_nro_third = expected.exp_id + '-003'
         expected_json['licencias'].append({
-            'lic_nro':    None,
-            'lic_tipo':   'Subterrânea',
-            'cadastro':   'cadastro',
-            'estado':     'Irregular',
+            'lic_nro': None,
+            'lic_tipo': 'Subterrânea',
+            'cadastro': 'cadastro',
+            'estado': 'Irregular',
             'c_soli_tot': 4.3,
             'c_soli_int': 2.1,
             'c_soli_fon': 2.2,
@@ -314,9 +319,9 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         exploracaos_update(self.request)
         # add new one
         expected_json['licencias'].append({
-            'lic_nro':    None,
-            'lic_tipo':   'Superficial',
-            'estado':     'Irregular',
+            'lic_nro': None,
+            'lic_tipo': 'Superficial',
+            'estado': 'Irregular',
         })
         self.request.json_body = expected_json
         exploracaos_update(self.request)
@@ -332,9 +337,9 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         lic_nro = expected.licencias[0].lic_nro
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
-        expected_json['licencias'][0]['cadastro']   = 'cadastro'
-        expected_json['licencias'][0]['estado']     = u'Não aprovada '
-        expected_json['licencias'][0]['d_emissao']  = '1999-9-9'
+        expected_json['licencias'][0]['cadastro'] = 'cadastro'
+        expected_json['licencias'][0]['estado'] = u'Não aprovada '
+        expected_json['licencias'][0]['d_emissao'] = '1999-9-9'
         expected_json['licencias'][0]['d_validade'] = '1999-8-7'
         expected_json['licencias'][0]['c_soli_tot'] = 23.45
         expected_json['licencias'][0]['c_soli_int'] = 0.45
@@ -523,7 +528,9 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
 class ExploracaoUpdateActividadeTests(DBIntegrationTest):
 
     def test_update_exploracao_update_actividade_values(self):
-        # SELECT a.tipo, e.exp_id FROM actividades AS a INNER JOIN exploracaos AS e ON (a.exploracao = e.gid) ORDER BY exp_id;
+        # SELECT a.tipo, e.exp_id
+        # FROM actividades AS a INNER JOIN exploracaos AS e ON (a.exploracao = e.gid)
+        # ORDER BY exp_id;
         # 2010-002 industria
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
         gid = expected.gid
@@ -597,7 +604,7 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
         self.request.matchdict.update(dict(id=expected.gid))
         expected_json = build_json(self.request, expected)
-        expected_json['actividade']['reses'] = [ res for res in expected_json['actividade']['reses'][0:-1] ]
+        expected_json['actividade']['reses'] = [res for res in expected_json['actividade']['reses'][0:-1]]
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
@@ -606,7 +613,7 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
 
     def test_update_exploracao_update_actividade_pecuaria_update_res(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
-        self.request.matchdict.update( dict(id=expected.gid))
+        self.request.matchdict.update(dict(id=expected.gid))
         expected_json = build_json(self.request, expected)
         expected_json['actividade']['reses'][0]['c_estimado'] = 9999.88
         self.request.json_body = expected_json
@@ -635,7 +642,6 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         self.assertEquals(old_len + 1, len(reses))
         self.assertEquals(reses[3].c_estimado, 40)
         self.assertEquals(reses[3].c_res, 4000)
-
 
     def test_update_exploracao_update_actividade_pecuaria_create_res_with_same_res_tipo(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-029').first()
@@ -681,7 +687,6 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         self.assertEquals(float(reses[1].c_estimado), 9999.77)
         self.assertEquals(reses[2].c_estimado, 50)
         self.assertEquals(reses[2].c_res, 5000)
-
 
     def test_update_exploracao_update_actividade_regadia_create_cultivo(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-022').first()

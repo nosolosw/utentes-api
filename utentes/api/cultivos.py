@@ -30,13 +30,12 @@ def cultivos_get(request):
             raise badrequest_exception({
                 'error': error_msgs['no_gid'],
                 'gid': gid
-                })
+            })
     else:  # return collection
         return {
             'type': 'FeatureCollection',
             'features': request.db.query(ActividadesCultivos).order_by(ActividadesCultivos.cult_id).all()
         }
-
 
 
 @view_config(route_name='cultivos_id', request_method='PUT', renderer='json')
@@ -54,7 +53,7 @@ def cultivos_update(request):
         cultivo.update_from_json(request.json_body)
         request.db.add(cultivo)
         request.db.commit()
-        actv = request.db.query(Actividade).filter(Actividade.gid ==cultivo.actividade).one()
+        actv = request.db.query(Actividade).filter(Actividade.gid == cultivo.actividade).one()
         c_estimado_actv = 0
         for cultivo in actv.cultivos:
             c_estimado_actv += cultivo.c_estimado
@@ -74,7 +73,6 @@ def cultivos_update(request):
         raise badrequest_exception({'error': error_msgs['body_not_valid']})
 
     return cultivo
-
 
 
 def validate_entities(body):

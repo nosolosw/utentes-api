@@ -11,12 +11,12 @@ class Licencia(Base):
     __tablename__ = 'licencias'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
-    gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.licencias_gid_seq'::regclass)"))
-    lic_nro    = Column(Text, nullable=False, unique=True, doc='Nro de Licença')
-    lic_tipo   = Column(Text, nullable=False, doc='')
-    cadastro   = Column(Text, doc='')
-    estado     = Column(Text, nullable=False, doc='')
-    d_emissao  = Column(Date, doc='Data emissão')
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.licencias_gid_seq'::regclass)"))
+    lic_nro = Column(Text, nullable=False, unique=True, doc='Nro de Licença')
+    lic_tipo = Column(Text, nullable=False, doc='')
+    cadastro = Column(Text, doc='')
+    estado = Column(Text, nullable=False, doc='')
+    d_emissao = Column(Date, doc='Data emissão')
     d_validade = Column(Date, doc='Data validade')
     c_soli_tot = Column(Numeric(10, 2), doc='')
     c_soli_int = Column(Numeric(10, 2), doc='')
@@ -30,7 +30,12 @@ class Licencia(Base):
     pago_mes = Column(Numeric(10, 2), doc='Valor pago mensual')
     iva = Column(Integer, nullable=False, doc='IVA')
     pago_iva = Column(Numeric(10, 2), doc='Valor com IVA')
-    exploracao = Column(ForeignKey(u'utentes.exploracaos.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
+    exploracao = Column(
+        ForeignKey(
+            u'utentes.exploracaos.gid',
+            ondelete=u'CASCADE',
+            onupdate=u'CASCADE'),
+        nullable=False)
 
     @staticmethod
     def create_from_json(json):
@@ -39,13 +44,13 @@ class Licencia(Base):
         return l
 
     def update_from_json(self, json):
-        self.gid        = json.get('id')
-        self.lic_nro    = json.get('lic_nro')
-        self.lic_tipo   = json.get('lic_tipo')
+        self.gid = json.get('id')
+        self.lic_nro = json.get('lic_nro')
+        self.lic_tipo = json.get('lic_tipo')
         self.finalidade = json.get('finalidade')
-        self.cadastro   = json.get('cadastro')
-        self.estado     = json.get('estado')
-        self.d_emissao  = to_date(json.get('d_emissao'))
+        self.cadastro = json.get('cadastro')
+        self.estado = json.get('estado')
+        self.d_emissao = to_date(json.get('d_emissao'))
         self.d_validade = to_date(json.get('d_validade'))
         self.c_soli_tot = to_decimal(json.get('c_soli_tot'))
         self.c_soli_int = to_decimal(json.get('c_soli_int'))
@@ -62,12 +67,12 @@ class Licencia(Base):
 
     def __json__(self, request):
         return {
-            'id':         self.gid,
-            'lic_nro':    self.lic_nro,
-            'lic_tipo':   self.lic_tipo,
-            'cadastro':   self.cadastro,
-            'estado':     self.estado,
-            'd_emissao':  self.d_emissao,
+            'id': self.gid,
+            'lic_nro': self.lic_nro,
+            'lic_tipo': self.lic_tipo,
+            'cadastro': self.cadastro,
+            'estado': self.estado,
+            'd_emissao': self.d_emissao,
             'd_validade': self.d_validade,
             'c_soli_tot': self.c_soli_tot,
             'c_soli_int': self.c_soli_int,
@@ -90,11 +95,11 @@ class Licencia(Base):
     @staticmethod
     def implies_validate_activity(estado):
         return estado not in [
-        u'Irregular',
-        u'Não aprovada',
-        u'Pendente de solicitação do utente',
-        u'Pendente de revisão da solicitação (Direcção)',
-        u'Pendente de revisão da solicitação (Chefe DT)',
-        u'Pendente de revisão da solicitação (D. Jurídico)',
-        u'Pendente de aprovação técnica (R. Cadastro)',
+            u'Irregular',
+            u'Não aprovada',
+            u'Pendente de solicitação do utente',
+            u'Pendente de revisão da solicitação (Direcção)',
+            u'Pendente de revisão da solicitação (Chefe DT)',
+            u'Pendente de revisão da solicitação (D. Jurídico)',
+            u'Pendente de aprovação técnica (R. Cadastro)',
         ]

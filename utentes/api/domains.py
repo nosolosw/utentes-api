@@ -14,17 +14,17 @@ def domains_get(request):
     domains = request.db.query(Domain).order_by(Domain.category, Domain.ordering, Domain.key).all()
     domains.append({
         'category': 'utente',
-        'text':     '',
-        'alias':    '',
-        'order':    0,
-        'parent':   ''
+        'text': '',
+        'alias': '',
+        'order': 0,
+        'parent': ''
     })
     for u in request.db.query(Utente).order_by(Utente.nome):
         domains.append({
             'category': 'utente',
-            'text':     u.nome,
-            'alias':    '',
-            'order':    None,
-            'parent':   ''
+            'text': u.nome,
+            'alias': '',
+            'order': None,
+            'parent': ''
         })
     return domains

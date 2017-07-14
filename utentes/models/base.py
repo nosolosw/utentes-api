@@ -26,6 +26,7 @@ class BaseClass(object):
             return False
         return self.gid == other.gid
 
+
 DeclarativeBase = declarative_base()
 Base = declarative_base(cls=BaseClass)
 
@@ -64,18 +65,18 @@ class APIAction(object):
 
     def __init__(self, operation="", status="", exp_type="", exp_id="", user_name=""):
         self.operation = operation
-        self.status    = status
-        self.exp_type  = exp_type
-        self.exp_id    = exp_id
+        self.status = status
+        self.exp_type = exp_type
+        self.exp_id = exp_id
         self.user_name = user_name
 
     def __json__(self, request):
         return {
-            'status':    self.status,
+            'status': self.status,
             'operation': self.operation,
-            'type':      self.exp_type,
-            'id':        self.exp_id,
-            'name':      self.user_name
+            'type': self.exp_type,
+            'id': self.exp_id,
+            'name': self.user_name
         }
 
 

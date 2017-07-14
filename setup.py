@@ -16,9 +16,9 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'six'
-    ]
+]
 
-excludes= ["utentes.tests", ]
+excludes = ["utentes.tests", ]
 
 setup(name='utentes',
       version='0.0',

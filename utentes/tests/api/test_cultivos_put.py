@@ -31,7 +31,8 @@ def create_new_session():
 class CultivosUpdateTests(DBIntegrationTest):
 
     def test_update_cultivo(self):
-        expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
+        expected = self.request.db.query(ActividadesCultivos).filter(
+            ActividadesCultivos.cult_id == '2010-022-01').first()
         gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
@@ -55,7 +56,8 @@ class CultivosUpdateTests(DBIntegrationTest):
         self.assertIsNone(actual.the_geom)
 
     def test_update_cultivo_the_geom(self):
-        expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
+        expected = self.request.db.query(ActividadesCultivos).filter(
+            ActividadesCultivos.cult_id == '2010-022-01').first()
         gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
@@ -68,7 +70,7 @@ class CultivosUpdateTests(DBIntegrationTest):
                 [40.3774400124151, -12.8723906015176],
                 [40.3566872025163, -12.8724988506617],
                 [40.3566078671374, -12.8577371684984]
-                ]]]
+            ]]]
         }
         self.request.json_body = expected_json
         cultivos_update(self.request)
@@ -76,7 +78,8 @@ class CultivosUpdateTests(DBIntegrationTest):
         self.assertAlmostEquals(367.77, float(actual.area))
 
     def test_not_update_cultivo_the_geom(self):
-        expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
+        expected = self.request.db.query(ActividadesCultivos).filter(
+            ActividadesCultivos.cult_id == '2010-022-01').first()
         gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
@@ -89,7 +92,7 @@ class CultivosUpdateTests(DBIntegrationTest):
                 [40.3774400124151, -12.8723906015176],
                 [40.3566872025163, -12.8724988506617],
                 [40.3566078671374, -12.8577371684984]
-                ]]]
+            ]]]
         }
         self.request.json_body = expected_json
         cultivos_update(self.request)
@@ -98,7 +101,8 @@ class CultivosUpdateTests(DBIntegrationTest):
 
     def test_update_cultivo_delete_the_geom(self):
         # TODO. Fixture for this entity should have a geometry
-        expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
+        expected = self.request.db.query(ActividadesCultivos).filter(
+            ActividadesCultivos.cult_id == '2010-022-01').first()
         gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
@@ -111,7 +115,8 @@ class CultivosUpdateTests(DBIntegrationTest):
         self.assertIsNone(actual.area)
 
     def test_update_cultivo_validation_fails(self):
-        expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
+        expected = self.request.db.query(ActividadesCultivos).filter(
+            ActividadesCultivos.cult_id == '2010-022-01').first()
         gid = expected.gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
@@ -122,6 +127,7 @@ class CultivosUpdateTests(DBIntegrationTest):
         s = create_new_session()
         actual = s.query(ActividadesCultivos).filter(ActividadesCultivos.gid == gid).first()
         self.assertEquals(rega, actual.rega)
+
 
 if __name__ == '__main__':
     unittest.main()

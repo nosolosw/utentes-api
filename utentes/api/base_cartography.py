@@ -9,6 +9,7 @@ import json
 import logging
 log = logging.getLogger(__name__)
 
+
 @view_config(route_name='base_fountains', request_method='POST', renderer='json')
 def base_fountains_post(request):
     body = request.json_body
@@ -29,7 +30,7 @@ def base_fountains_post(request):
         dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         path = os.path.join(dir_path, 'static', 'utentes-ui', 'offline', 'data', 'json_Fontes.js')
         with open(path, "w") as f:
-	           f.write(json.dumps(body))
+            f.write(json.dumps(body))
         return {'msg': 'Carregadas %d fontes' % len(body['features'])}
     except Exception as e:
         log.error(e)

@@ -23,7 +23,8 @@ class CultivosGET_IntegrationTests(DBIntegrationTest):
 
     def test_cultivo_get_id_returns_a_geojson(self):
         from utentes.api.cultivos import cultivos_get
-        expected = self.request.db.query(ActividadesCultivos).filter(ActividadesCultivos.cult_id == '2010-022-01').first()
+        expected = self.request.db.query(ActividadesCultivos).filter(
+            ActividadesCultivos.cult_id == '2010-022-01').first()
         self.request.matchdict.update(dict(id=expected.gid))
         actual = cultivos_get(self.request).__json__(self.request)
         self.assertTrue('geometry' in actual)

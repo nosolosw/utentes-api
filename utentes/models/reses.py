@@ -12,8 +12,14 @@ class ActividadesReses(Base):
     __tablename__ = 'actividades_reses'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.actividades_reses_gid_seq'::regclass)"))
-    actividade = Column(ForeignKey(u'utentes.actividades_pecuaria.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), nullable=False)
+    gid = Column(Integer, primary_key=True, server_default=text(
+        "nextval('utentes.actividades_reses_gid_seq'::regclass)"))
+    actividade = Column(
+        ForeignKey(
+            u'utentes.actividades_pecuaria.gid',
+            ondelete=u'CASCADE',
+            onupdate=u'CASCADE'),
+        nullable=False)
     c_estimado = Column(Numeric(10, 2), nullable=False)
     reses_tipo = Column(Text, nullable=False)
     reses_nro = Column(Integer, nullable=False)
@@ -28,11 +34,11 @@ class ActividadesReses(Base):
 
     def update_from_json(self, json):
         # actividade - handled by sqlalchemy relationship
-        self.gid        = json.get('id')
+        self.gid = json.get('id')
         self.c_estimado = json.get('c_estimado')
         self.reses_tipo = json.get('reses_tipo')
-        self.reses_nro  = json.get('reses_nro')
-        self.c_res      = json.get('c_res')
+        self.reses_nro = json.get('reses_nro')
+        self.c_res = json.get('c_res')
         self.observacio = json.get('observacio')
 
     def __json__(self, request):

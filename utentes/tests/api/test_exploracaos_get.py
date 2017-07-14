@@ -23,5 +23,6 @@ class ExploracaosGET_IntegrationTests(DBIntegrationTest):
         self.assertTrue('type' in actual)
         self.assertTrue('properties' in actual)
 
+
 if __name__ == '__main__':
     unittest.main()

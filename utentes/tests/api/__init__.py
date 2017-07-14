@@ -11,6 +11,7 @@ settings = get_appsettings('development.ini', 'main')
 engine = engine_from_config(settings, 'sqlalchemy.')
 session_factory = sessionmaker()
 
+
 class DBIntegrationTest(unittest.TestCase):
 
     def setUp(self):

@@ -20,7 +20,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='exploracaos',    request_method='GET', renderer='json')
+@view_config(route_name='exploracaos', request_method='GET', renderer='json')
 @view_config(route_name='exploracaos_id', request_method='GET', renderer='json')
 def exploracaos_get(request):
     gid = None
@@ -34,7 +34,7 @@ def exploracaos_get(request):
             raise badrequest_exception({
                 'error': error_msgs['no_gid'],
                 'gid': gid
-                })
+            })
 
     else:  # return collection
         return {
@@ -176,12 +176,14 @@ def exploracaos_create(request):
     request.db.commit()
     return e
 
+
 def activity_fail(v):
-    return (v == None) or \
+    return (v is None) or \
            (v == '') or \
            (len(v) == 0) or \
-           (v.get('tipo') == None) or \
+           (v.get('tipo') is None) or \
            (v.get('tipo') == 'Actividade non declarada')
+
 
 def validate_entities(body):
     import re

@@ -13,13 +13,17 @@ from utentes.models.base import (
     PGSQL_SCHEMA_UTENTES
 )
 
+
 class InventarioFonte(Base):
     __tablename__ = 'inventario_fontes'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
-    gid        = Column(Integer, primary_key=True, server_default=text("nextval('utentes.inventario_fontes_gid_seq'::regclass)"))
+    gid = Column(
+        Integer,
+        primary_key=True,
+        server_default=text("nextval('utentes.inventario_fontes_gid_seq'::regclass)"))
     fonte = Column(Text)
-    cod_fonte = Column(Text,  nullable=False, unique=True)
+    cod_fonte = Column(Text, nullable=False, unique=True)
     tip_fonte = Column(Text)
     red_monit = Column(Text)
     entidade = Column(Text)
@@ -88,7 +92,6 @@ class InventarioFonte(Base):
             else:
                 value = jsonValue
             setattr(self, name, value)
-
 
     @staticmethod
     def create_from_json(body):
