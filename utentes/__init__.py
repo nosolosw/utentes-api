@@ -71,6 +71,11 @@ def main(global_config, **settings):
     config.add_route('cultivos', '/api/cultivos')
     config.add_route('cultivos_id', '/api/cultivos/{id}')
 
+    # GET    /api/tanques_piscicolas = Return all tanks
+    # PUT    /api/tanques_piscicolas/{id} = Update a tank (geometry most of the times)
+    config.add_route('tanques_piscicolas', '/api/tanques_piscicolas')
+    config.add_route('tanques_piscicolas_id', '/api/tanques_piscicolas/{id}')
+
     # GET    /api/settings      = Return all settings
     # PUT    /api/settings/{property} = Update property
     config.add_route('settings', '/api/settings')

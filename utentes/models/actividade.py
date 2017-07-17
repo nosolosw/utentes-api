@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy import Boolean, Column, Integer, Date, Numeric, Text
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship
 
@@ -13,6 +14,7 @@ from utentes.lib.schema_validator.validator import Validator
 import actividades_schema
 from utentes.models.reses import ActividadesReses
 from utentes.models.cultivo import ActividadesCultivos
+from utentes.models.tanques_piscicolas import ActividadesTanquesPiscicolas
 from functools import reduce
 
 
@@ -217,21 +219,72 @@ class ActividadesPiscicultura(Actividade):
     __tablename__ = 'actividades_piscicultura'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
+    TANQUE_NRO_SEQUENCE_FIRST = 1
+
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
-    area = Column(Numeric(10, 4))
-    v_reservas = Column(Numeric(10, 2))
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
+    area = Column(Numeric(10, 4), doc='Área de exploração (ha)')
+    ano_i_ati = Column(Integer, doc='Ano inicio da atividade')
+    n_tanques = Column(Integer, doc='Nro de tanques')
+    v_reservas = Column(Numeric(10, 2), doc='Volume total tanques/gaiolas (reservas)')
+    n_ale_pov = Column(Integer, doc='Nro de alevins por povoar')
+    produc_pi = Column(Numeric(10, 2), doc='Produção Anual (kg)')
+    tipo_proc = Column(Text, doc='Processamento do peixe')
+    asis_aber = Column(Text, doc='Durante a abertura dos tanques/gaiolas')
+    asis_moni = Column(Text, doc='Na monitoria dos tanques/gaiolas')
+    asis_orig = Column(ARRAY(Text), doc='Origem da assistência')
+    asis_or_o = Column(Text, doc='Outros')
+    trat_t_en = Column(Text, doc='Tratamento da água que entra nos tanques')
+    trat_a_sa = Column(Text, doc='Tratamento da água que sai dos tanques')
+    gaio_subm = Column(Text, doc='As gaiolas estão submersas em')
+    problemas = Column(Text, doc='A exploraçaõ tem problemas')
+    prob_prin = Column(Text, doc='Principais problemas')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Piscicultura',
     }
 
+    tanques_piscicolas = relationship('ActividadesTanquesPiscicolas',
+                                      cascade="all, delete-orphan",
+                                      order_by='ActividadesTanquesPiscicolas.gid',
+                                      passive_deletes=True)
+
+    def __json__(self, request):
+        json = {c: getattr(self, c) for c in self.__mapper__.columns.keys()}
+        del json['gid']
+        json['id'] = self.gid
+        json['tanques_piscicolas'] = {
+            'type': 'FeatureCollection',
+            'features': self.tanques_piscicolas
+        }
+        return json
+
+    def calculate_next_sequence(self, tanques_piscicolas):
+        tanque_id_sequence = [int(seq.tanque_id.split('-')[2]) for seq in self.tanques_piscicolas if seq.tanque_id]
+        if len(tanque_id_sequence) == 0:
+            return ActividadesPiscicultura.TANQUE_NRO_SEQUENCE_FIRST
+        else:
+            return max(tanque_id_sequence) + 1
+
     def update_from_json(self, json):
         self.gid = json.get('id')
         self.tipo = json.get('tipo')
+        update_array(self.tanques_piscicolas,
+                     json.get('tanques_piscicolas'),
+                     ActividadesTanquesPiscicolas.create_from_json)
+        next_tanque_id_sequence = self.calculate_next_sequence(self.tanques_piscicolas)
+        for tanque in self.tanques_piscicolas:
+            if not tanque.tanque_id:
+                tanque.tanque_id = json.get('exp_id') + '-{:03d}'.format(next_tanque_id_sequence)
+                next_tanque_id_sequence += 1
+
         self.c_estimado = json.get('c_estimado')
         self.area = json.get('area')
         self.v_reservas = json.get('v_reservas')
+        self.produc_pi = json.get('produc_pi')
+        self.n_tanques = json.get('n_tanques')
+        self.n_ale_pov = json.get('n_ale_pov')
+        self.ano_i_ati = json.get('ano_i_ati')
 
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadeSchema['Piscicultura'])

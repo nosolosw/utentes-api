@@ -95,6 +95,7 @@ class Licencia(Base):
     @staticmethod
     def implies_validate_activity(estado):
         return estado not in [
+            u'Desconhecido',
             u'Irregular',
             u'Não aprovada',
             u'Pendente de solicitação do utente',
