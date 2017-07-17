@@ -11,16 +11,23 @@ class Utente(Base):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.utentes_gid_seq'::regclass)"))
-    nome = Column(Text, nullable=False, unique=True)
-    nuit = Column(Text, unique=True)
-    entidade = Column(Text)
-    reg_comerc = Column(Text)
-    reg_zona = Column(Text)
-    loc_provin = Column(Text)
-    loc_distri = Column(Text)
-    loc_posto = Column(Text)
-    loc_nucleo = Column(Text)
-    observacio = Column(Text)
+    nome = Column(Text, nullable=False, unique=True, doc='Nome')
+    uten_tipo = Column(Text, doc='Tipo de utente')
+    nuit = Column(Text, unique=True, doc='Nuit')
+    uten_gere = Column(Text, doc='Nome do Gerente/Presidente')
+    uten_memb = Column(Integer, doc='Nro de membros')
+    uten_mulh = Column(Integer, doc='Nro de mulheres')
+    contacto = Column(Text, doc='Pessoa de contacto')
+    email = Column(Text, doc='Email')
+    telefone = Column(Text, doc='Telefone')
+    loc_provin = Column(Text, doc='Província')
+    loc_distri = Column(Text, doc='Distrito')
+    loc_posto = Column(Text, doc='Posto administrativo')
+    loc_nucleo = Column(Text, doc='Bairro')
+    entidade = Column(Text, doc='Tipo de entidade')
+    reg_comerc = Column(Text, doc='Nro de Registro Comercial')
+    reg_zona = Column(Text, doc='Registrado em')
+    observacio = Column(Text, doc='Observações da actividade')
 
     exploracaos = relationship('Exploracao',
                                backref='utente_rel',
@@ -33,19 +40,15 @@ class Utente(Base):
         return u
 
     def update_from_json(self, json):
+        SPECIAL_CASES = ['gid']
         self.gid = json.get('id')
-        self.nome = json.get('nome')
-        self.nuit = json.get('nuit')
-        self.entidade = json.get('entidade')
-        self.reg_comerc = json.get('reg_comerc')
-        self.reg_zona = json.get('reg_zona')
-        self.loc_provin = json.get('loc_provin')
-        self.loc_distri = json.get('loc_distri')
-        self.loc_posto = json.get('loc_posto')
-        self.loc_nucleo = json.get('loc_nucleo')
-        self.observacio = json.get('observacio')
+        for column in self.__mapper__.columns.keys():
+            if column in SPECIAL_CASES:
+                continue
+            setattr(self, column, json.get(column))
 
     def __json__(self, request):
+        SPECIAL_CASES = ['gid']
         exploracaos = []
         for e in self.exploracaos:
             exploracaos.append({
@@ -54,18 +57,13 @@ class Utente(Base):
                 'exp_id': e.exp_id,
                 'actividade': e.actividade
             })
-
-        return {
+        payload = {
             'id': self.gid,
-            'nome': self.nome,
-            'nuit': self.nuit,
-            'entidade': self.entidade,
-            'reg_comerc': self.reg_comerc,
-            'reg_zona': self.reg_zona,
-            'loc_provin': self.loc_provin,
-            'loc_distri': self.loc_distri,
-            'loc_posto': self.loc_posto,
-            'loc_nucleo': self.loc_nucleo,
-            'observacio': self.observacio,
-            'exploracaos': exploracaos
+            'exploracaos': exploracaos,
         }
+        for column in self.__mapper__.columns.keys():
+            if column in SPECIAL_CASES:
+                continue
+            payload[column] = getattr(self, column)
+
+        return payload
