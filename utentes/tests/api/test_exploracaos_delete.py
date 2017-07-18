@@ -15,13 +15,6 @@ from utentes.api.exploracaos import exploracaos_delete
 
 class ExploracaosDeleteTests(DBIntegrationTest):
 
-    def get_test_exploracao(self):
-        EXP_ID = '2010-002'
-        try:
-            return self.request.db.query(Exploracao).filter(Exploracao.exp_id == EXP_ID).one()
-        except (MultipleResultsFound, NoResultFound):
-            return None
-
     def test_delete_get_exploracaos_id(self):
         exp = self.get_test_exploracao()
         gid = exp.gid

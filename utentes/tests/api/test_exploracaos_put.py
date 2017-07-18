@@ -113,7 +113,7 @@ class ExploracaoUpdateTests(DBIntegrationTest):
         # -12.8576290475983, 40.3774400124151 -12.8723906015176, 40.3566872025163
         # -12.8724988506617, 40.3566078671374 -12.8577371684984)))', 4326 ),
         # 32737));
-        self.assertAlmostEquals(367.77, float(actual.area))
+        self.assertAlmostEquals(367.77, float(actual.area), 2)
 
     def test_update_exploracao_delete_the_geom(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
@@ -137,7 +137,7 @@ class ExploracaoUpdateTests(DBIntegrationTest):
         expected_json['exp_name'] = None
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(exp_name, actual.exp_name)
 
@@ -176,7 +176,7 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
         })
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(1, len(actual.fontes))
 
@@ -219,7 +219,7 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
         expected_json['fontes'][0]['tipo_agua'] = None
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(tipo_agua, actual.fontes[0].tipo_agua)
 
@@ -338,7 +338,7 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
         expected_json['licencias'][0]['cadastro'] = 'cadastro'
-        expected_json['licencias'][0]['estado'] = u'Não aprovada '
+        expected_json['licencias'][0]['estado'] = u'Não aprovada'
         expected_json['licencias'][0]['d_emissao'] = '1999-9-9'
         expected_json['licencias'][0]['d_validade'] = '1999-8-7'
         expected_json['licencias'][0]['c_soli_tot'] = 23.45
@@ -348,6 +348,9 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         expected_json['licencias'][0]['c_real_tot'] = 23.45
         expected_json['licencias'][0]['c_real_int'] = 0.45
         expected_json['licencias'][0]['c_real_fon'] = 23
+        expected_json['licencias'][0]['taxa_fixa'] = 23
+        expected_json['licencias'][0]['taxa_uso'] = 23
+        expected_json['licencias'][0]['iva'] = 23
         self.request.json_body = expected_json
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
@@ -376,7 +379,7 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         expected_json['licencias'][0]['lic_tipo'] = None
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(1, len(actual.licencias))
         self.assertEquals(lic_gid, actual.licencias[0].gid)
@@ -398,13 +401,6 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
 
 
 class ExploracaoUpdateUtenteTests(DBIntegrationTest):
-
-    def get_test_exploracao(self):
-        EXP_ID = '2010-002'
-        try:
-            return self.request.db.query(Exploracao).filter(Exploracao.exp_id == EXP_ID).one()
-        except (MultipleResultsFound, NoResultFound):
-            return None
 
     def get_test_utente(self):
         UTENTE_NAME = 'Águas de Mueda'
@@ -450,7 +446,7 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         expected_json['utente']['nome'] = None
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(expected.utente_rel.nome, actual.utente_rel.nome)
 
@@ -554,7 +550,7 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
         self.request.json_body = expected_json
         from pyramid.httpexceptions import HTTPBadRequest
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals(expected.utente_rel.observacio, actual.utente_rel.observacio)
         self.assertNotEquals(' foo - bar ', actual.utente_rel.observacio)

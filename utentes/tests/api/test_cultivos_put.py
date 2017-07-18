@@ -15,19 +15,6 @@ def build_json(request, cultivo):
     return expected_json
 
 
-def create_new_session():
-    # La idea de generar una sesión distinta para este último chequeo
-    # es que no haya cosas cacheadas en la sesión original
-    from pyramid.paster import get_appsettings
-    from sqlalchemy import engine_from_config
-    from sqlalchemy.orm import sessionmaker
-    settings = get_appsettings('development.ini', 'main')
-    engine = engine_from_config(settings, 'sqlalchemy.')
-    session = sessionmaker()
-    session.configure(bind=engine)
-    return session()
-
-
 class CultivosUpdateTests(DBIntegrationTest):
 
     def test_update_cultivo(self):
@@ -124,7 +111,7 @@ class CultivosUpdateTests(DBIntegrationTest):
         expected_json['rega'] = None
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, cultivos_update, self.request)
-        s = create_new_session()
+        s = self.create_new_session()
         actual = s.query(ActividadesCultivos).filter(ActividadesCultivos.gid == gid).first()
         self.assertEquals(rega, actual.rega)
 

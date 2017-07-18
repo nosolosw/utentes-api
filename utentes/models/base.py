@@ -83,6 +83,7 @@ class APIAction(object):
 def update_array(olds, news_json, factory):
     news = []
     update_dict = {}
+    news_json = news_json or []
     for n in news_json:
         new = factory(n)
         msgs = new.validate(n)

@@ -18,11 +18,14 @@ API for utentes project
 # Tests
 
      $ pg_prove -r --ext .sql -d sixhiara -U postgres -h localhost tests/
- 
+     $ python setup.py test -q -s utentes.tests # Todos los tests
+     $ python setup.py test -q -s utentes.tests.api.test_cultivos_get.CultivosGET_IntegrationTests.test_cultivo_get_length
+
 # Launch server
-    
+
     $ workon utentes
     $ pserve development.ini --reload
+
 
 # Nomenclatura de virtualenvwrapper
 
