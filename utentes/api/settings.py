@@ -4,6 +4,9 @@ from pyramid.view import view_config
 from utentes.models.setting import Setting
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from utentes.models.base import badrequest_exception
+import error_msgs
+import logging
+logger = logging.getLogger(__name__)
 
 
 @view_config(route_name='settings', request_method='GET', renderer='json')
@@ -25,10 +28,10 @@ def settings_update(request):
     except(MultipleResultsFound, NoResultFound):
         raise badrequest_exception({
             'error': error_msgs['no_gid'],
-            'gid': gid
+            'gid': property
         })
     except ValueError as ve:
-        log.error(ve)
+        logger.exception(ve)
         raise badrequest_exception({'error': error_msgs['body_not_valid']})
 
     return setting

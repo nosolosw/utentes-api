@@ -7,8 +7,6 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import badrequest_exception
 from utentes.models.actividades_schema import ActividadeSchema
 from utentes.models.tanques_piscicolas import ActividadesTanquesPiscicolas as UsedModel
-from utentes.models.actividade import Actividade
-from utentes.models.exploracao import Exploracao
 
 from error_msgs import error_msgs
 

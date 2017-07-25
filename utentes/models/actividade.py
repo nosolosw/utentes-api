@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Boolean, Column, Integer, Date, Numeric, Text
+from sqlalchemy import Boolean, Column, Integer, Numeric, Text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship

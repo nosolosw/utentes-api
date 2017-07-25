@@ -6,6 +6,7 @@ from pyramid import testing
 from pyramid.paster import get_appsettings
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 settings = get_appsettings('development.ini', 'main')
 engine = engine_from_config(settings, 'sqlalchemy.')

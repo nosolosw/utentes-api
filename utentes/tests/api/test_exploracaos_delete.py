@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
 import unittest
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from utentes.tests.api import DBIntegrationTest
 from utentes.models.exploracao import Exploracao

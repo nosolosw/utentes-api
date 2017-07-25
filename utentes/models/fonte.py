@@ -2,7 +2,6 @@
 
 from sqlalchemy import Boolean, Column, Date, Integer, Numeric, Text
 from sqlalchemy import ForeignKey, text
-from sqlalchemy.orm import relationship
 
 from utentes.lib.formatter.formatter import to_decimal, to_date
 from utentes.models.base import Base, PGSQL_SCHEMA_UTENTES

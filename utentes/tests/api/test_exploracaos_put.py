@@ -212,7 +212,6 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
     def test_update_exploracao_update_fonte_validation_fails(self):
         expected = self.request.db.query(Exploracao).filter(Exploracao.exp_id == '2010-002').first()
         gid = expected.gid
-        gid_fonte = expected.fontes[0].gid
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
         tipo_agua = expected_json['fontes'][0]['tipo_agua']
@@ -475,7 +474,6 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         gid = exp.gid
         self.request.matchdict.update(dict(id=gid))
         expected = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
-        expected_utente_gid = expected.utente
         expected_json = build_json(self.request, expected)
         expected_json['utente']['nome'] = 'foo - bar'
         expected_json['c_soli'] = 'text'

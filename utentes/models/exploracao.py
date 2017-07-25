@@ -4,7 +4,6 @@ from sqlalchemy import Boolean, Column, Integer, Date, Numeric, Text
 from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
-from geoalchemy2.elements import WKTElement
 from geoalchemy2.functions import GenericFunction
 
 from utentes.lib.schema_validator.validation_exception import ValidationException
