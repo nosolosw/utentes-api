@@ -137,49 +137,49 @@ ActividadeSchema['Piscicultura'] = [{
 }]
 
 ActividadeSchema['TanquesPiscicolas'] = [{
-  'fieldname': 'cumprimen',
-  'message':   '"Cumprimento" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'cumprimen',
+    'message': '"Cumprimento" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'largura',
-  'message':   '"Largura" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'largura',
+    'message': '"Largura" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'profundid',
-  'message':   '"Profundidade" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'profundid',
+    'message': '"Profundidade" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'area',
-  'message':   '"Área" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'area',
+    'message': '"Área" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'area_gps',
-  'message':   '"Área GPS" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'area_gps',
+    'message': '"Área GPS" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'volume',
-  'message':   '"Volume" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'volume',
+    'message': '"Volume" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'n_ale_pov',
-  'message':   '"Nro de alevins por povoar" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'n_ale_pov',
+    'message': '"Nro de alevins por povoar" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'venda',
-  'message':   '"Venda" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'venda',
+    'message': '"Venda" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'consumo',
-  'message':   '"Consumo" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'consumo',
+    'message': '"Consumo" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'pro_anual',
-  'message':   '"Produção anual" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'pro_anual',
+    'message': '"Produção anual" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
-  'fieldname': 'peso_med',
-  'message':   '"Peso médio" não tem o formato correto o está vazio',
-  'rules':     ['IS_NUMERIC', 'INT_LESS_THAN_8']
+    'fieldname': 'peso_med',
+    'message': '"Peso médio" não tem o formato correto o está vazio',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }]
 
 ActividadeSchema['Producção de energia'] = [{

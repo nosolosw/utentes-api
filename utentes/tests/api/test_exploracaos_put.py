@@ -40,6 +40,7 @@ def create_new_session():
     from sqlalchemy import engine_from_config
     from sqlalchemy.orm import sessionmaker
     settings = get_appsettings('development.ini', 'main')
+    settings['sqlalchemy.url'] = 'postgresql://postgres@localhost:5432/aranorte_test'
     engine = engine_from_config(settings, 'sqlalchemy.')
     session = sessionmaker()
     session.configure(bind=engine)
@@ -376,6 +377,7 @@ class ExploracaoUpdateLicenciaTests(DBIntegrationTest):
         self.request.matchdict.update(dict(id=gid))
         expected_json = build_json(self.request, expected)
         expected_json['licencias'][0]['lic_tipo'] = None
+        expected_json['licencias'][0]['estado'] = 'Licenciada'
         self.request.json_body = expected_json
         self.assertRaises(HTTPBadRequest, exploracaos_update, self.request)
         s = self.create_new_session()
@@ -692,7 +694,8 @@ class ExploracaoUpdateActividadeTests(DBIntegrationTest):
             'c_estimado': 5,
             'rega': 'Gravidade',
             'eficiencia': 55,
-            'observacio': 'observacio'
+            'observacio': 'observacio',
+            'area': 1,
         })
         self.request.json_body = expected_json
         exploracaos_update(self.request)
