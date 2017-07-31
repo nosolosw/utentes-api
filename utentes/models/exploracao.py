@@ -169,7 +169,7 @@ class Exploracao(Base):
                     'id': self.utente_rel.gid,
                     'nome': self.utente_rel.nome,
                     'nuit': self.utente_rel.nuit,
-                    'entidade': self.utente_rel.entidade,
+                    'uten_tipo': self.utente_rel.uten_tipo,
                     'reg_comerc': self.utente_rel.reg_comerc,
                     'reg_zona': self.utente_rel.reg_zona,
                     'loc_provin': self.utente_rel.loc_provin,
