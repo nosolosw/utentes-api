@@ -32,7 +32,7 @@ class ActividadesTanquesPiscicolas(Base):
         nullable=False)
     # TODO. Use 'comment' instead of doc when upgrading to sqlalchemy 1.2
     # http://docs.sqlalchemy.org/en/latest/core/metadata.html#sqlalchemy.schema.Column.params.comment
-    tipo = Column(Text, doc='Tipo')
+    tipo = Column(Text, nullable=False, doc='Tipo')
     cumprimen = Column(Numeric(10, 2), doc='Cumprimento (m)')
     largura = Column(Numeric(10, 2), doc='Largura (m)')
     profundid = Column(Numeric(10, 2), doc='Profundidade (m)')
@@ -40,7 +40,7 @@ class ActividadesTanquesPiscicolas(Base):
     area_gps = Column(Numeric(10, 4), doc='Área GPS (m2)')
     volume = Column(Numeric(10, 4), doc='Volume (m3)')
     estado = Column(Text, doc='Estado')
-    esp_culti = Column(Text, doc='Espécie cultivada')
+    esp_culti = Column(Text, nullable=False, doc='Espécie cultivada')
     esp_cul_o = Column(Text, doc='Espécie cultivada (outros)')
     tipo_alim = Column(ARRAY(Text), doc='Tipo de alimentação')
     tipo_al_o = Column(Text, doc='Tipo de alimenção (outros)')

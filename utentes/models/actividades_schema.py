@@ -137,6 +137,10 @@ ActividadeSchema['Piscicultura'] = [{
 }]
 
 ActividadeSchema['TanquesPiscicolas'] = [{
+    'fieldname': 'tipo',
+    'message': '"Tipo" está vazio',
+    'rules': ['NOT_NULL']
+}, {
     'fieldname': 'cumprimen',
     'message': '"Cumprimento" não tem o formato correto o está vazio',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
@@ -160,6 +164,10 @@ ActividadeSchema['TanquesPiscicolas'] = [{
     'fieldname': 'volume',
     'message': '"Volume" não tem o formato correto o está vazio',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
+}, {
+    'fieldname': 'esp_culti',
+    'message': '"Especie cultivo" está vazio',
+    'rules': ['NOT_NULL']
 }, {
     'fieldname': 'n_ale_pov',
     'message': '"Nro de alevins por povoar" não tem o formato correto o está vazio',
