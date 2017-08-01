@@ -267,8 +267,9 @@ class ActividadesPiscicultura(Actividade):
             return max(tanque_id_sequence) + 1
 
     def update_from_json(self, json):
+        # actividade - handled by sqlalchemy relationship
+        SPECIAL_CASES = ['gid', 'tanques_piscicolas']
         self.gid = json.get('id')
-        self.tipo = json.get('tipo')
         update_array(self.tanques_piscicolas,
                      json.get('tanques_piscicolas'),
                      ActividadesTanquesPiscicolas.create_from_json)
@@ -278,13 +279,10 @@ class ActividadesPiscicultura(Actividade):
                 tanque.tanque_id = json.get('exp_id') + '-{:03d}'.format(next_tanque_id_sequence)
                 next_tanque_id_sequence += 1
 
-        self.c_estimado = json.get('c_estimado')
-        self.area = json.get('area')
-        self.v_reservas = json.get('v_reservas')
-        self.produc_pi = json.get('produc_pi')
-        self.n_tanques = json.get('n_tanques')
-        self.n_ale_pov = json.get('n_ale_pov')
-        self.ano_i_ati = json.get('ano_i_ati')
+        for column in self.__mapper__.columns.keys():
+            if column in SPECIAL_CASES:
+                continue
+            setattr(self, column, json.get(column))
 
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadeSchema['Piscicultura'])
