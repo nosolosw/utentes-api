@@ -417,7 +417,7 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         expected = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
         expected_json = build_json(self.request, expected)
         expected_json['utente']['nuit'] = 'new nuit'
-        expected_json['utente']['entidade'] = 'new entidade'
+        expected_json['utente']['uten_tipo'] = 'Outro'
         expected_json['utente']['reg_comerc'] = 'new reg_comerc'
         expected_json['utente']['reg_zona'] = 'new reg_zona'
         expected_json['utente']['loc_provin'] = 'Niassa'
@@ -429,7 +429,7 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         exploracaos_update(self.request)
         actual = self.request.db.query(Exploracao).filter(Exploracao.gid == gid).first()
         self.assertEquals('new nuit', actual.utente_rel.nuit)
-        self.assertEquals('new entidade', actual.utente_rel.entidade)
+        self.assertEquals('Outro', actual.utente_rel.uten_tipo)
         self.assertEquals('new reg_comerc', actual.utente_rel.reg_comerc)
         self.assertEquals('new reg_zona', actual.utente_rel.reg_zona)
         self.assertEquals('Niassa', actual.utente_rel.loc_provin)
@@ -493,7 +493,7 @@ class ExploracaoUpdateUtenteTests(DBIntegrationTest):
         expected_json['utente']['id'] = utente.gid
         expected_json['utente']['nome'] = utente.nome
         expected_json['utente']['nuit'] = utente.nuit
-        expected_json['utente']['entidade'] = utente.entidade
+        expected_json['utente']['uten_tipo'] = utente.uten_tipo
         expected_json['utente']['reg_comerc'] = utente.reg_comerc
         expected_json['utente']['reg_zona'] = utente.reg_zona
         expected_json['utente']['loc_provin'] = utente.loc_provin

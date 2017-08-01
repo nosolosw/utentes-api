@@ -36,7 +36,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         expected_json['utente'] = {
             'nome': 'nome',
             'nuit': 'nuit',
-            'entidade': 'entidade',
+            'uten_tipo': 'uten_tipo',
             'reg_comerc': 'reg_comerc',
             'reg_zona': 'reg_zona',
             'loc_provin': 'Niassa',
@@ -105,7 +105,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(utente, actual.utente_rel)
         self.assertEquals('nome', utente.nome)
         self.assertEquals('nuit', utente.nuit)
-        self.assertEquals('entidade', utente.entidade)
+        self.assertEquals('uten_tipo', utente.uten_tipo)
         self.assertEquals('reg_comerc', utente.reg_comerc)
         self.assertEquals('reg_zona', utente.reg_zona)
         self.assertEquals('Niassa', utente.loc_provin)

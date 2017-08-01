@@ -46,6 +46,7 @@ class ActividadesTanquesPiscicolas(Base):
     tipo_al_o = Column(Text, doc='Tipo de alimenção (outros)')
     n_ale_pov = Column(Integer, doc='Nro de alevins por povoar')
     prov_alev = Column(Text, doc='Proveniência dos alevinos')
+    prov_al_o = Column(Text, doc='Proveniência dos alevinos (outros)')
     venda = Column(Numeric(10, 2), doc='Venda (Kg)')
     consumo = Column(Numeric(10, 2), doc='Consumo (Kg)')
     pro_anual = Column(Numeric(10, 2), doc='Produção anual (Kg)')
