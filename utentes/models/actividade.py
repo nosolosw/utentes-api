@@ -268,7 +268,7 @@ class ActividadesPiscicultura(Actividade):
 
     def update_from_json(self, json):
         # actividade - handled by sqlalchemy relationship
-        SPECIAL_CASES = ['gid', 'tanques_piscicolas']
+        SPECIAL_CASES = ['gid', 'tanques_piscicolas', 'area']
         self.gid = json.get('id')
         update_array(self.tanques_piscicolas,
                      json.get('tanques_piscicolas'),
@@ -278,6 +278,16 @@ class ActividadesPiscicultura(Actividade):
             if not tanque.tanque_id:
                 tanque.tanque_id = json.get('exp_id') + '-{:03d}'.format(next_tanque_id_sequence)
                 next_tanque_id_sequence += 1
+
+        # Se setea el valor, sólo si no es nuelo. Es decir si el usuario ha
+        # puesto algo a ano (distinto a dejarlo vacio o 0). Se hace esto para
+        # poder actualizar este área mediante un trigger cuando se modifica la
+        # geometría de la explotación. Si no tal y como funciona ahora, tras
+        # hacer un update de la explotación, salta el trigger, pero después el
+        # orm hace un update de actividad_piscicola que sobreescribe el valor
+        from decimal import Decimal
+        if json.get('area') and (abs(self.area - Decimal(json.get('area'))) > 0.005):
+            self.area = json.get('area')
 
         for column in self.__mapper__.columns.keys():
             if column in SPECIAL_CASES:
