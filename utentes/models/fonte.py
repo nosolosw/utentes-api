@@ -16,7 +16,7 @@ class Fonte(Base):
     tipo_fonte = Column(Text)
     lat_lon = Column(Text)
     d_dado = Column(Date, doc='Data toma de dados')
-    c_soli = Column(Numeric(10, 2), doc='C. solicitado')
+    c_soli = Column(Numeric(10, 2), doc='Consumo solicitado')
     c_max = Column(Numeric(10, 2), doc='Máximo caudal extraíble')
     c_real = Column(Numeric(10, 2), doc="Consumo real")
     contador = Column(Boolean)
