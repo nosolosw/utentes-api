@@ -122,3 +122,11 @@ def update_geom(org_geom, json):
     the_geom = WKTElement(wkt.dumps(g), srid=4326)
     the_geom = the_geom.ST_Multi().ST_Transform(32737)
     return the_geom
+
+
+def update_area(model, json, divisor=10000, fieldname='area'):
+    if json.get('geometry_edited'):
+        if model.the_geom is None:
+            setattr(model, fieldname, None)
+        else:
+            setattr(model, fieldname, model.the_geom.ST_Area() / divisor)

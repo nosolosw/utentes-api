@@ -10,7 +10,8 @@ from utentes.lib.schema_validator.validator import Validator
 from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
-    update_geom
+    update_geom,
+    update_area
 )
 from actividades_schema import ActividadeSchema
 
@@ -71,6 +72,7 @@ class ActividadesTanquesPiscicolas(Base):
             if column in SPECIAL_CASES:
                 continue
             setattr(self, column, json.get(column))
+        update_area(self, json, 1, 'area_gps')
 
     def __json__(self, request):
         SPECIAL_CASES = ['gid', 'the_geom']

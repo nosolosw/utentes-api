@@ -12,7 +12,8 @@ from utentes.models.base import (
     Base,
     PGSQL_SCHEMA_UTENTES,
     update_array,
-    update_geom
+    update_geom,
+    update_area
 )
 from utentes.models.fonte import Fonte
 from utentes.models.licencia import Licencia
@@ -86,6 +87,7 @@ class Exploracao(Base):
         self.c_real = to_decimal(json.get('c_real'))
         self.c_estimado = to_decimal(json.get('c_estimado'))
         self.the_geom = update_geom(self.the_geom, json)
+        update_area(self, json)
 
         self.update_and_validate_activity(json)
 
@@ -104,6 +106,8 @@ class Exploracao(Base):
 
     def update_and_validate_activity(self, json):
         actividade_json = json.get('actividade')
+        if json.get('geometry_edited'):
+            actividade_json['area_exploracao_for_calcs'] = self.area
         actividade_json['exp_id'] = json.get('exp_id')
 
         if not self.actividade:
