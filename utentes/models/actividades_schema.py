@@ -142,7 +142,7 @@ ActividadeSchema['TanquesPiscicolas'] = [{
     'rules': ['NOT_NULL']
 }, {
     'fieldname': 'cumprimen',
-    'message': '"Cumprimento" não tem o formato correto o está vazio',
+    'message': '"Comprimento" não tem o formato correto o está vazio',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }, {
     'fieldname': 'largura',
