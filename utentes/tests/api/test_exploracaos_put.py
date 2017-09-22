@@ -158,7 +158,7 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
             'c_soli': 23.42,
             'c_max': 42.23,
             'c_real': 4.3,
-            'contador': False,
+            'sist_med': 'Contador',
             'metodo_est': 'manual',
             'observacio': 'nao'
         })
@@ -193,7 +193,7 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
         expected_json['fontes'][0]['c_soli'] = 23.42
         expected_json['fontes'][0]['c_max'] = 42.23
         expected_json['fontes'][0]['c_real'] = 4.3
-        expected_json['fontes'][0]['contador'] = False
+        expected_json['fontes'][0]['sist_med'] = 'Contador'
         expected_json['fontes'][0]['metodo_est'] = 'manual'
         expected_json['fontes'][0]['observacio'] = 'nao'
         self.request.json_body = expected_json
@@ -205,7 +205,7 @@ class ExploracaoUpdateFonteTests(DBIntegrationTest):
         self.assertEquals(23.42, float(actual.c_soli))
         self.assertEquals(42.23, float(actual.c_max))
         self.assertEquals(4.3, float(actual.c_real))
-        self.assertEquals(False, actual.contador)
+        self.assertEquals('Contador', actual.sist_med)
         self.assertEquals('manual', actual.metodo_est)
         self.assertEquals('nao', actual.observacio)
         self.assertEquals(gid, actual.exploracao)

@@ -19,7 +19,7 @@ class Fonte(Base):
     c_soli = Column(Numeric(10, 2), doc='Consumo solicitado')
     c_max = Column(Numeric(10, 2), doc='Máximo caudal extraíble')
     c_real = Column(Numeric(10, 2), doc="Consumo real")
-    contador = Column(Boolean)
+    sist_med = Column(Text)
     metodo_est = Column(Text)
     observacio = Column(Text)
     exploracao = Column(
@@ -44,7 +44,7 @@ class Fonte(Base):
         self.c_soli = to_decimal(json.get('c_soli'))
         self.c_max = to_decimal(json.get('c_max'))
         self.c_real = to_decimal(json.get('c_real'))
-        self.contador = json.get('contador')
+        self.sist_med = json.get('sist_med')
         self.metodo_est = json.get('metodo_est')
         self.observacio = json.get('observacio')
         # self.exploracao = json.get('exploracao')
@@ -59,7 +59,7 @@ class Fonte(Base):
             'c_soli': self.c_soli,
             'c_max': self.c_max,
             'c_real': self.c_real,
-            'contador': self.contador,
+            'sist_med': self.sist_med,
             'metodo_est': self.metodo_est,
             'observacio': self.observacio,
             'exploracao': self.exploracao,
