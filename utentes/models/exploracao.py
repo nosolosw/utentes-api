@@ -42,6 +42,7 @@ class Exploracao(Base):
     loc_posto = Column(Text, nullable=False)
     loc_nucleo = Column(Text)
     loc_endere = Column(Text)
+    loc_unidad = Column(Text, doc='Unidade')
     loc_bacia = Column(Text)
     loc_subaci = Column(Text)
     loc_rio = Column(Text)
@@ -79,6 +80,7 @@ class Exploracao(Base):
         self.loc_posto = json.get('loc_posto')
         self.loc_nucleo = json.get('loc_nucleo')
         self.loc_endere = json.get('loc_endere')
+        self.loc_unidad = json.get('loc_unidad')
         self.loc_bacia = json.get('loc_bacia')
         self.loc_subaci = json.get('loc_subaci')
         self.loc_rio = json.get('loc_rio')
@@ -157,6 +159,7 @@ class Exploracao(Base):
                 'loc_posto': self.loc_posto,
                 'loc_nucleo': self.loc_nucleo,
                 'loc_endere': self.loc_endere,
+                'loc_unidad': self.loc_unidad,
                 'loc_bacia': self.loc_bacia,
                 'loc_subaci': self.loc_subaci,
                 'loc_rio': self.loc_rio,
