@@ -14,6 +14,7 @@ class Licencia(Base):
     lic_nro = Column(Text, nullable=False, unique=True, doc='Nro de Licença')
     lic_tipo = Column(Text, nullable=False, doc='')
     cadastro = Column(Text, doc='')
+    n_licen_a = Column(Text, doc='Nro de licença histórico')
     estado = Column(Text, nullable=False, doc='')
     d_emissao = Column(Date, doc='Data emissão')
     d_validade = Column(Date, doc='Data validade')
@@ -48,6 +49,7 @@ class Licencia(Base):
         self.lic_tipo = json.get('lic_tipo')
         self.finalidade = json.get('finalidade')
         self.cadastro = json.get('cadastro')
+        self.n_licen_a = json.get('n_licen_a')
         self.estado = json.get('estado')
         self.d_emissao = to_date(json.get('d_emissao'))
         self.d_validade = to_date(json.get('d_validade'))
@@ -70,6 +72,7 @@ class Licencia(Base):
             'lic_nro': self.lic_nro,
             'lic_tipo': self.lic_tipo,
             'cadastro': self.cadastro,
+            'n_licen_a': self.n_licen_a,
             'estado': self.estado,
             'd_emissao': self.d_emissao,
             'd_validade': self.d_validade,
