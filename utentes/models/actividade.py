@@ -185,6 +185,7 @@ class ActividadesPecuaria(Actividade):
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
+    n_res_tot = Column(Integer, doc='Nro de reses total')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Pecuária',
@@ -206,6 +207,7 @@ class ActividadesPecuaria(Actividade):
         self.gid = json.get('id')
         self.tipo = json.get('tipo')
         self.c_estimado = json.get('c_estimado')
+        self.n_res_tot = json.get('n_res_tot')
         update_array(self.reses,
                      json.get('reses'),
                      ActividadesReses.create_from_json)

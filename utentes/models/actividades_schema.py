@@ -79,6 +79,10 @@ ActividadeSchema['Pecuária'] = [{
     'message': 'Consumo estimado da actividade não tem o formato correto o está vazio',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8', 'NOT_NULL']
 }, {
+    'fieldname': 'n_res_tot',
+    'message': '"Nro de reses total" da actividade não tem o formato correto',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
+}, {
     'fieldname': 'reses',
     'message': 'A actividade debe ter reses',
     'rules': ['ARRAY_NOT_VOID']
