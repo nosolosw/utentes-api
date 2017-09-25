@@ -23,7 +23,7 @@ class ActividadesReses(Base):
     c_estimado = Column(Numeric(10, 2), nullable=False)
     reses_tipo = Column(Text, nullable=False)
     reses_nro = Column(Integer, nullable=False)
-    c_res = Column(Integer, nullable=False)
+    c_res = Column(Numeric(10, 2), nullable=False)
     observacio = Column(Text)
 
     @staticmethod
