@@ -73,7 +73,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
             'c_soli': 23.42,
             'c_max': 42.23,
             'c_real': 4.3,
-            'contador': False,
+            'sist_med': 'Contador',
             'metodo_est': 'manual',
             'observacio': 'observacio'
         }]
@@ -136,7 +136,7 @@ class ExploracaoCreateTests(DBIntegrationTest):
         self.assertEquals(23.42, float(fonte.c_soli))
         self.assertEquals(42.23, float(fonte.c_max))
         self.assertEquals(4.3, float(fonte.c_real))
-        self.assertEquals(False, fonte.contador)
+        self.assertEquals('Contador', fonte.sist_med)
         self.assertEquals('manual', fonte.metodo_est)
         self.assertEquals('observacio', fonte.observacio)
 
