@@ -28,10 +28,6 @@ ActividadeSchema['Agricultura de Regadio'] = [{
     'fieldname': 'c_estimado',
     'message': 'Consumo estimado da actividade não tem o formato correto o está vazio',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8', 'NOT_NULL']
-}, {
-    'fieldname': 'cultivos',
-    'message': 'A actividade debe ter cultivos',
-    'rules': ['ARRAY_NOT_VOID']
 }]
 
 ActividadeSchema['Cultivos'] = [{
@@ -82,10 +78,6 @@ ActividadeSchema['Pecuária'] = [{
     'fieldname': 'n_res_tot',
     'message': '"Nro de reses total" da actividade não tem o formato correto',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
-}, {
-    'fieldname': 'reses',
-    'message': 'A actividade debe ter reses',
-    'rules': ['ARRAY_NOT_VOID']
 }]
 
 ActividadeSchema['Reses'] = [{
