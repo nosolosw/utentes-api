@@ -28,6 +28,22 @@ ActividadeSchema['Agricultura de Regadio'] = [{
     'fieldname': 'c_estimado',
     'message': 'Consumo estimado da actividade não tem o formato correto o está vazio',
     'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8', 'NOT_NULL']
+}, {
+    'fieldname': 'n_cul_tot',
+    'message': '"Número de cultivos" da actividade não tem o formato correto',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
+}, {
+    'fieldname': 'area_pot',
+    'message': '"Área potencial" da actividade não tem o formato correto',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
+}, {
+    'fieldname': 'area_irri',
+    'message': '"Área Irrigada" da actividade não tem o formato correto',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
+}, {
+    'fieldname': 'area_medi',
+    'message': '"Área medida" da actividade não tem o formato correto',
+    'rules': ['IS_NUMERIC', 'INT_LESS_THAN_8']
 }]
 
 ActividadeSchema['Cultivos'] = [{

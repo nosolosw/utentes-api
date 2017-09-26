@@ -55,9 +55,12 @@ def cultivos_update(request):
         request.db.commit()
         actv = request.db.query(Actividade).filter(Actividade.gid == cultivo.actividade).one()
         c_estimado_actv = 0
+        area_medi_actv = 0
         for cultivo in actv.cultivos:
             c_estimado_actv += cultivo.c_estimado
+            area_medi_actv += cultivo.area
         actv.c_estimado = c_estimado_actv
+        actv.area_medi = area_medi_actv
         request.db.add(actv)
         exp = request.db.query(Exploracao).filter(Exploracao.gid == actv.exploracao).one()
         exp.c_estimado = c_estimado_actv

@@ -100,6 +100,10 @@ class ActividadesAgriculturaRega(Actividade):
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
     c_estimado = Column(Numeric(10, 2))
+    n_cul_tot = Column(Integer, doc='Número de cultivos')
+    area_pot = Column(Numeric(10, 4), doc='Área potencial')
+    area_irri = Column(Numeric(10, 4), doc='Área Irrigada')
+    area_medi = Column(Numeric(10, 4), doc='Área medida')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Agricultura de Regadio',
@@ -141,6 +145,10 @@ class ActividadesAgriculturaRega(Actividade):
 
         # self.c_estimado = json.get('c_estimado')
         self.c_estimado = reduce(lambda x, y: x + y.c_estimado, self.cultivos, 0)
+        self.n_cul_tot = json.get('n_cul_tot')
+        self.area_pot = json.get('area_pot')
+        self.area_irri = json.get('area_irri')
+        self.area_medi = json.get('area_medi')
 
     def validate(self, json):
         validator = Validator(actividades_schema.ActividadeSchema['Agricultura de Regadio'])
