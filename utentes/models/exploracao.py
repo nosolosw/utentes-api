@@ -28,6 +28,9 @@ class ST_Multi(GenericFunction):
 class Exploracao(Base):
     __tablename__ = 'exploracaos'
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
+    __mapper_args__ = {
+        'order_by': 'exp_id'
+    }
 
     LIC_NRO_SEQUENCE_FIRST = 1
 
