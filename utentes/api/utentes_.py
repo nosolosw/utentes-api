@@ -13,8 +13,8 @@ import logging
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='utentes', request_method='GET', renderer='json')
-@view_config(route_name='utentes_id', request_method='GET', renderer='json')
+@view_config(route_name='api_utentes', request_method='GET', renderer='json')
+@view_config(route_name='api_utentes_id', request_method='GET', renderer='json')
 def utentes_get(request):
     gid = None
     if request.matchdict:
@@ -32,7 +32,7 @@ def utentes_get(request):
         return request.db.query(Utente).order_by(Utente.nome).all()
 
 
-@view_config(route_name='utentes_id', request_method='DELETE', renderer='json')
+@view_config(route_name='api_utentes_id', request_method='DELETE', renderer='json')
 def utentes_delete(request):
     gid = request.matchdict['id']
     if not gid:
@@ -51,7 +51,7 @@ def utentes_delete(request):
     return {'gid': gid}
 
 
-@view_config(route_name='utentes_id', request_method='PUT', renderer='json')
+@view_config(route_name='api_utentes_id', request_method='PUT', renderer='json')
 def utentes_update(request):
     gid = request.matchdict['id']
     if not gid:
@@ -78,7 +78,7 @@ def utentes_update(request):
     return e
 
 
-@view_config(route_name='utentes', request_method='POST', renderer='json')
+@view_config(route_name='api_utentes', request_method='POST', renderer='json')
 def utentes_create(request):
     try:
         body = request.json_body

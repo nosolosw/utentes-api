@@ -10,7 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='base_fountains', request_method='POST', renderer='json')
+@view_config(route_name='api_base_fountains', request_method='POST', renderer='json')
 def base_fountains_post(request):
     body = request.json_body
     # try:
@@ -37,7 +37,7 @@ def base_fountains_post(request):
         raise badrequest_exception({'error': error_msgs['bad_import_file']})
 
 
-@view_config(route_name='base_fountains', request_method='GET', renderer='json')
+@view_config(route_name='api_base_fountains', request_method='GET', renderer='json')
 def base_fountains_get(request):
     return {
         'type': 'FeatureCollection',

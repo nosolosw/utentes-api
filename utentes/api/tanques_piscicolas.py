@@ -14,8 +14,8 @@ import logging
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='tanques_piscicolas', request_method='GET', renderer='json')
-@view_config(route_name='tanques_piscicolas_id', request_method='GET', renderer='json')
+@view_config(route_name='api_tanques_piscicolas', request_method='GET', renderer='json')
+@view_config(route_name='api_tanques_piscicolas_id', request_method='GET', renderer='json')
 def tanques_piscicolas_get(request):
     gid = None
     if request.matchdict:
@@ -36,7 +36,7 @@ def tanques_piscicolas_get(request):
         }
 
 
-@view_config(route_name='tanques_piscicolas_id', request_method='PUT', renderer='json')
+@view_config(route_name='api_tanques_piscicolas_id', request_method='PUT', renderer='json')
 def tanques_piscicolas_update(request):
     gid = request.matchdict['id']
     if not gid:

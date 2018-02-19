@@ -7,7 +7,7 @@ from utentes.models.domain import Domain
 
 
 @view_config(
-    route_name='domains',
+    route_name='api_domains',
     request_method='GET',
     renderer='json')
 def domains_get(request):

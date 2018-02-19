@@ -9,12 +9,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-@view_config(route_name='settings', request_method='GET', renderer='json')
+@view_config(route_name='api_settings', request_method='GET', renderer='json')
 def settings_get(request):
     return {s.property: s.value for s in request.db.query(Setting)}
 
 
-@view_config(route_name='settings_property', request_method='PUT', renderer='json')
+@view_config(route_name='api_settings_property', request_method='PUT', renderer='json')
 def settings_update(request):
     property = request.matchdict['property']
     if not property:
