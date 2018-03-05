@@ -13,15 +13,15 @@ class Fonte(Base):
 
     gid = Column(Integer, primary_key=True, server_default=text("nextval('utentes.fontes_gid_seq'::regclass)"))
     tipo_agua = Column(Text, nullable=False, doc='Tipo de água')
-    tipo_fonte = Column(Text)
-    lat_lon = Column(Text)
+    tipo_fonte = Column(Text, doc='Tipo de Fonte')
+    lat_lon = Column(Text, doc='Latitude / Longitud')
     d_dado = Column(Date, doc='Data toma de dados')
     c_soli = Column(Numeric(10, 2), doc='Consumo solicitado')
     c_max = Column(Numeric(10, 2), doc='Máximo caudal extraíble')
-    c_real = Column(Numeric(10, 2), doc="Consumo real")
-    sist_med = Column(Text)
-    metodo_est = Column(Text)
-    observacio = Column(Text)
+    c_real = Column(Numeric(10, 2), doc='Consumo real')
+    sist_med = Column(Text, doc='Sistema de medição')
+    metodo_est = Column(Text, doc='Método estimação volume')
+    observacio = Column(Text, doc='Observações')
     exploracao = Column(
         ForeignKey(
             u'utentes.exploracaos.gid',

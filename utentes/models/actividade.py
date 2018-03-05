@@ -32,7 +32,7 @@ class Actividade(Base):
     # when updating tipo value, or other ForeignKey with tables not defined in the mapper
     # an exception is raised. Probably removing onupdate will work
     # tipo = Column(ForeignKey(u'domains.actividade.key', onupdate=u'CASCADE'), nullable=False)
-    tipo = Column(Text, nullable=False)
+    tipo = Column(Text, nullable=False, doc='Tipo de actividade')
 
     __mapper_args__ = {
         'polymorphic_identity': 'actividades',
@@ -72,9 +72,9 @@ class ActividadesAbastecemento(Actividade):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
-    habitantes = Column(Integer)  # , server_default=text("20"))
-    dotacao = Column(Integer)
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
+    habitantes = Column(Integer, doc='Número de  habitantes')  # , server_default=text("20"))
+    dotacao = Column(Integer, doc='Dotação (l/pessoa/dia)')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Abastecimento',
@@ -99,7 +99,7 @@ class ActividadesAgriculturaRega(Actividade):
     CULTIVO_NRO_SEQUENCE_FIRST = 1
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
     n_cul_tot = Column(Integer, doc='Número de cultivos')
     area_pot = Column(Numeric(10, 4), doc='Área potencial')
     area_irri = Column(Numeric(10, 4), doc='Área Irrigada')
@@ -160,13 +160,13 @@ class ActividadesIndustria(Actividade):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
     # tipo_indus = Column(ForeignKey(u'domains.industria_tipo.key', onupdate=u'CASCADE'))
-    tipo_indus = Column(Text)
-    instalacio = Column(Text)
-    efluente = Column(Text)
-    tratamento = Column(Text)
-    eval_impac = Column(Boolean)
+    tipo_indus = Column(Text, doc='Tipo de indústria')
+    instalacio = Column(Text, doc='Instalações')
+    efluente = Column(Text, doc='Efluente producido')
+    tratamento = Column(Text, doc='Medios tratamento água')
+    eval_impac = Column(Boolean, doc='Evaluação Impacto Ambiental')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Indústria',
@@ -192,7 +192,7 @@ class ActividadesPecuaria(Actividade):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
     n_res_tot = Column(Integer, doc='Nro de reses total')
 
     __mapper_args__ = {
@@ -306,13 +306,13 @@ class ActividadesProduccaoEnergia(Actividade):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
     # energia_tipo = Column(ForeignKey(u'domains.energia_tipo.key', onupdate=u'CASCADE'))
-    energia_tipo = Column(Text)
-    alt_agua = Column(Numeric(10, 2))
-    potencia = Column(Numeric(10, 2))
-    equipo = Column(Text)
-    eval_impac = Column(Boolean)
+    energia_tipo = Column(Text, doc='Tipo de produção')
+    alt_agua = Column(Numeric(10, 2), doc='Altura de água')
+    potencia = Column(Numeric(10, 2), doc='Potência a instalar')
+    equipo = Column(Text, doc='Tipo de equipamento')
+    eval_impac = Column(Boolean, doc='Evaluação Impacto Ambiental')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Producção de energia',
@@ -338,8 +338,8 @@ class ActividadesSaneamento(Actividade):
     __table_args__ = {u'schema': PGSQL_SCHEMA_UTENTES}
 
     gid = Column(ForeignKey(u'utentes.actividades.gid', ondelete=u'CASCADE', onupdate=u'CASCADE'), primary_key=True)
-    c_estimado = Column(Numeric(10, 2))
-    habitantes = Column(Integer)
+    c_estimado = Column(Numeric(10, 2), doc='Consumo mensal estimado')
+    habitantes = Column(Integer, doc='Nro de habitantes')
 
     __mapper_args__ = {
         'polymorphic_identity': u'Saneamento',

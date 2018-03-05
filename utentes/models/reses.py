@@ -20,11 +20,11 @@ class ActividadesReses(Base):
             ondelete=u'CASCADE',
             onupdate=u'CASCADE'),
         nullable=False)
-    c_estimado = Column(Numeric(10, 2), nullable=False)
-    reses_tipo = Column(Text, nullable=False)
-    reses_nro = Column(Integer, nullable=False)
-    c_res = Column(Numeric(10, 2), nullable=False)
-    observacio = Column(Text)
+    c_estimado = Column(Numeric(10, 2), nullable=False, doc='Consumo mensal estimado')
+    reses_tipo = Column(Text, nullable=False, doc='Tipo de reses')
+    reses_nro = Column(Integer, nullable=False, doc='Nro de reses')
+    c_res = Column(Numeric(10, 2), nullable=False, doc='Consumo res')
+    observacio = Column(Text, doc='Observações')
 
     @staticmethod
     def create_from_json(json):
