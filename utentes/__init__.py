@@ -108,3 +108,5 @@ def add_routes_api(config):
 
     config.add_route('api_requerimento', '/api/requerimento')
     config.add_route('api_requerimento_id', '/api/requerimento/{id}')
+
+    config.add_route('nuevo_ciclo_facturacion', '/api/nuevo_ciclo_facturacion')
