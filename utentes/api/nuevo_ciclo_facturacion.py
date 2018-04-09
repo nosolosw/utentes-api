@@ -31,8 +31,10 @@ def nuevo_ciclo_facturacion(request):
 
                         'consumo_tipo': 'Variável',
 
-                        'pago_lic': 'Si',
-                        'mensualidade_pagada': 'Si',
+                        'pago_lic': 'Não',
+                        'pago_c_mes': 'Não',
+                        'factura_emitida': 'Não',
+
 
                         'estado_facturacion': 'pendiente_consumo',
                         'facturacion': []
@@ -46,14 +48,22 @@ def nuevo_ciclo_facturacion(request):
                     estado_facturacion = 'pendiente_factura'
 
                 # Tal vez meter fecha
+                pago_lic = 'Não'
+                if len(observacio['facturacion']) > 0:
+                    pago_lic = observacio['facturacion'][-1]['pago_lic']
+
                 import datetime
                 currentFact = {
                     'estado_facturacion': estado_facturacion,
                     'date_reset': datetime.datetime.now().isoformat(),
+
                     'c_facturado': decimal_adapter(e.c_licencia),
                     'taxa_fixa': decimal_adapter(l.taxa_fixa),
                     'taxa_uso': decimal_adapter(l.taxa_uso),
                     'pago_mes': decimal_adapter(l.pago_mes),
+                    'pago_c_mes': 'Não',
+                    'pago_lic': pago_lic,
+                    'factura_emitida': 'Não',
                     'iva': decimal_adapter(l.iva),
                     'pago_iva': decimal_adapter(l.pago_iva),
                     'comments': [],
